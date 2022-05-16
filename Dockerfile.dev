@@ -1,0 +1,10 @@
+FROM node:14.14.0-alpine
+RUN apk add --update python make g++\
+   && rm -rf /var/cache/apk/*
+WORKDIR /app
+COPY ./package.json ./
+RUN npm i
+COPY . .
+EXPOSE 5000
+EXPOSE 9229
+CMD ["npm", "run", "dev"]
