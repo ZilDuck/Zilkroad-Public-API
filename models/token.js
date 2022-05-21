@@ -148,7 +148,7 @@ async function getTokens(filter, limit, page, order, orderBy) {
       break
     case 'recently-listed':
       // get the (collection address & token id  & order id) for 10 nfts - homepage recently listed section
-      db_result = await DBGetRandomVerifiedListedNonFungible() // TODO DB query for recently listed nfts
+      db_result = await DBGetPaginatedMostRecentListings(limit, page)
       break
     case 'recently-sold':
       // get the (collection address & token id  & order id) for 6 nfts - homepage recently sold section
@@ -156,17 +156,17 @@ async function getTokens(filter, limit, page, order, orderBy) {
       break
   }
 
-  for (const result of db_result) {
-    const token = await getTokenCard(
-      result.static_order_id,
-      result.token_id,
-      result.nonfungible_address,
-      false
-    )
-    tokenList.push(token)
+  const appData = {
+    nfts: db_result.map(({ nonfungible_address, token_id }) => ({
+      collection_name: 'WHERE',
+      symbol: 'WHERE',
+      contract_address_b16: validation.isBech32(nonfungible_address) ? fromBech32Address(nonfungible_address) : nonfungible_address,
+      contract_address_b32: validation.isBech32(nonfungible_address) ? nonfungible_address : toBech32Address(nonfungible_address),
+      token_id: token_id
+    })),
   }
 
-  return tokenList
+  return appData
 }
 
 async function GetTokenSpender(tokenId, contractAddress)
