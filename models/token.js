@@ -345,6 +345,16 @@ async function DBGetRandomVerifiedListedNonFungible() {
   return result.rows
 }
 
+async function DBGetPaginatedMostRecentListings(limitRows, offsetRows) {
+  const sql = 'SELECT * FROM fn_getpaginatedmostrecentlistings($1, $2)'
+  const values = [
+    limitRows,
+    offsetRows
+  ]
+  const result = await pgClient.query(sql, values)
+  return result.rows
+}
+
 
 module.exports = {
   getToken,
