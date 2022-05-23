@@ -157,12 +157,19 @@ async function getTokens(filter, limit, page, order, orderBy) {
   }
 
   const appData = {
-    nfts: db_result.map(({ nonfungible_address, token_id }) => ({
-      collection_name: 'WHERE',
-      symbol: 'WHERE',
-      contract_address_b16: validation.isBech32(nonfungible_address) ? fromBech32Address(nonfungible_address) : nonfungible_address,
-      contract_address_b32: validation.isBech32(nonfungible_address) ? nonfungible_address : toBech32Address(nonfungible_address),
-      token_id: token_id
+    nfts: await Promise.all(db_result.map(async ({nonfungible_address, token_id}) => {
+
+      const contract_address_b16 = validation.isBech32(nonfungible_address) ? fromBech32Address(nonfungible_address) : nonfungible_address
+      const contract_address_b32 = validation.isBech32(nonfungible_address) ? nonfungible_address : toBech32Address(nonfungible_address)
+      const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(res => (res.data)).catch((error) => console.log(error)) // TODO Shouldn't have an api call in a loop like this. Need a batch method or listing data from indexer?
+
+      return {
+        collection_name: indexer_token.name,
+        symbol: indexer_token.symbol,
+        contract_address_b16,
+        contract_address_b32,
+        token_id: token_id
+      }
     })),
   }
 
