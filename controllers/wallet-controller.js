@@ -53,6 +53,21 @@ module.exports = {
     } else {
       res.send(cacheResult)
     }
+  },
+
+  getWalletBalances: async function(req, res) {
+    let zil = 11
+    let wzil = 10
+    let gzil = 0
+    let zweth = 399
+    let balances = {
+      zil,
+      wzil,
+      gzil,
+      zweth
+    }
+
+    res.send(balances)
   }
 
 }
