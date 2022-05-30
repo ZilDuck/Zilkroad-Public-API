@@ -56,15 +56,28 @@ module.exports = {
   },
 
   getWalletBalances: async function(req, res) {
-    let zil = 11
-    let wzil = 10
-    let gzil = 0
-    let zweth = 399
+    const walletAddress = req.params.walletAddress
+    const wzilContract = '0x864895d52504c388A345eF6cd9C800DBBD0eF92A' // TODO: store in db or in config
+    const gzilContract = '0xa845C1034CD077bD8D32be0447239c7E4be6cb21' // TODO: store in db or in config
+    const zwethContract = '0x2cA315F4329654614d1E8321f9C252921192c5f2' // TODO: store in db or in config
+    const zbtcContract = '0x75fA7D8BA6BEd4a68774c758A5e43Cfb6633D9d6' // TODO: store in db or in config
+    const zwusdtContract = '0x818Ca2e217E060aD17B7bD0124a483a1f66930a9' // TODO: store in db or in config
+    const xsgdContract = '0x3Bd9aD6FEe7BfdF5B5875828B555E4f702e427Cd' // TODO: store in db or in config
+
+    let wzil = await token.GetTokenAllowance(wzilContract, walletAddress)
+    let gzil = await token.GetTokenAllowance(gzilContract, walletAddress)
+    let zweth = await token.GetTokenAllowance(zwethContract, walletAddress)
+    let zbtc = await token.GetTokenAllowance(zbtcContract, walletAddress)
+    let zwusdt = await token.GetTokenAllowance(zwusdtContract, walletAddress)
+    let xsgd = await token.GetTokenAllowance(xsgdContract, walletAddress)
+
     let balances = {
-      zil,
       wzil,
       gzil,
-      zweth
+      zweth,
+      zbtc,
+      zwusdt,
+      xsgd
     }
 
     res.send(balances)
