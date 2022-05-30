@@ -204,16 +204,27 @@ async function GetTokenSpender(tokenId, contractAddress)
 
 async function GetTokenAllowance(contractAddress, userAddress)
 {
+  let wallet_address_b16
+  let wallet_address_b32
+
+  if (validation.isBech32(userAddress)) {
+    wallet_address_b16 = fromBech32Address(userAddress)
+    wallet_address_b32 = userAddress
+  } else {
+    wallet_address_b16 = userAddress
+    wallet_address_b32 = toBech32Address(userAddress)
+  }
+
   const allowances = await zilliqa.blockchain.getSmartContractSubState(
     contractAddress,
     'allowances',
-    [userAddress]
+    [wallet_address_b16]
   );
   console.log(allowances)
 
   if (allowances.result) {
     return allowances.result.allowances[userAddress]
-  } else return {}
+  } else return 0
 }
 
 async function getContractNfts(contractAddress, filter, limit, page, order, orderBy) {
