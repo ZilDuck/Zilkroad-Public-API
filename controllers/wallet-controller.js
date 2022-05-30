@@ -64,12 +64,12 @@ module.exports = {
     const zwusdtContract = '0x818Ca2e217E060aD17B7bD0124a483a1f66930a9' // TODO: store in db or in config
     const xsgdContract = '0x3Bd9aD6FEe7BfdF5B5875828B555E4f702e427Cd' // TODO: store in db or in config
 
-    let wzil = await token.GetTokenAllowance(wzilContract, walletAddress)
-    let gzil = await token.GetTokenAllowance(gzilContract, walletAddress)
-    let zweth = await token.GetTokenAllowance(zwethContract, walletAddress)
-    let zbtc = await token.GetTokenAllowance(zbtcContract, walletAddress)
-    let zwusdt = await token.GetTokenAllowance(zwusdtContract, walletAddress)
-    let xsgd = await token.GetTokenAllowance(xsgdContract, walletAddress)
+    let wzil = await token.GetTokenBalance(wzilContract, walletAddress)
+    let gzil = await token.GetTokenBalance(gzilContract, walletAddress)
+    let zweth = await token.GetTokenBalance(zwethContract, walletAddress)
+    let zbtc = await token.GetTokenBalance(zbtcContract, walletAddress)
+    let zwusdt = await token.GetTokenBalance(zwusdtContract, walletAddress)
+    let xsgd = await token.GetTokenBalance(xsgdContract, walletAddress)
 
     let balances = {
       wzil,
