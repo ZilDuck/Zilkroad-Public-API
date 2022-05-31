@@ -110,7 +110,7 @@ async function DBGetAccumulativeStatsForUser(user_address_b16)
 
     var result = await pgClient.query(sql, values)
     logger.debugLog(result.rows)
-    return result.rows
+    return result.rows[0]
 }
 
 async function DBGetPaginatedUserListings(user_address, limit_rows, offset_rows) {
