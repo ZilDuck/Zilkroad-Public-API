@@ -235,8 +235,10 @@ async function getUserNfts(walletAddress, limit = 16, page = 1) {
     }
   }
   const totalPages = nfts.length / limit
+  const totalNfts = nfts.length
   nfts = paginate(nfts, limit, page)
   const appData = {
+    total: totalNfts,
     nfts,
     pagination: {
       'size': limit,
