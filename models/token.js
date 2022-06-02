@@ -48,6 +48,9 @@ async function getToken(
   // const db_volume = await DBGetNonFungibleTokenSalesData(contract_address_b16, token_id).catch((error) => console.log(error))
   // const bps = await utils.GetRoyaltyBPSForToken(contract_address_b16).catch((error) => console.log(error))
   // const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => console.log(error))
+  const sales_data = await DBGetNonFungibleTokenSalesData(contract_address_b16, token_id).catch((error) => console.log(error))
+  const sales_count = sales_data[0]?.lifetime_quantity_sold ?? 0
+  const sales_volume = sales_data[0]?.lifetime_sales_usd ?? 0
 
   contract_name = indexer_token.name ?? false
   contract_symbol = indexer_token.symbol ?? false
@@ -72,7 +75,9 @@ async function getToken(
     // royalty_bps,
     // is_verified,
     token_resource_uri,
-    token_metadata
+    token_metadata,
+    sales_count,
+    sales_volume
     // token_actions,
     // volume_over_time_graph,
     // token_sales_history,
@@ -342,7 +347,7 @@ async function DBGetNonFungibleTokenSalesData(nft_contract, token_id) {
     nft_contract,
     token_id
   ]
-  var result = pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values)
   logger.debugLog(result.rows)
   return result.rows
 }
