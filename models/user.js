@@ -28,14 +28,15 @@ async function GetUser(user_address_b16)
     const fungible_token_balance = await APIGetHeldTokensForUser(user_address_b16).catch(error => console.log(error))
     const user_stats = await DBGetAccumulativeStatsForUser(user_address_b16).catch(error => console.log(error))
     const zil_balance = await APIGetZilBalanceForUser(user_address_b16).catch(error => console.log(error))
-    // TODO add wallet_activity 
+    const wallet_activity = await DBGetPaginatedUserWalletActivity(user_address_b16).catch(error => console.log(error))
 
     return {
         user_address_b16,
         user_address_b32: toBech32Address(user_address_b16),
         zil_balance,
         fungible_token_balance,
-        user_stats
+        user_stats,
+        wallet_activity
     }
 }
 
