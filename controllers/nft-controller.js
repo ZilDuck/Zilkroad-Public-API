@@ -38,6 +38,7 @@ module.exports = {
       res.send(cacheResult)
     }
   },
+  
   getNftSpender: async function(req, res) {
     const contractAddress = req.params.contractAddress
     const tokenId = req.params.tokenId

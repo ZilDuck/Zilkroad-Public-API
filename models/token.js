@@ -157,7 +157,7 @@ async function getTokens(filter, limit, page, order, orderBy) {
       break
     case 'recently-sold':
       // get the (collection address & token id  & order id) for 6 nfts - homepage recently sold section
-      db_result = await DBGetRandomVerifiedListedNonFungible() // TODO DB query for recently listed nfts
+      db_result = await DBGetPaginatedMostRecentlySold() // TODO DB query for recently listed nfts
       break
   }
 
@@ -361,6 +361,16 @@ async function DBGetRandomVerifiedListedNonFungible() {
 
 async function DBGetPaginatedMostRecentListings(limitRows, offsetRows) {
   const sql = 'SELECT * FROM fn_getpaginatedmostrecentlistings($1, $2)'
+  const values = [
+    limitRows,
+    offsetRows
+  ]
+  const result = await pgClient.query(sql, values)
+  return result.rows
+}
+
+async function DBGetPaginatedMostRecentlySold(limitRows, offsetRows) {
+  const sql = 'SELECT * FROM fn_getPaginatedSalesForAllRecentContracts($1, $2)'
   const values = [
     limitRows,
     offsetRows
