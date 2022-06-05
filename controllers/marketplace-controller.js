@@ -4,7 +4,7 @@ module.exports = {
     getMarketplaceListings: async function(req, res) {
         const page = req.params.page ?? 0
         const filter = req.query.filter ?? 'recently-listed'
-        const limit = req.query.limit ?? 10
+        const limit = req.query.limit ?? 28
         const order = req.query.order ?? 'ASC'
         const orderBy = req.query.orderBy ?? ''
 
