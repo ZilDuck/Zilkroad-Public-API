@@ -90,7 +90,7 @@ async function GetNftListing(contract_address, token_id) {
 }
 
 async function GetIndexerNftListing(contract_address, token_id) {
-    const contractState = await indexer.GetContractState('0xB4FA69997f7560fe48F375b03F73B8774cB3BF5A').then(r => r.data).catch((error) => console.log(error))
+    const contractState = await indexer.GetContractState('0x552f96a968cac7a910fdeb668181b0f6e50e4fae').then(r => r.data).catch((error) => console.log(error))
 
     if (contractState.listing_map) {
         for (const [orderId, listingData] of Object.entries(contractState.listing_map)) {
