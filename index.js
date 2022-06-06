@@ -62,6 +62,10 @@ app.use('/cache', cacheRoute)
 
 const healthRouter = require('./routes/health-route')
 app.use('/health', healthRouter)
+
+const marketplaceRoute = require('./routes/marketplace-route')
+app.use('/marketplace', marketplaceRoute)
+
 // END Restful endpoints
 
 // On API start
