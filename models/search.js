@@ -104,7 +104,7 @@ async function getSearchForContract(address)
     const db_verified = await DBGetVerifiedStatusForNonFungible(address)
     console.log(db_verified + 'fuck')
 
-    return ReturnSearch(nftUtils.GetTokenName(contract_b32), contract_b32, `/collections/${contract_b32}`, !!db_verified)
+    return ReturnSearch(await nftUtils.GetTokenName(contract_b32), contract_b32, `/collections/${contract_b32}`, !!db_verified)
 }
 
 async function getSearchForZNS(zns)
