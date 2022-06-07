@@ -52,6 +52,8 @@ async function getToken(
   const sales_count = sales_data[0]?.lifetime_quantity_sold ?? 0
   const sales_volume = sales_data[0]?.lifetime_sales_usd ?? 0
 
+  const sales_history = await DBGetNonFungibleTokenSaleHistory(contract_address_b16, token_id).catch((error) => console.log(error))
+
   contract_name = indexer_token.name ?? false
   contract_symbol = indexer_token.symbol ?? false
   owner_address = indexer_token.owner ?? false
@@ -77,7 +79,8 @@ async function getToken(
     token_resource_uri,
     token_metadata,
     sales_count,
-    sales_volume
+    sales_volume,
+    sales_history
     // token_actions,
     // volume_over_time_graph,
     // token_sales_history,
@@ -352,6 +355,17 @@ async function DBGetNonFungibleTokenSalesData(nft_contract, token_id) {
   logger.infoLog(`MODEL- NFTModel - DBGetNonFungibleTokenSalesData - HIT`)
 
   const sql = 'SELECT * FROM fn_getNonFungibleTokenSalesData($1, $2)'
+  const values = [
+    nft_contract,
+    token_id
+  ]
+  var result = await pgClient.query(sql, values)
+  logger.debugLog(result.rows)
+  return result.rows
+}
+
+async function DBGetNonFungibleTokenSaleHistory(nft_contract, token_id) {
+  const sql = 'SELECT * FROM fn_getNonFungibleTokenSalesHistory($1, $2)'
   const values = [
     nft_contract,
     token_id
