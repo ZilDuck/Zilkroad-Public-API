@@ -184,6 +184,13 @@ async function GetAddressFromDotZilDomain(zns)
     }
 }
 
+function getSearchFallback( query ) {
+    const result = ReturnSearch(`No results for ${query.toString()}`, '', '', false)
+    console.table(result)
+    return result
+}
+
 module.exports = {
-    SearchString
+    SearchString,
+    getSearchFallback
 }
