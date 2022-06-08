@@ -75,7 +75,7 @@ async function isUser(address)
 {
     try{
         const balance = await client.zilliqa.blockchain.getBalance(address);
-        return !!balance.result;
+        return !!balance.result.nonce;
     }
     catch(e)
     {
