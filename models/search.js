@@ -45,15 +45,13 @@ async function SearchString(queryString)
     var searchResult;
     if(isAddress)
     {
-        console.log(await isUser(queryString))
         if(await isUser(queryString))
-        {
-
-        }
-        else
         {
             console.log(`searching for user`)
             searchResult = getSearchForUser(queryString)
+        }
+        else
+        {
             console.log(`searching for contract `)
             searchResult = getSearchForContract(queryString)
         }
@@ -77,13 +75,7 @@ async function isUser(address)
 {
     try{
         const balance = await client.zilliqa.blockchain.getBalance(address);
-
-        if (typeof(balance.result.nonce) === 'undefined') 
-        {
-            return false;
-        }
-        if(balance.result.nonce > 1) return false;
-        else return false; 
+        return !!balance.result.nonce;
     }
     catch(e)
     {
@@ -102,7 +94,6 @@ async function getSearchForContract(address)
 {
     const contract_b32 = toBech32Address(address)
     const db_verified = await DBGetVerifiedStatusForNonFungible(address)
-    console.log(db_verified + 'fuck')
 
     return ReturnSearch(await nftUtils.GetTokenName(contract_b32), contract_b32, `/collections/${contract_b32}`, !!db_verified)
 }
