@@ -237,6 +237,23 @@ async function getContractNfts(contractAddress, filter, limit, page, order, orde
   return appData
 }
 
+async function getContractListedNfts(contractAddress, limit, page) {
+  const db_result = await DBGetPaginatedListedTokensForContract(contractAddress, limit, page)
+  let nfts = []
+  for ( const result of db_result ) {
+    nfts.push({
+      collection_name: result.collection_name,
+      symbol: result.symbol,
+      contact_address_b16: contractAddress,
+      contract_address_b32: validation.isBech32(contractAddress) ? contractAddress : toBech32Address(contractAddress),
+      token_id: result.token_id
+    })
+  }
+  return {
+    nfts: nfts
+  }
+}
+
 async function getUserNfts(walletAddress, limit = 16, page = 1) {
   const indexerData = await indexer.GetNFTsForAddress(walletAddress).then(response => response).catch((error) => logger.errorLog(error))
   let nfts = []
@@ -404,11 +421,22 @@ async function DBGetPaginatedMostRecentlySold(limitRows, offsetRows) {
   return result.rows
 }
 
+async function DBGetPaginatedListedTokensForContract(contractAddress, limitRows, offsetRows) {
+  const sql = 'SELECT * FROM fn_getPaginatedListedTokensForContract($1, $2, $3)'
+  const values = [
+    contractAddress,
+    limitRows,
+    offsetRows
+  ]
+  const result = await pgClient.query(sql, values)
+  return result.rows
+}
 
 module.exports = {
   getToken,
   getTokens,
   getContractNfts,
+  getContractListedNfts,
   getUserNfts,
   getUserListedNfts,
   GetRandomVerifiedListedNFT,
