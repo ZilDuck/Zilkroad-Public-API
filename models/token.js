@@ -239,7 +239,6 @@ async function getContractNfts(contractAddress, filter, limit, page, order, orde
 
 async function getContractListedNfts(contractAddress, limit, page) {
   const db_result = await DBGetPaginatedListedTokensForContract(contractAddress, limit, page)
-  console.log("Result: ", db_result)
   let nfts = []
   for ( const result of db_result ) {
     nfts.push({
