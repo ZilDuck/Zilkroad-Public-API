@@ -8,7 +8,10 @@ module.exports = {
     const cacheResult = cache.GetKey(`getSearchResults-${queryString}`)
     if (cacheResult === false) 
     {
-      const fetchData = await search.SearchString(queryString)
+      let fetchData = await search.SearchString(queryString)
+      if (fetchData.length < 1) {
+        fetchData = search.getSearchFallback(queryString)
+      }
       cache.SetKey(`getSearchResults-${queryString}`, fetchData)
       res.send(fetchData)
     }
