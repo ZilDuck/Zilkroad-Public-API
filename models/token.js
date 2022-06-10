@@ -244,7 +244,7 @@ async function getContractListedNfts(contractAddress, limit, page) {
     nfts.push({
       collection_name: result.collection_name,
       symbol: result.symbol,
-      contact_address_b16: contractAddress,
+      contract_address_b16: contractAddress,
       contract_address_b32: validation.isBech32(contractAddress) ? contractAddress : toBech32Address(contractAddress),
       token_id: result.token_id
     })
