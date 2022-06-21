@@ -21,6 +21,8 @@ const pgClient = new Pool
   port: keys.pgPort
 });
 
+console.log(pgClient)
+
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
 
 const zilliqa = new Zilliqa(process.env.current_network);

@@ -296,13 +296,7 @@ async function DBGetACollectionRank(contractAddress, timeFrom, timeTo)
   return result.rows
 }
 
-//
-/*
-	_limit_rows numeric,
-	_offset_rows numeric,
-  _time_from int8,
-	_time_to int8
-*/
+
 async function DBGetAllCollectionRanks(page, limit, timeFrom, timeTo)
 {
   logger.infoLog(`FUNC - PUBLIC - getAllCollectionRanks - HIT`)
@@ -319,37 +313,7 @@ async function DBGetAllCollectionRanks(page, limit, timeFrom, timeTo)
   return result.rows
 }
 
-async function APIGetNFTCollectionHeader(nonfungible_address) {
-  logger.infoLog(`FUNC - PUBLIC - APIGetNFTCollectionHeader - HIT`)
-  const metadata_filename = 'metadata.json'
-  const fallback_filename = '1'
 
-  const response = await client.zilliqa.blockchain.getSmartContractSubState(
-    nonfungible_address,
-    'base_uri',
-  );
-
-  if (response.data === undefined) {
-    // nothing to catch here, we dont know where the token is
-    logger.warnLog(`can't fetch user defined metadata for collection ${nonfungible_address}`)
-    return
-  }
-  if (response.result) {
-    logger.debugLog(project_metadata_uri + metadata_filename)
-    var metadata_result = axios.get(project_metadata_uri + metadata_filename)
-      .then(function (response) {
-        // handle success
-        logger.debugLog(response.data);
-        return response.data
-      })
-      .catch(function (error) {
-        //client.Return400ErrorCallback('{error : GetNFTCollectionHeader, details : NoMetadataFoundAtBaseURIForContract}', res)
-        logger.debugLog(`no hit at metadata.json`);
-      })
-    console.log(`FUCK ${metadata_result}`)
-    return metadata_result
-  }
-}
 
 module.exports = {
   GetContract,
@@ -365,5 +329,4 @@ module.exports = {
   DBGetGraphForNonFungible,
   DBGetACollectionRank,
   DBGetAllCollectionRanks,
-  APIGetNFTCollectionHeader
 }

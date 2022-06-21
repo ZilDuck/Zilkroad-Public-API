@@ -6,7 +6,7 @@ async function DBGetACollectionRank(contractAddress, timeFrom, timeTo)
 {
   logger.infoLog(`FUNC - PUBLIC - getACollectionRank - HIT`)
 
-  const sql = 'SELECT * FROM fn_getSingleCollectionsActivity ($1, $2, $3)'
+  const sql = 'SELECT * FROM fn_getSingleCollectionsActivity($1, $2, $3)'
   const values = [
     contractAddress,
     timeFrom,
@@ -17,12 +17,11 @@ async function DBGetACollectionRank(contractAddress, timeFrom, timeTo)
   return result.rows
 }
 
-
 async function DBGetAllCollectionRanks(page, limit, timeFrom, timeTo)
 {
   logger.infoLog(`FUNC - PUBLIC - getAllCollectionRanks - HIT`)
 
-  const sql = 'SELECT * FROM fn_getCollectionsActivity ($1, $2, $3, $4)'
+  const sql = 'SELECT * FROM fn_getCollectionsActivity($1, $2, $3, $4)'
   const values = [
     limit,
     page,
@@ -33,8 +32,6 @@ async function DBGetAllCollectionRanks(page, limit, timeFrom, timeTo)
   logger.debugLog(result.rows)
   return result.rows
 }
-
-
 
 module.exports = {
   DBGetACollectionRank,
