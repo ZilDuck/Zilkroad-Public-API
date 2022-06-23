@@ -14,12 +14,14 @@ const crypto = require('crypto')
 
 const pgClient = new Pool
 ({
-  user: keys.PGHOST,
-  host: keys.PGHOST,
-  database: keys.PGDATABASE,
-  password: keys.PGPASSWORD,
-  port: keys.PGPORT
+  user: keys.pgUser,
+  host: keys.pgHost,
+  database: keys.pgDatabase,
+  password: keys.pgPassword,
+  port: keys.pgPort
 });
+
+console.log(`fuck ${JSON.stringify(keys.pgDatabase)}`)
 
 console.log(pgClient)
 
