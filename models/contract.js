@@ -42,7 +42,7 @@ async function GetContract(contract_address) {
   logger.debugLog(indexer_state.data)
   const indexer_metadata = await indexer.GetStatisticsForMetadata(contract_address_b16).catch((error) => console.log(error))
   const db_primary_sales = await DBGetPrimarySalesIfPresent(contract_address_b16).catch((error) => console.log(error))
-  const api_metadata = await APIGetNFTCollectionHeader(contract_address_b16).catch((error) => console.log(error))
+  //const api_metadata = await APIGetNFTCollectionHeader(contract_address_b16).catch((error) => console.log(error))
   const db_floors = await DBGetPaginatedCollectionFloors(0, 20).catch((error) => console.log(error))
   const db_stats = await DBGetStatsForNonfungible(contract_address_b16).catch((error) => console.log(error))
   const db_graph = await DBGetGraphForNonFungible(contract_address_b16).catch((error) => console.log(error))
@@ -50,7 +50,7 @@ async function GetContract(contract_address) {
 
   const contract_name = indexer_state.data.token_name
   const contract_symbol = indexer_state.data.token_symbol
-  const user_defined_metadata = api_metadata
+ // const user_defined_metadata = api_metadata
   const aggregated_contract_metadata = indexer_metadata.data
   const contract_owner = indexer_state.data.contract_owner
   const royalty_recipient = indexer_state.data.royalty_recipient
@@ -68,7 +68,7 @@ async function GetContract(contract_address) {
     contract_address_b32,
     contract_name,
     contract_symbol,
-    user_defined_metadata,
+   // user_defined_metadata,
     aggregated_contract_metadata,
     contract_owner,
     royalty_recipient,

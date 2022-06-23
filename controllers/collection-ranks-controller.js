@@ -1,6 +1,6 @@
 const cache = require('../cache/cache.js')
 const contractRanks = require('../models/contract-ranks')
-const nftUtils = require('../utils/nftUtils')
+const contract = require('../models/contract')
 
 module.exports = {
     getAllCollectionRanks: async function(req, res)
@@ -14,15 +14,15 @@ module.exports = {
         if (cacheResult === false) {
             const fetchData = await contractRanks.DBGetAllCollectionRanks(page, limit, timeFrom, timeTo)
             
-            // Could call contract.GetContract to get a fatter object which includes total listed
-            // 1) use fat object + do more with the data on this page
-            // 2) use skinny object (DONE) + add count query 
             for(const data of fetchData)
             {
-                const bps = await nftUtils.GetRoyaltyBPSForToken(data.nonfungible_address)
-                const idCount = await nftUtils.GetTokenIDCount(data.nonfungible_address)
-                data.bps = bps
-                data.idCount = idCount
+                const contractData = await contract.GetContract(data.nonfungible_address)
+                console.log(contractData)
+                data.royalty_bps = contractData.royalty_bps
+                data.is_verified = contractData.is_verified
+                data.nfts_minted = contractData.nfts_minted
+                data.sales_history = contractData.sales_history
+                data.primary_sales = contractData.primary_sales
             }
             cache.SetKey(`getAllCollectionRanks-${page}-${limit}-${timeFrom}-${timeTo}`, fetchData)
             res.send(fetchData)
@@ -41,6 +41,14 @@ module.exports = {
         const cacheResult = cache.GetKey(`getACollectionRank-${contractAddress}-${timeFrom}-${timeTo}`)
         if (cacheResult === false) {
             const fetchData = await contractRanks.DBGetACollectionRank(contractAddress, timeFrom, timeTo)
+
+            const contractData = await contract.GetContract(fetchData[0].nonfungible_address)
+            fetchData[0].royalty_bps = contractData.royalty_bps
+            fetchData[0].is_verified = contractData.is_verified
+            fetchData[0].nfts_minted = contractData.nfts_minted
+            fetchData[0].sales_history = contractData.sales_history
+            fetchData[0].primary_sales = contractData.primary_sales
+
             cache.SetKey(`getACollectionRank-${contractAddress}-${timeFrom}-${timeTo}`, fetchData)
             res.send(fetchData)
         } else {
