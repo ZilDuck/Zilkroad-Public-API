@@ -42,7 +42,7 @@ async function GetContract(contract_address) {
   logger.debugLog(indexer_state.data)
   const indexer_metadata = await indexer.GetStatisticsForMetadata(contract_address_b16).catch((error) => console.log(error))
   const db_primary_sales = await DBGetPrimarySalesIfPresent(contract_address_b16).catch((error) => console.log(error))
-  const api_metadata = await APIGetNFTCollectionHeader(contract_address_b16).catch((error) => console.log(error))
+  //const api_metadata = await APIGetNFTCollectionHeader(contract_address_b16).catch((error) => console.log(error))
   const db_floors = await DBGetPaginatedCollectionFloors(0, 20).catch((error) => console.log(error))
   const db_stats = await DBGetStatsForNonfungible(contract_address_b16).catch((error) => console.log(error))
   const db_graph = await DBGetGraphForNonFungible(contract_address_b16).catch((error) => console.log(error))
@@ -50,7 +50,7 @@ async function GetContract(contract_address) {
 
   const contract_name = indexer_state.data.token_name
   const contract_symbol = indexer_state.data.token_symbol
-  const user_defined_metadata = api_metadata
+ // const user_defined_metadata = api_metadata
   const aggregated_contract_metadata = indexer_metadata.data
   const contract_owner = indexer_state.data.contract_owner
   const royalty_recipient = indexer_state.data.royalty_recipient
@@ -68,7 +68,7 @@ async function GetContract(contract_address) {
     contract_address_b32,
     contract_name,
     contract_symbol,
-    user_defined_metadata,
+   // user_defined_metadata,
     aggregated_contract_metadata,
     contract_owner,
     royalty_recipient,
@@ -281,39 +281,39 @@ async function DBGetGraphForNonFungible(nonfungible_address) {
 }
 
 
+async function DBGetACollectionRank(contractAddress, timeFrom, timeTo)
+{
+  logger.infoLog(`FUNC - PUBLIC - getACollectionRank - HIT`)
 
-
-async function APIGetNFTCollectionHeader(nonfungible_address) {
-  logger.infoLog(`FUNC - PUBLIC - APIGetNFTCollectionHeader - HIT`)
-  const metadata_filename = 'metadata.json'
-  const fallback_filename = '1'
-
-  const response = await client.zilliqa.blockchain.getSmartContractSubState(
-    nonfungible_address,
-    'base_uri',
-  );
-
-  if (response.data === undefined) {
-    // nothing to catch here, we dont know where the token is
-    logger.warnLog(`can't fetch user defined metadata for collection ${nonfungible_address}`)
-    return
-  }
-  if (response.result) {
-    logger.debugLog(project_metadata_uri + metadata_filename)
-    var metadata_result = axios.get(project_metadata_uri + metadata_filename)
-      .then(function (response) {
-        // handle success
-        logger.debugLog(response.data);
-        return response.data
-      })
-      .catch(function (error) {
-        //client.Return400ErrorCallback('{error : GetNFTCollectionHeader, details : NoMetadataFoundAtBaseURIForContract}', res)
-        logger.debugLog(`no hit at metadata.json`);
-      })
-    console.log(`FUCK ${metadata_result}`)
-    return metadata_result
-  }
+  const sql = 'SELECT * FROM fn_getSingleCollectionsActivity ($1, $2, $3)'
+  const values = [
+    contractAddress,
+    timeFrom,
+    timeTo
+  ]
+  var result = await pgClient.query(sql, values)
+  logger.debugLog(result.rows)
+  return result.rows
 }
+
+
+async function DBGetAllCollectionRanks(page, limit, timeFrom, timeTo)
+{
+  logger.infoLog(`FUNC - PUBLIC - getAllCollectionRanks - HIT`)
+
+  const sql = 'SELECT * FROM fn_getCollectionsActivity ($1, $2, $3, $4)'
+  const values = [
+    limit,
+    page,
+    timeFrom,
+    timeTo
+  ]
+  var result = await pgClient.query(sql, values)
+  logger.debugLog(result.rows)
+  return result.rows
+}
+
+
 
 module.exports = {
   GetContract,
@@ -327,5 +327,6 @@ module.exports = {
   DBGetPaginatedCollectionFloors,
   DBGetStatsForNonfungible,
   DBGetGraphForNonFungible,
-  APIGetNFTCollectionHeader
+  DBGetACollectionRank,
+  DBGetAllCollectionRanks,
 }
