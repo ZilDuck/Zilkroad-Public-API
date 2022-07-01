@@ -25,6 +25,9 @@ app.timeout = (1000 * 60 * 1) / 2; // (1min /2) = 30s
 const collectionRouter = require('./routes/collection-route')
 app.use('/collections', collectionRouter)
 
+const metadataRouter = require('./routes/metadata-route')
+app.use('/metadata', metadataRouter)
+
 const collectionStatsRouter = require('./routes/collection-stats-route')
 app.use('/collection-stats', collectionStatsRouter)
 

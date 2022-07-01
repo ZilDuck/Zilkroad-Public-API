@@ -85,7 +85,7 @@ module.exports =
         );
        
         logger.debugLog(stateResult.result.base_uri);
-        return stateResult.result.base_uri 
+        return stateResult.result.base_uri
     },
     GetTokenPauseStatus: async function(nft_contract) {
         logger.infoLog(`MODEL- UTILS - GetTokenPauseStatus - HIT - ${nft_contract}`);

@@ -1,0 +1,1067 @@
+{
+	"info": {
+		"_postman_id": "446b7458-8ec2-4468-bd25-7d6da8a8d2de",
+		"name": "ZILKROAD API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "INSERT",
+			"item": [
+				{
+					"name": "InsertStaticListing",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nonfungible_address",
+									"value": "zil1ge9vdwhjxke0n6sfdxwe3njn26swsyn6uv6NFT",
+									"type": "text"
+								},
+								{
+									"key": "nonfungible_symbol",
+									"value": "Postman2DB",
+									"type": "text"
+								},
+								{
+									"key": "nonfungible_name",
+									"value": "P2DB",
+									"type": "text"
+								},
+								{
+									"key": "token_id",
+									"value": "69",
+									"type": "text"
+								},
+								{
+									"key": "fungible_address",
+									"value": "0x864895d52504c388a345ef6cd9c800dbbd0ef92a",
+									"type": "text"
+								},
+								{
+									"key": "static_order_id",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "listing_transaction_hash",
+									"value": "0x792fee5ba36cc725bbff16b516681e5780b9b9839a59d972bef2e42f6fd7859f",
+									"type": "text"
+								},
+								{
+									"key": "listing_fungible_token_price",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "listing_block",
+									"value": "1745855",
+									"type": "text"
+								},
+								{
+									"key": "listing_unixtime",
+									"value": "3425626",
+									"type": "text"
+								},
+								{
+									"key": "listing_user_address",
+									"value": "0x823b673337bbee959f90f189e5f0cbd9f0f98d29",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5001/InsertStaticListing",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5001",
+							"path": [
+								"InsertStaticListing"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertStaticDelisting",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "static_order_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "delisting_transaction_hash",
+									"value": "0x792fee5ba36cc725bbff16b516681e5780b9b9839a59d972bef2e42f6fdelist",
+									"type": "text"
+								},
+								{
+									"key": "delisting_block",
+									"value": "11",
+									"type": "text"
+								},
+								{
+									"key": "delisting_unixtime",
+									"value": "11",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5001/InsertStaticDelisting",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5001",
+							"path": [
+								"InsertStaticDelisting"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertStaticSale",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "static_order_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "sale_transaction_hash",
+									"value": "0x792fee5ba36cc725bbff16b516681e5780b9b9839a59d972bef2e42f6fsale",
+									"type": "text"
+								},
+								{
+									"key": "sale_block",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "sale_unixtime",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "buyer_address",
+									"value": "zil169ndkx3flmrcc97m7t8d5vwl82qek92negglqr",
+									"type": "text"
+								},
+								{
+									"key": "royalty_recipient_address",
+									"value": "zil1sxx29cshups269ahh5qjffyr58mxjv9ft78jqy",
+									"type": "text"
+								},
+								{
+									"key": "tax_recipient_address",
+									"value": "zil16wg79qfhy737sjre0qwcq34pagfm0nfpkc70sl",
+									"type": "text"
+								},
+								{
+									"key": "x_tokens_to_1_usd",
+									"value": "13.41",
+									"type": "text"
+								},
+								{
+									"key": "tax_amount_token",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "tax_amount_usd",
+									"value": "14",
+									"type": "text"
+								},
+								{
+									"key": "royalty_amount_token",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "royalty_amount_usd",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "final_sale_after_taxes_tokens",
+									"value": "13",
+									"type": "text"
+								},
+								{
+									"key": "final_sale_after_taxes_usd",
+									"value": "14",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5001/InsertStaticSale",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5001",
+							"path": [
+								"InsertStaticSale"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertNFTAttribute",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nonfungible_address",
+									"value": "zil1ge9vdwhjxke0n6sfdxwe3njn26swsyn6uv6NFT",
+									"type": "text"
+								},
+								{
+									"key": "token_id",
+									"value": "2",
+									"description": "Needs to be called via a static Listing, then attributes can be inserted",
+									"type": "text"
+								},
+								{
+									"key": "nft_trait_type",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "nft_trait_value",
+									"value": "test",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5001/InsertNFTAttribute",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5001",
+							"path": [
+								"InsertNFTAttribute"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertAdvertiseContract",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nonfungible_address",
+									"value": "zil1ge9vdwhjxke0n6sfdxwe3njn26swsyn6uv6NFT",
+									"description": "This contract must have been seen first",
+									"type": "text"
+								},
+								{
+									"key": "advertise_start_unixtime",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "advertise_end_unixtime",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "advertise_description",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "half_image",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "quarter_image",
+									"value": "test",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5001/InsertAdvertiseContract",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5001",
+							"path": [
+								"InsertAdvertiseContract"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "InsertCalendarEvent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "calendar_unixtime",
+									"value": "123",
+									"description": "unixtime of event",
+									"type": "text"
+								},
+								{
+									"key": "calendar_description",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "calendar_website",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "calendar_image",
+									"value": "test",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5001/InsertCalendarEvent",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5001",
+							"path": [
+								"InsertCalendarEvent"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SELECT",
+			"item": [
+				{
+					"name": "GetAllFungibleData",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetAllFungibleData",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetAllFungibleData"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllUserActivity",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "user_address",
+									"value": "0x823b673337bbee959f90f189e5f0cbd9f0f98d29",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetAllActivityForUser",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetAllActivityForUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAccumulativeStatsForUser",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "user_address",
+									"value": "0x823b673337bbee959f90f189e5f0cbd9f0f98d29",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetAccumulativeStatsForUser",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetAccumulativeStatsForUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPaginatedUserListing",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "user_address",
+									"value": "0x823b673337bbee959f90f189e5f0cbd9f0f98d29",
+									"type": "text"
+								},
+								{
+									"key": "limit_rows",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "offset_rows",
+									"value": "0",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetPaginatedUserListings",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetPaginatedUserListings"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllVerifiedData",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://0.0.0.0:5000/getAllVerifiedData",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"getAllVerifiedData"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetVerifiedDataForAddress",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nonfungible_address",
+									"value": "zil1ge9vdwhjxke0n6sfdxwe3njn26swsyn6uv6NFT",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetVerifiedDataForAddress",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetVerifiedDataForAddress"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPaginatedListingForFungible",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "fungible_address",
+									"value": "0x864895d52504c388a345ef6cd9c800dbbd0ef92a",
+									"type": "text"
+								},
+								{
+									"key": "limit_rows",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "offset_rows",
+									"value": "0",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetPaginatedListingForFungible",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetPaginatedListingForFungible"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPaginatedListingForRecent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "limit_rows",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "offset_rows",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetPaginatedListingForRecent",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetPaginatedListingForRecent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPaginatedCollectionFloors",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "limit_rows",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "offset_rows",
+									"value": "0",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetPaginatedCollectionFloors",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetPaginatedCollectionFloors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSiteStats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetSiteStats",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetSiteStats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetNonFungibleStats",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nonfungible_address",
+									"value": "zil1ge9vdwhjxke0n6sfdxwe3njn26swsyn6uv6NFT",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetNonFungibleStats",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetNonFungibleStats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPaginatedListingForNonFungible",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nonfungible_address",
+									"value": "zil1ge9vdwhjxke0n6sfdxwe3njn26swsyn6uv6NFT",
+									"type": "text"
+								},
+								{
+									"key": "limit_rows",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "offset_rows",
+									"value": "0",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetPaginatedListingForNonFungible?=&limit_rows=1&offset_rows=0",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetPaginatedListingForNonFungible"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": ""
+								},
+								{
+									"key": "limit_rows",
+									"value": "1"
+								},
+								{
+									"key": "offset_rows",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllDataForListing",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "static_order_id",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetAllDataForListing",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetAllDataForListing"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAttributesForNonFungibleToken",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nonfungible_address",
+									"value": "zil1ge9vdwhjxke0n6sfdxwe3njn26swsyn6uv6NFT",
+									"type": "text"
+								},
+								{
+									"key": "token_id",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetAttributesForNonFungibleToken",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetAttributesForNonFungibleToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAddressFromDotZilDomain",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "user_address",
+									"value": "brad.zil",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetAddressFromDotZilDomain",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetAddressFromDotZilDomain"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetHeldTokensForUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "user_address",
+									"value": "0x12ae83b70a4cf6321a4e820f2e4dc6294c165c8e",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetHeldTokensForUser",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetHeldTokensForUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllValidAdvertisements",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetAllValidAdvertisements",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetAllValidAdvertisements"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllCalendarData",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://0.0.0.0:5000/GetAllCalendarData",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"GetAllCalendarData"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CONNECTIVITY",
+			"item": [
+				{
+					"name": "TestPublicAPI",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://0.0.0.0:5000/testpublic",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5000",
+							"path": [
+								"testpublic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TestPrivateAPI",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://0.0.0.0:5001/testprivate",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5001",
+							"path": [
+								"testprivate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TestPost",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://0.0.0.0:5001/testpost?test=test",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "5001",
+							"path": [
+								"testpost"
+							],
+							"query": [
+								{
+									"key": "test",
+									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
