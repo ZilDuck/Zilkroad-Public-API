@@ -128,8 +128,6 @@ async function DBGetPaginatedUserListings(user_address, limit_rows, offset_rows)
     return result.rows
 }
 
-
-
 async function DBGetPaginatedUserWalletActivity(user_address, limit_rows, offset_rows)
 {
     logger.infoLog(`API - PUBLIC - GetPaginatedUserWalletActivity - HIT`)
@@ -146,6 +144,27 @@ async function DBGetPaginatedUserWalletActivity(user_address, limit_rows, offset
     return result.rows
 }
 
+async function DBGetRankedWalletActivity(filter)
+{
+    const limit = 25
+    const offset = 0
+    const startTime = 0
+    const endTime = 9999999999999
+    var sql = ''
+    if (filter === "royalties") {
+        sql = 'SELECT * FROM fn_getPaginatedTopRoyalties($1, $2, $3, $4)'
+    }
+    else if (filter === "sellers") {
+        sql = 'SELECT * FROM fn_getPaginatedTopSellers($1, $2, $3, $4)'
+    } else {
+        sql = 'SELECT * FROM fn_getPaginatedTopBuyers($1, $2, $3, $4)'
+    }
+    const values = [limit, offset, startTime, endTime]
+    var result = await pgClient.query(sql, values)
+    logger.debugLog(result.rows)
+    return result.rows
+}
+
 
 
 module.exports = {
@@ -157,5 +176,6 @@ module.exports = {
     APIGetZilBalanceForUser,
     DBGetAccumulativeStatsForUser,
     DBGetPaginatedUserListings,
-    DBGetPaginatedUserWalletActivity
+    DBGetPaginatedUserWalletActivity,
+    DBGetRankedWalletActivity
   }

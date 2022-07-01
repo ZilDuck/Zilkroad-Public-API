@@ -11,6 +11,8 @@ const keys = require("../keys");
 require("dotenv").config();
 
 const crypto = require('crypto')
+console.log("Host: %s\nUser: %s\nPassword: %s\nDatabase: %s\nPort: %s", keys.pgHost, keys.pgUser, keys.pgPassword, keys.pgDatabase, keys.pgPort)
+
 
 const pgClient = new Pool
 ({
@@ -21,9 +23,20 @@ const pgClient = new Pool
   port: keys.pgPort
 });
 
-console.log(`fuck ${JSON.stringify(keys.pgDatabase)}`)
-
 console.log(pgClient)
+
+pgClient.connect((err, client, release) => {
+  if (err) {
+    return console.error('Error acquiring client', err.stack)
+  }
+  client.query('SELECT NOW()', (err, result) => {
+    release()
+    if (err) {
+      return console.error('Error executing query', err.stack)
+    }
+    console.log(result.rows)
+  })
+})
 
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
 
