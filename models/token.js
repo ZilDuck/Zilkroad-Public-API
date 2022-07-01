@@ -52,6 +52,9 @@ async function getToken(
   const sales_count = sales_data[0]?.lifetime_quantity_sold ?? 0
   const sales_volume = sales_data[0]?.lifetime_sales_usd ?? 0
 
+  const sales_history = await DBGetNonFungibleTokenSaleHistory(contract_address_b16, token_id).catch((error) => console.log(error))
+  const graph_data = await DBGetPeriodGraphForNonFungibleToken(contract_address, token_id).catch((error) => console.log(error))
+
   contract_name = indexer_token.name ?? false
   contract_symbol = indexer_token.symbol ?? false
   owner_address = indexer_token.owner ?? false
@@ -77,7 +80,9 @@ async function getToken(
     token_resource_uri,
     token_metadata,
     sales_count,
-    sales_volume
+    sales_volume,
+    sales_history,
+    graph_data
     // token_actions,
     // volume_over_time_graph,
     // token_sales_history,
@@ -232,6 +237,23 @@ async function getContractNfts(contractAddress, filter, limit, page, order, orde
   return appData
 }
 
+async function getContractListedNfts(contractAddress, limit, page) {
+  const db_result = await DBGetPaginatedListedTokensForContract(contractAddress, limit, page)
+  let nfts = []
+  for ( const result of db_result ) {
+    nfts.push({
+      collection_name: result.collection_name,
+      symbol: result.symbol,
+      contract_address_b16: contractAddress,
+      contract_address_b32: validation.isBech32(contractAddress) ? contractAddress : toBech32Address(contractAddress),
+      token_id: result.token_id
+    })
+  }
+  return {
+    nfts: nfts
+  }
+}
+
 async function getUserNfts(walletAddress, limit = 16, page = 1) {
   const indexerData = await indexer.GetNFTsForAddress(walletAddress).then(response => response).catch((error) => logger.errorLog(error))
   let nfts = []
@@ -339,8 +361,8 @@ async function DBGetPeriodGraphForNonFungibleToken(nft_contract, token_id) {
   const values = [
     nft_contract,
     token_id,
-    '0',
-    '3131648330' // 2069
+    0,
+    3131648330534 // 2069
   ]
 
   var result = await pgClient.query(sql, values)
@@ -352,6 +374,17 @@ async function DBGetNonFungibleTokenSalesData(nft_contract, token_id) {
   logger.infoLog(`MODEL- NFTModel - DBGetNonFungibleTokenSalesData - HIT`)
 
   const sql = 'SELECT * FROM fn_getNonFungibleTokenSalesData($1, $2)'
+  const values = [
+    nft_contract,
+    token_id
+  ]
+  var result = await pgClient.query(sql, values)
+  logger.debugLog(result.rows)
+  return result.rows
+}
+
+async function DBGetNonFungibleTokenSaleHistory(nft_contract, token_id) {
+  const sql = 'SELECT * FROM fn_getNonFungibleTokenSalesHistory($1, $2)'
   const values = [
     nft_contract,
     token_id
@@ -388,11 +421,22 @@ async function DBGetPaginatedMostRecentlySold(limitRows, offsetRows) {
   return result.rows
 }
 
+async function DBGetPaginatedListedTokensForContract(contractAddress, limitRows, offsetRows) {
+  const sql = 'SELECT * FROM fn_getPaginatedListedTokensForContract($1, $2, $3)'
+  const values = [
+    contractAddress,
+    limitRows,
+    offsetRows
+  ]
+  const result = await pgClient.query(sql, values)
+  return result.rows
+}
 
 module.exports = {
   getToken,
   getTokens,
   getContractNfts,
+  getContractListedNfts,
   getUserNfts,
   getUserListedNfts,
   GetRandomVerifiedListedNFT,

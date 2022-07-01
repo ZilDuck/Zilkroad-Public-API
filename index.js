@@ -3,8 +3,6 @@ require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const path = require('path');
-const fs = require('fs');
 const logger = require('./logger.js')
 var helmet = require('helmet')
 
@@ -33,6 +31,9 @@ app.use('/metadata', metadataRouter)
 const collectionStatsRouter = require('./routes/collection-stats-route')
 app.use('/collection-stats', collectionStatsRouter)
 
+const collectionRankRouter = require('./routes/collection-ranks-route')
+app.use('/collection-ranks', collectionRankRouter)
+
 const nftRouter = require('./routes/nft-route')
 app.use('/nfts', nftRouter)
 
@@ -53,6 +54,9 @@ app.use('/user-stats', userStatsRouter)
 
 const skinnyUserStatsRouter = require('./routes/skinny-user-stats-route')
 app.use('/skinny-user-stats', skinnyUserStatsRouter)
+
+const userFungibleRouter = require('./routes/user-fungible-route')
+app.use('/user-fungible', userFungibleRouter)
 
 const calendarRouter = require('./routes/calendar-route')
 app.use('/calendar', calendarRouter)

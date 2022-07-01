@@ -34,6 +34,22 @@ module.exports = {
     }
   },
 
+  getCollectionListedNfts: async function(req, res) {
+    const contractAddress = req.params.contractAddress
+    const limit = req.query.limit ?? 10
+    const page = req.query.page ?? 1
+    
+    const cacheResult = cache.GetKey(`getCollectionListedNfts-${contractAddress}-${page}-${limit}`)
+    if ( cacheResult === false ) {
+      const fetchData = await nft.getContractListedNfts(contractAddress, limit, (page - 1))
+      cache.SetKey(`getCollectionListedNfts-${contractAddress}-${page}-${limit}`)
+      res.send(fetchData)
+    } else {
+      res.send(cacheResult)
+    }
+    
+  },
+
   getCollections: async function(req, res) {
     const page = req.params.page ?? 0
     const limit = req.query.limit ?? 10

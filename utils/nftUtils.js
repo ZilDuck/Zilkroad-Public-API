@@ -3,19 +3,38 @@ const { Zilliqa } = require('@zilliqa-js/zilliqa');
 
 const zilliqa = new Zilliqa(process.env.current_network) // Same here 
 process.env.is_testnet ? console.log("UTILS TESTNET") : console.log("UTILS MAINNET") 
-
 /*
  * HELPER EXPORTED CLASS 
  * ALL OF THE ONE OFF RPC CALLS REQUIRED
  */
 module.exports =
 { 
+    GetTokenIDCount: async function (nft_contract) {
+        logger.infoLog(`MODEL- NFTModel - GetTokenIDCount - HIT - ${nft_contract}`);
+        const stateResult = await zilliqa.blockchain.getSmartContractSubState(
+            nft_contract,
+            'token_id_count',
+        );
+
+        logger.debugLog(stateResult.result.token_id_count);
+        return stateResult.result.token_id_count
+    },
+    GetTotalSupplyCount: async function (nft_contract) {
+        logger.infoLog(`MODEL- NFTModel - GetTotalSupplyCount - HIT - ${nft_contract}`);
+        const stateResult = await zilliqa.blockchain.getSmartContractSubState(
+            nft_contract,
+            'total_supply',
+        );
+        logger.debugLog(stateResult.result.total_supply);
+        return stateResult.result.total_supply
+    },
     GetRoyaltyBPSForToken: async function (nft_contract) {
         logger.infoLog(`MODEL- NFTModel - GetRoyaltyBPSForToken - HIT - ${nft_contract}`);
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'royalty_fee_bps',
         );
+        logger.debugLog(stateResult.result.royalty_fee_bps);
         return stateResult.result.royalty_fee_bps
     },
     GetRoyaltyRecipientForToken: async function (nft_contract) {
