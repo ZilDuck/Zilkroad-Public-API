@@ -53,6 +53,17 @@ module.exports = {
     } else {
       res.send(cacheResult)
     }
+  },
+
+  getRankedWalletActivitiesByType: async function(req, res) {
+    filter = req.query.filter
+    const cacheResult = cache.GetKey(`getRankedWalletAcitvitiesBy=${filter}`)
+    if (cacheResult === false) {
+      const result = await wallet.DBGetRankedWalletActivity(filter)
+      res.send(result)
+    } else {
+      res.send(cacheResult)
+    }
   }
 
 }

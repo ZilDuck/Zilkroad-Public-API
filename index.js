@@ -73,6 +73,9 @@ app.use('/health', healthRouter)
 const marketplaceRoute = require('./routes/marketplace-route')
 app.use('/marketplace', marketplaceRoute)
 
+const walletActivitiesRoute = require('./routes/wallet-activities-route')
+app.use('/wallet-activities', walletActivitiesRoute)
+
 // END Restful endpoints
 
 // On API start
