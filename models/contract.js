@@ -60,7 +60,7 @@ async function GetContract(contract_address) {
   const token_balances = indexer_state.data.balances
   const floor_prices = db_floors
   const volume_over_time = db_graph
-  const sales_history = db_stats
+  const stats = db_stats[0] ?? {"listed_tokens": 0, "volume": 0}
   const primary_sales = db_primary_sales
 
   return {
@@ -78,7 +78,7 @@ async function GetContract(contract_address) {
     token_balances,
     floor_prices,
     volume_over_time,
-    sales_history,
+    stats,
     primary_sales,
   };
 }
@@ -253,7 +253,7 @@ async function DBGetPaginatedCollectionFloors(limit_rows, offset_rows) {
 async function DBGetStatsForNonfungible(nonfungible_address) {
   logger.infoLog(`API - PUBLIC - DBGetStatsForNonfungible - HIT`)
 
-  const sql = 'SELECT * FROM fn_getstatsfornonfungible($1)'
+  const sql = 'SELECT * FROM fn_getCollectionStats($1)'
   const values = [
     nonfungible_address
   ]
