@@ -10,3 +10,5 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 
 nvm use 16
 ```
+
+**NB** You can now point the client to the staging public-api
