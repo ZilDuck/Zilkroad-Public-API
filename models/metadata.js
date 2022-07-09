@@ -5,13 +5,14 @@ const axios = require("axios");
 
 
 
-function Metadata(metadata_name, metadata_description, metadata_url, metadata_animation_url)
+function Metadata(metadata_name, metadata_description, metadata_url, metadata_animation_url, collection_image_url)
 {
     return {
         name: metadata_name, 
         description: metadata_description, 
         url: metadata_url, 
-        animation_url: metadata_animation_url
+        animation_url: metadata_animation_url,
+        collection_image_url: collection_image_url
     }
 }
 
