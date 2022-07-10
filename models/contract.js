@@ -217,7 +217,7 @@ async function GetPageMostRecentSales(limit_rows, offset_rows) {
 async function DBGetPrimarySalesIfPresent(nonfungible_address) {
   logger.infoLog(`MODEL- NFTModel - DBGetPrimarySalesIfPresent - HIT`)
 
-  const sql = 'SELECT * FROM fn_getVerifiedStatusForNonFungible($1)'
+  const sql = 'SELECT * FROM fn_getNonFungibleLifetimeSalesData($1)'
   const values = [
     nonfungible_address
   ]
