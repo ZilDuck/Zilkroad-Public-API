@@ -23,6 +23,7 @@ module.exports = {
                 data.nfts_minted = contractData.nfts_minted
                 data.sales_history = contractData.sales_history
                 data.primary_sales = contractData.primary_sales
+                data.stats = contractData.stats
             }
             cache.SetKey(`getAllCollectionRanks-${page}-${limit}-${timeFrom}-${timeTo}`, fetchData)
             res.send(fetchData)
@@ -48,6 +49,7 @@ module.exports = {
             fetchData[0].nfts_minted = contractData.nfts_minted
             fetchData[0].sales_history = contractData.sales_history
             fetchData[0].primary_sales = contractData.primary_sales
+            fetchData[0].stats = contractData.stats
 
             cache.SetKey(`getACollectionRank-${contractAddress}-${timeFrom}-${timeTo}`, fetchData)
             res.send(fetchData)
