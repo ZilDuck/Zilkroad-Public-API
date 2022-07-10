@@ -23,8 +23,6 @@ const pgClient = new Pool
   port: keys.pgPort
 });
 
-console.log(pgClient)
-
 pgClient.connect((err, client, release) => {
   if (err) {
     return console.error('Error acquiring client', err.stack)
