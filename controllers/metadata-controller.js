@@ -14,8 +14,7 @@ module.exports = {
     {
         try
         {
-            const contractAddress = String(req.params.contractAddress).toLowerCase()
-
+            let contractAddress = String(req.params.contractAddress).toLowerCase()
             if(contractAddress.startsWith(`ipfs://`))
             {
                 contractAddress.replace('ipfs://', 'https://ipfs.io/ipfs/')
@@ -61,7 +60,7 @@ module.exports = {
 
                     res.send(response)
                 }
-            }        
+            }
         }
         catch(e){
             res.status(404).send(`No metadata found at base_uri`)
