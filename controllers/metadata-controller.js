@@ -1,3 +1,4 @@
+const { fromBech32Address } = require('@zilliqa-js/zilliqa')
 const logger = require("../logger");
 const { Metadata } = require("../models/metadata");
 const { GetTokenBaseURI } = require("../utils/nftUtils");
@@ -22,6 +23,10 @@ module.exports = {
             if(contractAddress.startsWith(`ar://`))
             {
                 contractAddress.replace('ar://', 'https://xqozxxt2juqo5ubrsd3gzsrznsj7ev5qhghtctqfkg2thfay.arweave.net/')
+            }
+            if(contractAddress.startsWith(`zil`))
+            {
+                contractAddress = fromBech32Address(contractAddress)
             }
 
             logger.infoLog(`got contractAddress ${contractAddress}`)
