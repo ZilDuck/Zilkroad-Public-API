@@ -18,13 +18,13 @@ async function GetFungibleDataForAddress(address)
     const zusdt_amount = Object.values(fungibleResponse.find(x => x.id == 6).result?.balances ?? 0)[0]
     const duck_amount = Object.values(fungibleResponse.find(x => x.id == 7).result?.balances ?? 0)[0]
 
-    const usd_wzil_amount = await getUSDValuefromTokens("wzil", wzil_amount)
-    const usd_gzil_amount = await getUSDValuefromTokens("gzil", gzil_amount)
-    const usd_xsgd_amount = await getUSDValuefromTokens("xsgd", xsgd_amount)
-    const usd_zwbtc_amount = await getUSDValuefromTokens("zwbtc", zwbtc_amount)
-    const usd_zeth_amount = await getUSDValuefromTokens("zeth", zeth_amount)
-    const usd_zusdt_amount = await getUSDValuefromTokens("zusdt", zusdt_amount)
-    const usd_duck_amount = await getUSDValuefromTokens("duck", duck_amount)
+    const usd_wzil_amount = await getUSDValuefromTokens("wzil", wzil_amount) ?? 0
+    const usd_gzil_amount = await getUSDValuefromTokens("gzil", gzil_amount) ?? 0
+    const usd_xsgd_amount = await getUSDValuefromTokens("xsgd", xsgd_amount) ?? 0
+    const usd_zwbtc_amount = await getUSDValuefromTokens("zwbtc", zwbtc_amount) ?? 0
+    const usd_zeth_amount = await getUSDValuefromTokens("zeth", zeth_amount) ?? 0
+    const usd_zusdt_amount = await getUSDValuefromTokens("zusdt", zusdt_amount) ?? 0
+    const usd_duck_amount = await getUSDValuefromTokens("duck", duck_amount) ?? 0
 
     return {
         wzil_amount,
