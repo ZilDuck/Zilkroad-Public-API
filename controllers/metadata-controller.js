@@ -52,12 +52,16 @@ module.exports = {
                 }
                 else
                 {
-                    const response = Metadata(metadataResponse.data.name, 
+                    const response = Metadata
+                    (
+                        metadataResponse.data.name, 
                         metadataResponse.data.description, 
                         metadataResponse.data.external_url, 
                         metadataResponse.data.animation_url,
-                        metadataResponse.data.collection_image_url)
-
+                        metadataResponse.data.collection_image_url,
+                        metadataResponse.data.discord,
+                        metadataResponse.data.twitter
+                    )
                     res.send(response)
                 }
             }
