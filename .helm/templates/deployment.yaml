@@ -1,40 +1,62 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: client
+  name: public-api
   labels:
-    service: client
+    service: public-api
 spec:
-  replicas: {{ .Values.replicas.client }}
+  replicas: {{ .Values.replicas.publicApi }}
   selector:
     matchLabels:
-      service: client
+      service: public-api
   template:
     metadata:
       labels:
-        service: client
+        service: public-api
       annotations:
         rollme: {{ randAlphaNum 5 | quote }}
     spec:
       imagePullSecrets:
         - name: {{ .Values.image.app.pullSecret }}
       containers:
-        - name: client
+        - name: public-api
           image: "{{ .Values.image.app.url }}:{{ .Values.image.app.tag }}"
           imagePullPolicy: {{ .Values.image.app.pullPolicy }}
           ports:
           - containerPort: {{ .Values.port }}
           env:
-            - name: VITE_API_ENDPOINT
-              value: {{ .Values.env.viteApiEndpoint | quote }}
-            - name: VITE_BLOCK_NETWORK
-              value: {{ .Values.env.network | quote }}
-            - name: VITE_MARKETPLACE_ADDRESS
-              value: {{ .Values.env.nftMarketplaceAddress | quote }}
-            - name: VITE_WZIL_ADDRESS
-              value: {{ .Values.env.wzilAddress | quote }}
-            - name: VITE_CDN_BASE_URL
-              value: {{ .Values.env.cdnBase | quote }}
+            - name: PUBLIC_API_PORT
+              value: {{ .Values.port | quote }}
+            - name: is_testnet
+              value: {{ .Values.env.isTestnet | quote }}
+            - name: PGHOST
+              value: {{ .Values.env.pgHost | quote }}
+            - name: PGDATABASE
+              value: {{ .Values.env.pgDatabase | quote }}
+            - name: PGPORT
+              value: {{ .Values.env.pgPort | quote }}
+            - name: PGUSER
+              value: {{ .Values.env.pgReadUser | quote }}
+            - name: PGPASSWORD
+              value: {{ .Values.env.pgReadPassword | quote }}
+            - name: current_network
+              value: {{ .Values.env.currentNetwork | quote }}
+            - name: DISABLE_CACHE
+              value: {{ .Values.env.disableCache | quote }}
+            - name: WZIL_CONTRACT
+              value: {{ .Values.env.tokens.wzil | quote }}
+            - name: GZIL_CONTRACT
+              value: {{ .Values.env.tokens.gzil | quote }}
+            - name: XSGD_CONTRACT
+              value: {{ .Values.env.tokens.xsgd | quote }}
+            - name: ZWBTC_CONTRACT
+              value: {{ .Values.env.tokens.zwbtc | quote }}
+            - name: ZETH_CONTRACT
+              value: {{ .Values.env.tokens.zeth | quote }}
+            - name: ZUSDT_CONTRACT
+              value: {{ .Values.env.tokens.zusdt | quote }}
+            - name: DUCK_CONTRACT
+              value: {{ .Values.env.tokens.duck | quote }}
           resources:
             limits:
               cpu: {{ .Values.resources.limits.cpu | quote }}

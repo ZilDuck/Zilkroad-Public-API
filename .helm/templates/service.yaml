@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: client
+  name: public-api
   namespace: {{ .Values.namespace }}
   labels:
-    service: client
+    service: public-api
 spec:
   selector:
-    service: client
+    service: public-api
   ports:
   - name: http
     port: {{ .Values.port }}
