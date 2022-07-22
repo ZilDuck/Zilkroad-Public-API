@@ -107,42 +107,31 @@ async function getSearchForZNS(zns)
 
 async function getSearchForFreetext(freetext)
 {
-    try{
-    logger.infoLog(`MODEL - SearchModel - GetPaginatedSearchForString - HIT`)
-    const limit_rows = 15;
-    const offset_rows = 0;
-
-    logger.debugLog(`got search query ${freetext}`)
-
-    const sql = 'SELECT * FROM fn_getPaginatedSearchForString($1, $2, $3)'
-    const values = [
-        freetext,
-        limit_rows,
-        offset_rows
-    ]
-
-    logger.debugLog(`calling ${sql}, with ${values}`)
-    var query = await pgClient.query(sql, values)
-    logger.debugLog(query.rows)
-
-    var resultArray = [];
-    for(var result in query.rows)
+    try
     {
-        console.log(`hi` + query.rows[result].nonfungible_address)
-        const db_verified = await DBGetVerifiedStatusForNonFungible(query.rows[result].nonfungible_address)
-        const address = toBech32Address(query.rows[result].nonfungible_address)
-        const name = query.rows[result].nonfungible_name
-        const row = ReturnSearch(name, address, `/collections/${address}`, !!db_verified)
-        resultArray.push(row);
-        
+        logger.infoLog(`MODEL - SearchModel - GetPaginatedSearchForString - HIT`)
+        const limit_rows = 15;
+        const offset_rows = 0;
+
+        logger.debugLog(`got search query ${freetext}`)
+
+        const sql = 'SELECT * FROM fn_getPaginatedSearchForString($1, $2, $3)'
+        const values = [
+            freetext,
+            limit_rows,
+            offset_rows
+        ]
+
+        logger.debugLog(`calling ${sql}, with ${values}`)
+        var query = await pgClient.query(sql, values)
+        logger.debugLog(query.rows)
+
+        return query.rows;
     }
-    console.table(resultArray)
-    return resultArray;
-}
-catch(e)
-{
-    console.log(e)
-}
+    catch(e)
+    {
+        console.log(e)
+    }
 }
 
 
