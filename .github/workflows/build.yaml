@@ -81,4 +81,4 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: Bearer ${{ secrets.ACCESS_TOKEN }}" \
             https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yaml/dispatches \
-            -d '{"ref":"${{ steps.commitTag.outputs.tag }}", "inputs":{"environment":"testnet", "tag":"${{ steps.commitTag.outputs.tag }}"}}'
+            -d '{"ref":"master", "inputs":{"environment":"testnet", "tag":"${{ steps.commitTag.outputs.tag }}"}}'
