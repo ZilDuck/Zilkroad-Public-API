@@ -1,0 +1,34 @@
+image:
+  app:
+    url: 465700395685.dkr.ecr.eu-west-1.amazonaws.com/zilkroad-private/public-api
+    tag: latest
+    pullPolicy: IfNotPresent
+    pullSecret: ""
+  filebeat:
+    url: elastic/filebeat:7.17.0
+    pullPolicy: IfNotPresent
+
+port: 5000
+targetPort: 5000
+namespace: devnet
+
+logPath: /app/logs
+
+replicas:
+  publicApi: 1
+
+env:
+  isTestnet: true
+  pgHost: postgres
+  pgDatabase: postgres
+  pgPort: 5432
+  pgReadUser: postgres
+  pgReadPassword: postgres_password
+
+resources:
+  limits:
+    cpu: 0.2
+    memory: 128M 
+  requests:
+    cpu: 0.2
+    memory: 128M 
