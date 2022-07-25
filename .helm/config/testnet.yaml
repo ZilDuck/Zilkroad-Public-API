@@ -18,6 +18,10 @@ ingress:
         - path: /
           pathType: Prefix
 
+publicApi:
+  ingress:
+    enabled: True
+
 replicas:
   chainHook: 1
   client: 2
