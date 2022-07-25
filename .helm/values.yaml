@@ -24,6 +24,14 @@ env:
   pgPort: 5432
   pgReadUser: postgres
   pgReadPassword: postgres_password
+  tokens:
+    wzil: "0x000000000000000000000000000000000000000"
+    gzil: "0x000000000000000000000000000000000000000"
+    xsgd: "0x000000000000000000000000000000000000000"
+    zwbtc: "0x000000000000000000000000000000000000000"
+    zeth: "0x000000000000000000000000000000000000000"
+    zusdt: "0x000000000000000000000000000000000000000"
+    duck: "0x000000000000000000000000000000000000000"
 
 resources:
   limits:
@@ -32,3 +40,9 @@ resources:
   requests:
     cpu: 0.2
     memory: 128M 
+
+publicApi:
+  ingress:
+    enabled: False
+    hosts:
+    host: staging-public-api.zilkroad.io
