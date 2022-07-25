@@ -145,9 +145,10 @@ async function getTokenCard(
  * @param page
  * @param order
  * @param orderBy
+ * @param query
  * @return {Promise<*[]>}
  */
-async function getTokens(filter, limit, page, order, orderBy) {
+async function getTokens(filter, limit, page, order, orderBy, query = {}) {
   let db_result = []
   let tokenList = []
 
@@ -164,6 +165,9 @@ async function getTokens(filter, limit, page, order, orderBy) {
       // get the (collection address & token id  & order id) for 6 nfts - homepage recently sold section
       db_result = await DBGetPaginatedMostRecentlySold() // TODO DB query for recently listed nfts
       break
+    case 'contract-listed':
+      const queried_contract = query?.contract
+      db_result = await DBGetPaginatedListedTokensForContract(queried_contract, limit, page)
   }
 
   const nfts = await Promise.all(db_result.map(async ({nonfungible_address, token_id}) => {
@@ -181,7 +185,7 @@ async function getTokens(filter, limit, page, order, orderBy) {
     }
   }))
 
-  const totalPages = nfts.length / limit
+  const totalPages = Math.ceil(nfts.length / limit)
   const appData = {
     nfts,
     pagination: {

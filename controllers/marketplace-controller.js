@@ -7,8 +7,9 @@ module.exports = {
         const limit = req.query.limit ?? 28
         const order = req.query.order ?? 'ASC'
         const orderBy = req.query.orderBy ?? ''
+        const query = {contract:req.query.contract}
 
-        const { nfts, pagination } = await getTokens(filter, limit, page, order, orderBy)
+        const { nfts, pagination } = await getTokens(filter, limit, page, order, orderBy, query)
         const collections = nfts.map(({ collection_name, contract_address_b16 }) => ({
             label: collection_name,
             value: contract_address_b16,
