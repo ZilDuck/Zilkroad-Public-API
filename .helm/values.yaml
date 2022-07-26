@@ -3,10 +3,7 @@ image:
     url: 465700395685.dkr.ecr.eu-west-1.amazonaws.com/zilkroad-private/public-api
     tag: latest
     pullPolicy: IfNotPresent
-    pullSecret: ""
-  filebeat:
-    url: elastic/filebeat:7.17.0
-    pullPolicy: IfNotPresent
+    pullSecret: ~
 
 port: 5000
 targetPort: 5000
@@ -19,11 +16,12 @@ replicas:
 
 env:
   isTestnet: true
-  pgHost: postgres
-  pgDatabase: postgres
-  pgPort: 5432
-  pgReadUser: postgres
-  pgReadPassword: postgres_password
+  pg:
+    host: postgres
+    database: postgres
+    port: 5432
+    user: postgres
+    password: postgres_password
 
 resources:
   limits:
