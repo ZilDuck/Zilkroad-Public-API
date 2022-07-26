@@ -64,6 +64,3 @@ spec:
             requests:
               cpu: {{ .Values.resources.requests.cpu | quote }}
               memory: {{ .Values.resources.requests.memory | quote }}
-          volumeMounts:
-            - name: logs
-              mountPath: {{ .Values.logPath }}
