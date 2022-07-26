@@ -1,11 +1,11 @@
-{{- if .Values.publicApi.ingress.enabled }}
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: public-api
 spec:
   rules:
-  - host: {{ .Values.publicApi.ingress.host }}
+  - host: {{ .Values.ingress.host }}
     http:
       paths:
       - backend:
