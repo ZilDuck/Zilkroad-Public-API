@@ -3,10 +3,7 @@ image:
     url: 465700395685.dkr.ecr.eu-west-1.amazonaws.com/zilkroad-private/public-api
     tag: latest
     pullPolicy: IfNotPresent
-    pullSecret: ""
-  filebeat:
-    url: elastic/filebeat:7.17.0
-    pullPolicy: IfNotPresent
+    pullSecret: ~
 
 port: 5000
 targetPort: 5000
@@ -19,19 +16,12 @@ replicas:
 
 env:
   isTestnet: true
-  pgHost: postgres
-  pgDatabase: postgres
-  pgPort: 5432
-  pgReadUser: postgres
-  pgReadPassword: postgres_password
-  tokens:
-    wzil: "0x000000000000000000000000000000000000000"
-    gzil: "0x000000000000000000000000000000000000000"
-    xsgd: "0x000000000000000000000000000000000000000"
-    zwbtc: "0x000000000000000000000000000000000000000"
-    zeth: "0x000000000000000000000000000000000000000"
-    zusdt: "0x000000000000000000000000000000000000000"
-    duck: "0x000000000000000000000000000000000000000"
+  pg:
+    host: postgres
+    database: postgres
+    port: 5432
+    user: postgres
+    password: postgres_password
 
 resources:
   limits:
@@ -40,9 +30,3 @@ resources:
   requests:
     cpu: 0.2
     memory: 128M 
-
-publicApi:
-  ingress:
-    enabled: False
-    hosts:
-    host: staging-public-api.zilkroad.io
