@@ -239,7 +239,19 @@ async function getContractNfts(contractAddress, filter, limit, page, order, orde
     })),
     pagination: indexerData.headers['x-pagination']
   }
-
+  let token_ids = indexerData.data.map(({tokenId}) => {return tokenId});
+  let min_token_id = Math.min.apply( null, token_ids );
+  let max_token_id = Math.max.apply( null, token_ids );
+  let token_prices = await DBGetListedTokenPricesForCollectionRange(contractAddress, min_token_id, max_token_id)
+  appData.nfts.map(function (nft) {
+    for ( const result of token_prices ) {
+      if ( result.token_id == nft.token_id ) {
+        nft.token_price = result.listing_fungible_token_price
+        nft.token_symbol = result.fungible_symbol
+        nft.decimals = result.decimals
+      }
+    }
+  })
   return appData
 }
 
@@ -433,6 +445,17 @@ async function DBGetPaginatedListedTokensForContract(contractAddress, limitRows,
     contractAddress,
     limitRows,
     offsetRows
+  ]
+  const result = await pgClient.query(sql, values)
+  return result.rows
+}
+
+async function DBGetListedTokenPricesForCollectionRange(contractAddress, min_token_id, max_token_id) {
+  const sql = 'SELECT * FROM fn_getListedTokensForCollectionRange($1, $2, $3)'
+  const values = [
+    contractAddress,
+    min_token_id,
+    max_token_id
   ]
   const result = await pgClient.query(sql, values)
   return result.rows
