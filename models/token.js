@@ -170,7 +170,7 @@ async function getTokens(filter, limit, page, order, orderBy, query = {}) {
       db_result = await DBGetPaginatedListedTokensForContract(queried_contract, limit, page)
   }
 
-  const nfts = await Promise.all(db_result.map(async ({nonfungible_address, token_id}) => {
+  const nfts = await Promise.all(db_result.map(async ({nonfungible_address, token_id, listing_fungible_token_price, fungible_symbol}) => {
 
     const contract_address_b16 = validation.isBech32(nonfungible_address) ? fromBech32Address(nonfungible_address) : nonfungible_address
     const contract_address_b32 = validation.isBech32(nonfungible_address) ? nonfungible_address : toBech32Address(nonfungible_address)
@@ -181,7 +181,9 @@ async function getTokens(filter, limit, page, order, orderBy, query = {}) {
       symbol: indexer_token.symbol,
       contract_address_b16,
       contract_address_b32,
-      token_id: token_id
+      token_id: token_id,
+      token_price: listing_fungible_token_price,
+      token_symbol: fungible_symbol
     }
   }))
 
