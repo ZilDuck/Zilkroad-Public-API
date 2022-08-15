@@ -4,7 +4,7 @@ const { Metadata } = require("../models/metadata");
 const { GetTokenBaseURI } = require("../utils/nftUtils");
 const axios = require("axios");
 const { reset } = require("nodemon");
-
+const cache = require('../cache/cache.js')
 
 const metadataFileExtenstion = `metadata.json`
 
@@ -15,14 +15,6 @@ module.exports = {
         try
         {
             let contractAddress = String(req.params.contractAddress).toLowerCase()
-            if(contractAddress.startsWith(`ipfs://`))
-            {
-                contractAddress.replace('ipfs://', 'https://ipfs.io/ipfs/')
-            }
-            if(contractAddress.startsWith(`ar://`))
-            {
-                contractAddress.replace('ar://', 'https://xqozxxt2juqo5ubrsd3gzsrznsj7ev5qhghtctqfkg2thfay.arweave.net/')
-            }
             if(contractAddress.startsWith(`zil`))
             {
                 contractAddress = fromBech32Address(contractAddress)
@@ -30,7 +22,7 @@ module.exports = {
 
             logger.infoLog(`got contractAddress ${contractAddress}`)
 
-            const baseURI = await GetTokenBaseURI(contractAddress)
+            let baseURI = await GetTokenBaseURI(contractAddress)
 
             logger.infoLog(`got baseURI ${baseURI}`)
             
@@ -41,11 +33,30 @@ module.exports = {
             }
             else
             {
-                logger.infoLog(`Attempting to find metadata at ${baseURI + metadataFileExtenstion}`)
+                if(baseURI.startsWith(`ipfs://`))
+                {
+                    baseURI = baseURI.replace('ipfs://', 'https://ipfs.io/ipfs/')
+                    logger.infoLog(`ipfs replacement made ${baseURI}`)
+                }
+                else if(baseURI.startsWith(`ar://`))
+                {
+                    baseURI = baseURI.replace('ar://', 'https://xqozxxt2juqo5ubrsd3gzsrznsj7ev5qhghtctqfkg2thfay.arweave.net/')
+                    logger.infoLog(`ipfs replacement made ${baseURI}`)
+                }
+                else {
+                    logger.infoLog(`no replacements made`)
+                }
+
+                logger.infoLog(`Attempting to find metadata at ${baseURI + metadataFileExtenstion} in cache`)
                 
-                const metadataResponse = await axios.get(baseURI + metadataFileExtenstion)
-                logger.infoLog(metadataResponse)
-                
+                const cacheResult = cache.GetKey(`Metadata-${contractAddress}`, contractAddress)
+                if (cacheResult === false) {
+                    logger.infoLog(`fetching...`)
+                    const metadataResponse = await axios.get(baseURI + metadataFileExtenstion)
+                    logger.infoLog(`setting key ${JSON.stringify(metadataResponse)}`)
+                    cache.SetKey(`Metadata-${contractAddress}`, metadataResponse)
+                }
+
                 if(metadataResponse === undefined)
                 {
                     res.status(404).send(`No metadata found at base_uri`)
