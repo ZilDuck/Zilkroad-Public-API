@@ -1,7 +1,7 @@
 const client = require('../utils/expressUtils.js')
 const axios = require("axios");
 
-function getListedTransactionHashForOrderID(orderID)
+async function getListedTransactionHashForOrderID(orderID)
 {
     logger.infoLog(`MODEL - OrderTransaction - getListedTransactionHashForOrderID - HIT`)
 
@@ -13,7 +13,7 @@ function getListedTransactionHashForOrderID(orderID)
     return result.rows
 }
 
-function getSoldTransactionHashForOrderID(orderID)
+async function getSoldTransactionHashForOrderID(orderID)
 {
     logger.infoLog(`MODEL - OrderTransaction - getTransactigetSoldTransactionHashForOrderIDonHashForOrderID - HIT`)
 
