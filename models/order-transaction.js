@@ -1,5 +1,6 @@
 const client = require('../utils/expressUtils.js')
-const axios = require("axios");
+const pgClient = client.ReturnPool()
+const logger = require('../logger')
 
 async function getListedTransactionHashForOrderID(orderID)
 {
