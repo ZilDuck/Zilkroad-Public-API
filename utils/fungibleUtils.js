@@ -8,6 +8,12 @@ process.env.is_testnet ? console.log("UTILS TESTNET") : console.log("UTILS MAINN
 
 module.exports =
 { 
+    GetNativeZilBalanceForAddress : async function(address)
+    {
+      const zil_amount = await zilliqa.blockchain.getBalance(address)
+      console.log(zil_amount.result.balance)
+      return zil_amount.result.balance
+    },
     GetFungibleAmountForAddress: async function(address)
     {
         const wzil_req = [
