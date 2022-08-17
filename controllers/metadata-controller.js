@@ -3,7 +3,6 @@ const logger = require("../logger");
 const { Metadata } = require("../models/metadata");
 const { GetTokenBaseURI } = require("../utils/nftUtils");
 const axios = require("axios");
-
 const cache = require('../cache/cache.js')
 
 const metadataFileExtenstion = `metadata.json`
@@ -23,7 +22,7 @@ module.exports = {
 
             logger.infoLog(`got contractAddress ${contractAddress}`)
 
-            var baseURI = await GetTokenBaseURI(contractAddress)
+            let baseURI = await GetTokenBaseURI(contractAddress)
 
             logger.infoLog(`got baseURI ${baseURI}`)
             
@@ -56,6 +55,7 @@ module.exports = {
                     logger.infoLog(`setting key ${metadataResponse.result}`)
                     cache.SetKey(`Metadata-${contractAddress}`, metadataResponse)
                 }
+
                 if(metadataResponse === undefined)
                 {
                     res.status(404).send(`No metadata found at base_uri`)
