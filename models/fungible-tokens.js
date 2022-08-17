@@ -9,7 +9,9 @@ const Big = require('big.js');
 async function GetFungibleDataForAddress(address)
 {
     const fungibleResponse = await fungibleUtil.GetFungibleAmountForAddress(address)
-
+    var fusd_zeth_amount = Object.values(fungibleResponse.find(x => x.id == 5).result?.balances ?? 0)[0] ?? 0
+   
+    console.log(`fuck ${fungibleResponse.find(x => x.id == 5).result?.balances}`)
     // used once to get penny units
     var zil_amount = await fungibleUtil.GetNativeZilBalanceForAddress(address)
     var wzil_amount = Object.values(fungibleResponse.find(x => x.id == 1).result?.balances ?? 0)[0] ?? 0
@@ -19,6 +21,7 @@ async function GetFungibleDataForAddress(address)
     var zeth_amount = Object.values(fungibleResponse.find(x => x.id == 5).result?.balances ?? 0)[0] ?? 0
     var zusdt_amount = Object.values(fungibleResponse.find(x => x.id == 6).result?.balances ?? 0)[0] ?? 0
     var duck_amount = Object.values(fungibleResponse.find(x => x.id == 7).result?.balances ?? 0)[0] ?? 0
+
 
     // penny units -> USD
     const usd_zil_amount = parseFloat(await getUSDValuefromTokens("zil", zil_amount) ?? 0 )
@@ -40,7 +43,7 @@ async function GetFungibleDataForAddress(address)
     zusdt_amount = new Big(Object.values(fungibleResponse.find(x => x.id == 6).result?.balances ?? 0)[0] ?? 0).div(new Big(10).pow(6));
     duck_amount = new Big(Object.values(fungibleResponse.find(x => x.id == 7).result?.balances ?? 0)[0] ?? 0).div(new Big(10).pow(2));
 
-    const total_usd_value = usd_zil_amount + usd_wzil_amount + usd_gzil_amount + usd_xsgd_amount + usd_zwbtc_amount + usd_zeth_amount + usd_zusdt_amount + usd_duck_amount
+    const total_usd_value = (usd_zil_amount + usd_wzil_amount + usd_gzil_amount + usd_xsgd_amount + usd_zwbtc_amount + usd_zeth_amount + usd_zusdt_amount + usd_duck_amount).toFixed(2)
     return {
         zil_amount: zil_amount,
         zil_usd_amount : usd_zil_amount,

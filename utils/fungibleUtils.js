@@ -16,6 +16,7 @@ module.exports =
     },
     GetFungibleAmountForAddress: async function(address)
     {
+      console.log(address)
         const wzil_req = [
             process.env.WZIL_CONTRACT,
             'balances',
