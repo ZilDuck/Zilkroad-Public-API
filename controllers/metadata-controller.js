@@ -15,14 +15,6 @@ module.exports = {
         try
         {
             let contractAddress = String(req.params.contractAddress).toLowerCase()
-            if(contractAddress.startsWith(`ipfs://`))
-            {
-                contractAddress.replace('ipfs://', 'https://ipfs.io/ipfs/')
-            }
-            if(contractAddress.startsWith(`ar://`))
-            {
-                contractAddress.replace('ar://', 'https://xqozxxt2juqo5ubrsd3gzsrznsj7ev5qhghtctqfkg2thfay.arweave.net/')
-            }
             if(contractAddress.startsWith(`zil`))
             {
                 contractAddress = fromBech32Address(contractAddress)
@@ -30,7 +22,7 @@ module.exports = {
 
             logger.infoLog(`got contractAddress ${contractAddress}`)
 
-            const baseURI = await GetTokenBaseURI(contractAddress)
+            let baseURI = await GetTokenBaseURI(contractAddress)
 
             logger.infoLog(`got baseURI ${baseURI}`)
             
@@ -54,6 +46,7 @@ module.exports = {
                     logger.infoLog(`setting key ${metadataResponse.result}`)
                     cache.SetKey(`Metadata-${contractAddress}`, metadataResponse)
                 }
+
                 if(metadataResponse === undefined)
                 {
                     res.status(404).send(`No metadata found at base_uri`)
