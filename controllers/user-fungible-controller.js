@@ -3,7 +3,7 @@ const cache = require('../cache/cache.js')
 const { toBech32Address, fromBech32Address, validation } = require('@zilliqa-js/zilliqa')
 module.exports = {
     GetFungibleForAddress: async function(req, res) {
-        var walletAddress = req.params.walletAddress
+        var walletAddress = req.params.walletAddress.toLowerCase()
 
         if (validation.isBech32(walletAddress)) {
           walletAddress = fromBech32Address(walletAddress)
