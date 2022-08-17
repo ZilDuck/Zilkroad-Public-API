@@ -15,14 +15,7 @@ module.exports = {
         try
         {
             let contractAddress = String(req.params.contractAddress).toLowerCase()
-            if(contractAddress.startsWith(`ipfs://`))
-            {
-                contractAddress.replace('ipfs://', 'https://ipfs.io/ipfs/')
-            }
-            if(contractAddress.startsWith(`ar://`))
-            {
-                contractAddress.replace('ar://', 'https://xqozxxt2juqo5ubrsd3gzsrznsj7ev5qhghtctqfkg2thfay.arweave.net/')
-            }
+
             if(contractAddress.startsWith(`zil`))
             {
                 contractAddress = fromBech32Address(contractAddress)
@@ -30,7 +23,7 @@ module.exports = {
 
             logger.infoLog(`got contractAddress ${contractAddress}`)
 
-            const baseURI = await GetTokenBaseURI(contractAddress)
+            var baseURI = await GetTokenBaseURI(contractAddress)
 
             logger.infoLog(`got baseURI ${baseURI}`)
             
@@ -41,6 +34,15 @@ module.exports = {
             }
             else
             {
+                if(baseURI.startsWith(`ipfs://`))
+                {
+                    baseURI = baseURI.replace('ipfs://', 'https://ipfs.io/ipfs/')
+                }
+                if(baseURI.startsWith(`ar://`))
+                {
+                    baseURI = baseURI.replace('ar://', 'https://xqozxxt2juqo5ubrsd3gzsrznsj7ev5qhghtctqfkg2thfay.arweave.net/')
+                }
+
                 logger.infoLog(`Attempting to find metadata at ${baseURI + metadataFileExtenstion}`)
 
                 const cacheResult = cache.GetKey(`Metadata-${contractAddress}`, contractAddress)
