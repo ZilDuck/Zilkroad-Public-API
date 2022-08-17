@@ -3,8 +3,8 @@ const logger = require("../logger");
 const { Metadata } = require("../models/metadata");
 const { GetTokenBaseURI } = require("../utils/nftUtils");
 const axios = require("axios");
-const { reset } = require("nodemon");
 
+const cache = require('../cache/cache.js')
 
 const metadataFileExtenstion = `metadata.json`
 
@@ -42,10 +42,18 @@ module.exports = {
             else
             {
                 logger.infoLog(`Attempting to find metadata at ${baseURI + metadataFileExtenstion}`)
-                
-                const metadataResponse = await axios.get(baseURI + metadataFileExtenstion)
-                logger.infoLog(metadataResponse)
-                
+
+                const cacheResult = cache.GetKey(`Metadata-${contractAddress}`, contractAddress)
+                var metadataResponse = undefined
+                if (cacheResult === false) {
+                    logger.infoLog(`fetching...`)
+                    const baseURIMetadata = String(baseURI + metadataFileExtenstion)
+                    logger.infoLog(baseURIMetadata)
+                    metadataResponse = await axios.get(baseURIMetadata, {timeout: 3000})
+
+                    logger.infoLog(`setting key ${metadataResponse.result}`)
+                    cache.SetKey(`Metadata-${contractAddress}`, metadataResponse)
+                }
                 if(metadataResponse === undefined)
                 {
                     res.status(404).send(`No metadata found at base_uri`)
@@ -60,14 +68,15 @@ module.exports = {
                         metadataResponse.data.animation_url,
                         metadataResponse.data.collection_image_url,
                         metadataResponse.data.discord,
-                        metadataResponse.data.twitter
+                        metadataResponse.data.twitter,
+                        metadataResponse.data.telegram
                     )
                     res.send(response)
                 }
             }
         }
         catch(e){
-            res.status(404).send(`No metadata found at base_uri`)
+            res.status(404).send(`Error: No metadata found at base_uri`)
         }
     }
 }
