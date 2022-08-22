@@ -1,40 +1,18 @@
 const client = require('../utils/expressUtils')
 const pgClient = client.ReturnPool()
+const logger = require('../logger.js')
 
-let advert = {
-  id: 0,
-  title: `Ad Title`,
-  advertise_description: ``,
-  advertise_uri: '',
-  advertImage: '',
-  advertType: 'large'
+async function GetAValidCardAdvertisements() {
+  logger.infoLog(`API - PUBLIC - GetAllValidCardAdvertisements - HIT`)
+
+  const sql = 'SELECT * FROM fn_getAllValidCardAdvertisements()'
+
+  var result = await pgClient.query(sql)
+  logger.debugLog(result.rows)
+  return result.rows
 }
 
-async function getAdvert(id = 0) {
-
-  const query = {
-    name: 'fetch-advert',
-    text: 'SELECT * FROM tbl_advertise_card WHERE advertise_card_id = $1', //fn_getCardByID 
-    values: [id]
-  }
-
-  let dbData = await pgClient.query(query).then(res => {
-    return res.rows[0]
-  }).catch(e => console.error(e.stack))
-
-  return { ...advert, ...dbData }
-
-}
-
-function getAdverts() {
-  adverts = []
-  for (let advertCount = 0; advertCount < 7; advertCount++) {
-    adverts.push(getAdvert(advertCount))
-  }
-  return adverts
-}
 
 module.exports = {
-  getAdvert,
-  getAdverts
+  GetAValidCardAdvertisements
 }

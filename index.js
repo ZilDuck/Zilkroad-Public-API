@@ -44,7 +44,7 @@ const searchRouter = require('./routes/search-route')
 app.use('/search', searchRouter)
 
 const advertRouter = require('./routes/advert-route')
-app.use('/adverts', advertRouter)
+app.use('/banner-advert', advertRouter)
 
 const primarySalesRouter = require('./routes/primary-sales-route')
 app.use('/primary-sales', primarySalesRouter)
