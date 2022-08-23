@@ -1,4 +1,4 @@
-FROM node:14.14.0-alpine
+FROM node:16.17.0-alpine
 
 # hadolint ignore=DL3018
 RUN apk --no-cache add --update python make g++\

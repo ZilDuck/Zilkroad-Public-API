@@ -1,10 +1,6 @@
 require('dotenv').config()
-const { Client, GatewayIntentBits } = require('discord.js')
-const client = new Client({
-    intents: [
-        GatewayIntentBits.Guilds,
-    ]
-})
+const { Client, GatewayIntentBits } = require('discord.js');
+const client = new Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
 client.login(process.env.discord_token);
 
 const siteReportsChannel = "1009161755584364644"
