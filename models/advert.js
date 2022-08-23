@@ -12,7 +12,6 @@ async function GetAValidCardAdvertisements() {
   return result.rows
 }
 
-
 module.exports = {
   GetAValidCardAdvertisements
 }
