@@ -16,7 +16,6 @@ replicas:
 
 env:
   isTestnet: true
-  discordToken: OTA0NDcwNDUzMjc4NjE3NjAw.GgDcRZ.XlpogCVhHB5TNh5wUmdryQ27ABIyWiZ4_20EyA
   pg:
     host: postgres
     database: postgres

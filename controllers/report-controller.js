@@ -3,7 +3,7 @@ const discordUtils = require('../utils/discordUtils.js')
 module.exports = {
     reportContract: async function(req, res) {
         const contract = req.params.contract
-        const user = req.params?.user ?? 'non logged in user'
+        const user = req.params?.user ?? '<no user>'
 
         const cacheResult = cache.GetKey(`Report-${contract}-${user}`)
         if (cacheResult === false) 

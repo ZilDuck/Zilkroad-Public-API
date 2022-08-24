@@ -1,6 +1,7 @@
 env:
   isTestnet: true
-  discordToken: OTA0NDcwNDUzMjc4NjE3NjAw.GgDcRZ.XlpogCVhHB5TNh5wUmdryQ27ABIyWiZ4_20EyA
+  discord:
+    discordToken: OTA0NDcwNDUzMjc4NjE3NjAw.GgDcRZ.XlpogCVhHB5TNh5wUmdryQ27ABIyWiZ4_20EyA
   pg:
     host: postgres-zilkroad.postgres.svc.cluster.local
     database: postgres
