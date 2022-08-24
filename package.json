@@ -11,19 +11,16 @@
     "big.js": "^6.2.0",
     "body-parser": "*",
     "cors": "2.8.4",
-    "crypto-js": "^4.1.1",
+    "discord.js": "^13.10.3",
     "dotenv": "^10.0.0",
     "express": "4.16.3",
     "helmet": "^5.0.2",
     "js-sha256": "^0.9.0",
     "log4js": "^6.4.4",
-    "luxon": "^2.3.1",
-    "moment": "2.24.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^3.1.1",
     "nodemon": "1.18.3",
-    "pg": "8.0.3",
-    "tzdata": "^1.0.30"
+    "pg": "8.0.3"
   },
   "scripts": {
     "dev": "nodemon --inspect=0.0.0.0 index.js",

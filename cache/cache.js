@@ -2,11 +2,13 @@ const NodeCache = require('node-cache')
 const cache = new NodeCache()
 const cache_expiry_time_seconds = 300
 const logger = require('../logger.js')
-const cache_disabled = process.env.DISABLE_CACHE
+const cache_disabled = process.env.DISABLE_CACHE === 'true' ? true : false
 
+logger.infoLog(`cache == ${cache_disabled}`)
 // cache will expire items after 300s
 module.exports =
   {
+
     // if calls have no key passed, then use the method name
     // if calls have keys passed then use both (call,key) as the key
     SetKey: function(key, data_obj) {

@@ -29,6 +29,8 @@ spec:
               value: {{ .Values.port | quote }}
             - name: is_testnet
               value: {{ .Values.env.isTestnet | quote }}
+            - name: discord_token
+              value: {{ .Values.env.discord.discordToken | quote }}
             - name: PGHOST
               value: {{ .Values.env.pg.host | quote }}
             - name: PGDATABASE

@@ -45,14 +45,14 @@ module.exports = {
                 logger.infoLog(`Attempting to find metadata at ${baseURI + metadataFileExtenstion}`)
 
                 const cacheResult = cache.GetKey(`Metadata-${contractAddress}`, contractAddress)
-                var metadataResponse = undefined
+     
                 if (cacheResult === false) {
                     logger.infoLog(`fetching...`)
                     const baseURIMetadata = String(baseURI + metadataFileExtenstion)
                     logger.infoLog(baseURIMetadata)
-                    metadataResponse = await axios.get(baseURIMetadata, {timeout: 3000})
+                    var metadataResponse = await axios.get(baseURIMetadata, {timeout: 3000})
 
-                    logger.infoLog(`setting key ${metadataResponse.result}`)
+                    logger.infoLog(`setting key ${JSON.stringify(metadataResponse)}`)
                     cache.SetKey(`Metadata-${contractAddress}`, metadataResponse)
                 }
 
