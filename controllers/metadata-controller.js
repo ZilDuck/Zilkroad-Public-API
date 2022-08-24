@@ -52,7 +52,6 @@ module.exports = {
                     logger.infoLog(baseURIMetadata)
                     var metadataResponse = await axios.get(baseURIMetadata, {timeout: 3000})
 
-                    logger.infoLog(`setting key ${JSON.stringify(metadataResponse)}`)
                     cache.SetKey(`Metadata-${contractAddress}`, metadataResponse)
                 }
 
@@ -78,7 +77,8 @@ module.exports = {
             }
         }
         catch(e){
-            res.status(404).send(`Error: No metadata found at base_uri`)
+            logger.errorLog(`Error: No metadata found at base_uri - ${e}`)
+            res.status(404).send(`Not Found`)
         }
     }
 }
