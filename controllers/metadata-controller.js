@@ -46,16 +46,17 @@ module.exports = {
 
                 const cacheResult = cache.GetKey(`Metadata-${contractAddress}`, contractAddress)
      
+                var metadataResponse;
                 if (cacheResult === false) {
                     logger.infoLog(`fetching...`)
                     const baseURIMetadata = String(baseURI + metadataFileExtenstion)
-                    logger.infoLog(baseURIMetadata)
-                    var metadataResponse = await axios.get(baseURIMetadata, {timeout: 3000})
-
-                    cache.SetKey(`Metadata-${contractAddress}`, metadataResponse)
+                    logger.infoLog(`req : ${baseURIMetadata}`)
+                    metadataResponse = await axios.get(baseURIMetadata, {timeout: 3000})
+                    console.log('JSON: %j', metadataResponse.data)
+                    cache.SetKey(`Metadata-${contractAddress}`, metadataResponse.data)
                 }
 
-                if(metadataResponse === undefined)
+                if(metadataResponse.data === undefined)
                 {
                     res.status(404).send(`No metadata found at base_uri`)
                 }
