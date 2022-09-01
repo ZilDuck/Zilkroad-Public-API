@@ -2,16 +2,18 @@ const wallet = require('../models/user')
 const token = require('../models/token')
 const cache = require('../cache/cache.js')
 
+const cacheTime = 30
+
 module.exports = {
   getWallet: async function(req, res) {
     const walletAddress = req.params.walletAddress
 
-    const cacheResult = cache.GetKey(`getWallet-${walletAddress}`)
+    const cacheResult = await cache.GetKey(`getWallet-${walletAddress}`)
     if (cacheResult === false) {
       let walletData = await wallet.GetUser(walletAddress)
       const nfts = await token.getUserNfts(walletAddress)
       walletData = { ...walletData, nfts }
-      cache.SetKey(`getWallet-${walletAddress}`, walletData)
+      await cache.SetKey(`getWallet-${walletAddress}`, walletData, cacheTime)
       res.send(walletData)
     } else {
       res.send(cacheResult)
@@ -26,10 +28,10 @@ module.exports = {
     const order = req.query.order ?? 'ASC'
     const orderBy = req.query.order ?? ''
 
-    const cacheResult = cache.GetKey(`getWalletNfts-${walletAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`)
+    const cacheResult = await cache.GetKey(`getWalletNfts-${walletAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`)
     if (cacheResult === false) {
       const nfts = await token.getUserNfts(walletAddress, limit, page)
-      cache.SetKey(`getWalletNfts-${walletAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`, nfts)
+      await cache.SetKey(`getWalletNfts-${walletAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`, nfts, cacheTime)
       res.send(nfts)
     } else {
       res.send(cacheResult)
@@ -44,11 +46,11 @@ module.exports = {
     const order = req.query.order ?? 'ASC'
     const orderBy = req.query.order ?? ''
 
-    const cacheResult = cache.GetKey(`getWalletListedNfts-${walletAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`)
+    const cacheResult = await cache.GetKey(`getWalletListedNfts-${walletAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`)
     if (cacheResult === false) {
       const listings = await wallet.GetPageUserListing(walletAddress, limit, (page - 1))
       const nfts = await token.getUserListedNfts(listings, walletAddress, limit, page)
-      cache.SetKey(`getWalletListedNfts-${walletAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`, nfts)
+      await cache.SetKey(`getWalletListedNfts-${walletAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`, nfts, cacheTime)
       res.send(nfts)
     } else {
       res.send(cacheResult)
@@ -56,8 +58,8 @@ module.exports = {
   },
 
   getRankedWalletActivitiesByType: async function(req, res) {
-    filter = req.query.filter
-    const cacheResult = cache.GetKey(`getRankedWalletAcitvitiesBy=${filter}`)
+    const filter = req.query.filter
+    const cacheResult = await cache.GetKey(`getRankedWalletAcitvitiesBy=${filter}`)
     if (cacheResult === false) {
       const result = await wallet.DBGetRankedWalletActivity(filter)
       res.send(result)

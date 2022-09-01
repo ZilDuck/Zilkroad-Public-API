@@ -2,6 +2,8 @@ const cache = require('../cache/cache.js')
 const contractRanks = require('../models/contract-ranks')
 const contract = require('../models/contract')
 
+const cacheTime = 30
+
 module.exports = {
     getAllCollectionRanks: async function(req, res)
     {
@@ -10,7 +12,7 @@ module.exports = {
         const timeFrom = req.query.timeFrom ?? 0
         const timeTo = req.query.timeTo ?? 99999999999999
 
-        const cacheResult = cache.GetKey(`getAllCollectionRanks-${page}-${limit}-${timeFrom}-${timeTo}`)
+        const cacheResult = await cache.GetKey(`getAllCollectionRanks-${page}-${limit}-${timeFrom}-${timeTo}`)
         if (cacheResult === false) {
             const fetchData = await contractRanks.DBGetAllCollectionRanks(page, limit, timeFrom, timeTo)
             
@@ -25,7 +27,7 @@ module.exports = {
                 data.primary_sales = contractData.primary_sales
                 data.stats = contractData.stats
             }
-            cache.SetKey(`getAllCollectionRanks-${page}-${limit}-${timeFrom}-${timeTo}`, fetchData)
+            await cache.SetKey(`getAllCollectionRanks-${page}-${limit}-${timeFrom}-${timeTo}`, fetchData, cacheTime)
             res.send(fetchData)
         } else {
             res.send(cacheResult)
@@ -39,7 +41,7 @@ module.exports = {
         const timeFrom = req.params.timeFrom ?? 0
         const timeTo = req.query.timeTo ?? 99999999999999
 
-        const cacheResult = cache.GetKey(`getACollectionRank-${contractAddress}-${timeFrom}-${timeTo}`)
+        const cacheResult = await cache.GetKey(`getACollectionRank-${contractAddress}-${timeFrom}-${timeTo}`)
         if (cacheResult === false) {
             const fetchData = await contractRanks.DBGetACollectionRank(contractAddress, timeFrom, timeTo)
 
@@ -51,7 +53,7 @@ module.exports = {
             fetchData[0].primary_sales = contractData.primary_sales
             fetchData[0].stats = contractData.stats
 
-            cache.SetKey(`getACollectionRank-${contractAddress}-${timeFrom}-${timeTo}`, fetchData)
+            await cache.SetKey(`getACollectionRank-${contractAddress}-${timeFrom}-${timeTo}`, fetchData)
             res.send(fetchData)
         } else {
             res.send(cacheResult)

@@ -2,14 +2,16 @@ const contract = require('../models/contract')
 const nft = require('../models/token')
 const cache = require('../cache/cache.js')
 
+const cacheTime = 30
+
 module.exports = {
   getCollection: async function(req, res) {
     const contractAddress = req.params.contractAddress
 
-    const cacheResult = cache.GetKey(`getCollection-${contractAddress}`)
+    const cacheResult = await cache.GetKey(`getCollection-${contractAddress}`)
     if (cacheResult === false) {
       const fetchData = await contract.GetContract(contractAddress).catch((error) => console.error(error))
-      cache.SetKey(`getCollection-${contractAddress}`, fetchData)
+      await cache.SetKey(`getCollection-${contractAddress}`, fetchData, cacheTime)
       res.send(fetchData)
     } else {
       res.send(cacheResult)
@@ -24,10 +26,10 @@ module.exports = {
     const order = req.query.order ?? 'ASC'
     const orderBy = req.query.order ?? ''
 
-    const cacheResult = cache.GetKey(`getCollectionNfts-${contractAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`)
+    const cacheResult = await cache.GetKey(`getCollectionNfts-${contractAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`)
     if (cacheResult === false) {
       const fetchData = await nft.getContractNfts(contractAddress, filter, limit, page, order, orderBy)
-      cache.SetKey(`getCollectionNfts-${contractAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData)
+      await cache.SetKey(`getCollectionNfts-${contractAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData)
       res.send(fetchData)
     } else {
       res.send(cacheResult)
@@ -39,10 +41,10 @@ module.exports = {
     const limit = req.query.limit ?? 10
     const page = req.query.page ?? 1
     
-    const cacheResult = cache.GetKey(`getCollectionListedNfts-${contractAddress}-${page}-${limit}`)
+    const cacheResult = await cache.GetKey(`getCollectionListedNfts-${contractAddress}-${page}-${limit}`)
     if ( cacheResult === false ) {
       const fetchData = await nft.getContractListedNfts(contractAddress, limit, (page - 1))
-      cache.SetKey(`getCollectionListedNfts-${contractAddress}-${page}-${limit}`)
+      await cache.SetKey(`getCollectionListedNfts-${contractAddress}-${page}-${limit}`)
       res.send(fetchData)
     } else {
       res.send(cacheResult)
@@ -57,10 +59,10 @@ module.exports = {
     const order = req.query.order ?? 'ASC'
     const orderBy = req.query.order ?? ''
 
-    const cacheResult = cache.GetKey(`getCollections-${page}-${limit}-${filter}-${order}-${orderBy}`)
+    const cacheResult = await cache.GetKey(`getCollections-${page}-${limit}-${filter}-${order}-${orderBy}`)
     if (cacheResult === false) {
       const fetchData = await contract.GetContractNfts(contractAddress, filter, limit, page, order, orderBy)
-      cache.SetKey(`getCollections-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData)
+      await cache.SetKey(`getCollections-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData)
       res.send(fetchData)
     } else {
       res.send(cacheResult)
