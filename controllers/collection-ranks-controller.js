@@ -53,7 +53,7 @@ module.exports = {
             fetchData[0].primary_sales = contractData.primary_sales
             fetchData[0].stats = contractData.stats
 
-            await cache.SetKey(`getACollectionRank-${contractAddress}-${timeFrom}-${timeTo}`, fetchData)
+            await cache.SetKey(`getACollectionRank-${contractAddress}-${timeFrom}-${timeTo}`, fetchData, cacheTime)
             res.send(fetchData)
         } else {
             res.send(cacheResult)

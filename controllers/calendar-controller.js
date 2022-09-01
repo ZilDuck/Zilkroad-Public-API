@@ -13,8 +13,8 @@ module.exports = {
     const cacheResult = await cache.GetKey(`GetCalendarForPeriod-${period}-${offset}-${limit}-${timezone}`)
     if (cacheResult === false) 
     {
-      const fetchData = await calendar.GetCalendarForPeriod(period, limit, offset, timezone, cacheTime)
-      await cache.SetKey(`GetCalendarForPeriod-${period}-${offset}-${limit}-${timezone}`, fetchData)
+      const fetchData = await calendar.GetCalendarForPeriod(period, limit, offset, timezone)
+      await cache.SetKey(`GetCalendarForPeriod-${period}-${offset}-${limit}-${timezone}`, fetchData, cacheTime)
       res.send(fetchData)
     }
     else

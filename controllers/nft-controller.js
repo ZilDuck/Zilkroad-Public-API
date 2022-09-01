@@ -32,7 +32,7 @@ module.exports = {
     if (cacheResult === false) 
     {
       const fetchData = await token.getTokens(filter, limit, page, order, orderBy)
-      await cache.SetKey(`getNfts-${page}-${filter}-${limit}-${order}-${orderBy}`, fetchData)
+      await cache.SetKey(`getNfts-${page}-${filter}-${limit}-${order}-${orderBy}`, fetchData, cacheTime)
       res.send(fetchData)
     }
     else
@@ -48,7 +48,7 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getNftSpender-${contractAddress}-${tokenId}`)
     if (cacheResult === false) {
       let nftSpender = await token.GetTokenSpender(tokenId, contractAddress)
-      await cache.SetKey(`getNftSpender-${contractAddress}-${tokenId}`, nftSpender)
+      await cache.SetKey(`getNftSpender-${contractAddress}-${tokenId}`, nftSpender, cacheTime)
       res.send(nftSpender)
     } else {
       res.send(cacheResult)
@@ -62,7 +62,7 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getFungibleAllowance-${contractAddress}-${userAddress}`)
     if (cacheResult === false) {
       let ftAllowance = await token.GetTokenAllowance(contractAddress, userAddress)
-      await cache.SetKey(`getFungibleAllowance-${contractAddress}-${userAddress}`, ftAllowance)
+      await cache.SetKey(`getFungibleAllowance-${contractAddress}-${userAddress}`, ftAllowance, cacheTime)
       res.send(ftAllowance)
     } else {
       res.send(cacheResult)

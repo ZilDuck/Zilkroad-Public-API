@@ -29,7 +29,7 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getCollectionNfts-${contractAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`)
     if (cacheResult === false) {
       const fetchData = await nft.getContractNfts(contractAddress, filter, limit, page, order, orderBy)
-      await cache.SetKey(`getCollectionNfts-${contractAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData)
+      await cache.SetKey(`getCollectionNfts-${contractAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData, cacheTime)
       res.send(fetchData)
     } else {
       res.send(cacheResult)
@@ -44,7 +44,7 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getCollectionListedNfts-${contractAddress}-${page}-${limit}`)
     if ( cacheResult === false ) {
       const fetchData = await nft.getContractListedNfts(contractAddress, limit, (page - 1))
-      await cache.SetKey(`getCollectionListedNfts-${contractAddress}-${page}-${limit}`)
+      await cache.SetKey(`getCollectionListedNfts-${contractAddress}-${page}-${limit}`, cacheTime)
       res.send(fetchData)
     } else {
       res.send(cacheResult)
@@ -62,7 +62,7 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getCollections-${page}-${limit}-${filter}-${order}-${orderBy}`)
     if (cacheResult === false) {
       const fetchData = await contract.GetContractNfts(contractAddress, filter, limit, page, order, orderBy)
-      await cache.SetKey(`getCollections-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData)
+      await cache.SetKey(`getCollections-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData, cacheTime)
       res.send(fetchData)
     } else {
       res.send(cacheResult)

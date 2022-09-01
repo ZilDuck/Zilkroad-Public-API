@@ -31,7 +31,7 @@ module.exports = {
     if (cacheResult === false) 
     {
       const fetchData = advert.getAdverts(filter, limit, page, order, orderBy)
-      await cache.SetKey(`getAdverts-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData)
+      await cache.SetKey(`getAdverts-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData, cacheTime)
       res.send(fetchData)
     }
     else
