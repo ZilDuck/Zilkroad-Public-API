@@ -72,5 +72,4 @@ spec:
               path: /health
               port: {{ .Values.port }}
               scheme: HTTP
-              initialDelaySeconds: 10
               periodSeconds: 30
