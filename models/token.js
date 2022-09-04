@@ -8,6 +8,7 @@ const zilliqa = new Zilliqa(process.env.current_network)
 
 const { DBGetVerifiedStatusForNonFungible } = require('./common.js')
 const { GetPaginatedTokenIDs } = require('../utils/indexer')
+const { GetContract } = require('./contract.js')
 
 /*
  * SHAPE DEFINITION
