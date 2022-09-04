@@ -66,3 +66,11 @@ spec:
             requests:
               cpu: {{ .Values.resources.requests.cpu | quote }}
               memory: {{ .Values.resources.requests.memory | quote }}
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: {{ .Values.port }}
+              scheme: HTTP
+              initialDelaySeconds: 10
+              periodSeconds: 30
