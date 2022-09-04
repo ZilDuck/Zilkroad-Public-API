@@ -62,6 +62,7 @@ async function GetContract(contract_address) {
   const volume_over_time = db_graph
   const stats = db_stats[0] ?? {"listed_tokens": 0, "volume": 0}
   const primary_sales = db_primary_sales
+  const verified = db_verified.length > 0
 
   return {
     contract_address_b16,
@@ -73,7 +74,7 @@ async function GetContract(contract_address) {
     contract_owner,
     royalty_recipient,
     royalty_bps,
-    is_verified,
+    verified,
     nfts_minted,
     token_balances,
     floor_prices,
