@@ -8,7 +8,7 @@ const zilliqa = new Zilliqa(process.env.current_network)
 
 const { DBGetVerifiedStatusForNonFungible } = require('./common.js')
 const { GetPaginatedTokenIDs } = require('../utils/indexer')
-const { GetContract } = require('./contract.js')
+const contractModel = require('./contract')
 
 /*
  * SHAPE DEFINITION
@@ -232,7 +232,7 @@ async function GetTokenAllowance(contractAddress, userAddress)
 
 async function getContractNfts(contractAddress, filter, limit, page, order, orderBy) {
   const indexerData = await GetPaginatedTokenIDs(contractAddress, limit, page).then(response => response).catch((error) => logger.errorLog(error))
-  const verified = await GetContract(contractAddress).then(response => response).catch((error) => logger.errorLog(error)).verified ?? false
+  const verified = await contractModel.GetContract(contractAddress).then(response => response).catch((error) => logger.errorLog(error)).verified ?? false
   const appData = {
     nfts: indexerData.data.map(({ name, symbol, contract, tokenId }) => ({
       collection_name: name,
