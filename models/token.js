@@ -231,13 +231,15 @@ async function GetTokenAllowance(contractAddress, userAddress)
 
 async function getContractNfts(contractAddress, filter, limit, page, order, orderBy) {
   const indexerData = await GetPaginatedTokenIDs(contractAddress, limit, page).then(response => response).catch((error) => logger.errorLog(error))
+  const verified = await GetContract(contractAddress).then(response => response).catch((error) => logger.errorLog(error)).verified ?? false
   const appData = {
     nfts: indexerData.data.map(({ name, symbol, contract, tokenId }) => ({
       collection_name: name,
       symbol,
       contract_address_b16: validation.isBech32(contract) ? fromBech32Address(contract) : contract,
       contract_address_b32: validation.isBech32(contract) ? contract : toBech32Address(contract),
-      token_id: tokenId
+      token_id: tokenId,
+      verified: verified
     })),
     pagination: indexerData.headers['x-pagination']
   }
