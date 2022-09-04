@@ -68,9 +68,8 @@ spec:
               memory: {{ .Values.resources.requests.memory | quote }}
           livenessProbe:
             failureThreshold: 3
+            periodSeconds: 30
             httpGet:
               path: /health
               port: {{ .Values.port }}
               scheme: HTTP
-              initialDelaySeconds: 10
-              periodSeconds: 30
