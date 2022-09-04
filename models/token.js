@@ -184,7 +184,8 @@ async function getTokens(filter, limit, page, order, orderBy, query = {}) {
       token_id: token_id,
       token_price: listing_fungible_token_price,
       token_symbol: fungible_symbol,
-      decimals: decimals
+      decimals: decimals,
+      verified
     }
   }))
 
