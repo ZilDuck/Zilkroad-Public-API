@@ -8,6 +8,7 @@ const zilliqa = new Zilliqa(process.env.current_network)
 
 const { DBGetVerifiedStatusForNonFungible } = require('./common.js')
 const { GetPaginatedTokenIDs } = require('../utils/indexer')
+const contractModel = require('./contract')
 
 /*
  * SHAPE DEFINITION
@@ -170,7 +171,7 @@ async function getTokens(filter, limit, page, order, orderBy, query = {}) {
       db_result = await DBGetPaginatedListedTokensForContract(queried_contract, limit, page)
   }
 
-  const nfts = await Promise.all(db_result.map(async ({nonfungible_address, token_id, listing_fungible_token_price, fungible_symbol, decimals}) => {
+  const nfts = await Promise.all(db_result.map(async ({nonfungible_address, token_id, listing_fungible_token_price, fungible_symbol, decimals, verified}) => {
 
     const contract_address_b16 = validation.isBech32(nonfungible_address) ? fromBech32Address(nonfungible_address) : nonfungible_address
     const contract_address_b32 = validation.isBech32(nonfungible_address) ? nonfungible_address : toBech32Address(nonfungible_address)
@@ -184,7 +185,8 @@ async function getTokens(filter, limit, page, order, orderBy, query = {}) {
       token_id: token_id,
       token_price: listing_fungible_token_price,
       token_symbol: fungible_symbol,
-      decimals: decimals
+      decimals: decimals,
+      verified: verified
     }
   }))
 
@@ -230,13 +232,15 @@ async function GetTokenAllowance(contractAddress, userAddress)
 
 async function getContractNfts(contractAddress, filter, limit, page, order, orderBy) {
   const indexerData = await GetPaginatedTokenIDs(contractAddress, limit, page).then(response => response).catch((error) => logger.errorLog(error))
+  const verified = await contractModel.GetContract(contractAddress).then(response => response).catch((error) => logger.errorLog(error)).verified ?? false
   const appData = {
     nfts: indexerData.data.map(({ name, symbol, contract, tokenId }) => ({
       collection_name: name,
       symbol,
       contract_address_b16: validation.isBech32(contract) ? fromBech32Address(contract) : contract,
       contract_address_b32: validation.isBech32(contract) ? contract : toBech32Address(contract),
-      token_id: tokenId
+      token_id: tokenId,
+      verified: verified
     })),
     pagination: indexerData.headers['x-pagination']
   }
