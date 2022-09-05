@@ -7,11 +7,6 @@ const pgClient = client.ReturnPool()
 async function DBGetVerifiedStatusForNonFungible(nonfungible_address)
 {
   logger.infoLog(`API - PUBLIC - DBGetVerifiedStatusForNonFungible - HIT`)
-
-  const now = parseInt((new Date().getTime() / 1000).toFixed(0))
-  var date = new Date();
-  const lastYear = date.setFullYear(date.getFullYear() - 1);
-
   const sql = 'SELECT * FROM fn_getVerifiedStatusForNonFungible ($1)'
   const values = [
     nonfungible_address
