@@ -1,7 +1,6 @@
 const advert = require('../models/advert')
 const cache = require('../cache/cache.js')
 
-
 module.exports = {
   getAdvert: async function(req, res) {
 
