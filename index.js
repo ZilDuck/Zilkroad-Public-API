@@ -67,9 +67,6 @@ app.use('/calendar', calendarRouter)
 const sitewideStatsRouter = require('./routes/sitewide-stats-route')
 app.use('/site-stats', sitewideStatsRouter)
 
-const cacheRoute = require('./routes/cache-route')
-app.use('/cache', cacheRoute)
-
 const healthRouter = require('./routes/health-route')
 app.use('/health', healthRouter)
 
