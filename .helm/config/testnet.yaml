@@ -11,7 +11,7 @@ env:
   currentNetwork: https://dev-api.zilliqa.com
   enableCache: true
   cacheAge: 300
-  redisUrl: redis://redis-master
+  redisUrl: redis://redis-master.svc.cluster.local
   redisPort: 6379
   tokens:
     wzil: 864895d52504c388a345ef6cd9c800dbbd0ef92a
