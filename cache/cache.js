@@ -4,8 +4,8 @@ const logger = require('../logger.js')
 
 const cache_enabled = process.env.ENABLE_CACHE === 'true' ? true : false
 const cache_default_age = process.env.CACHE_AGE ?? 300
-logger.infoLog(`loaded cache envs ${process.env.ENABLE_CACHE} ${process.env.CACHE_AGE}`)
 logger.infoLog(`cache active : ${cache_enabled} // cache age : ${cache_default_age}`)
+logger.infoLog(`cache url : ${process.env.REDIS_URL} // cache port : ${process.env.REDIS_PORT}`)
 
 let client = redis.createClient(
   {
@@ -15,6 +15,7 @@ let client = redis.createClient(
       },
   }
 )
+
 module.exports =
   {
     SetKey: async function(key, value, expiry = cache_default_age)
