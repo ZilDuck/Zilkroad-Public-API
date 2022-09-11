@@ -2,17 +2,19 @@ const token = require('../models/token')
 const listing = require('../models/listing')
 const cache = require('../cache/cache.js')
 
+const cacheTime = 30
+
 module.exports = {
   getNft: async function(req, res) {
     const contractAddress = req.params.contractAddress
     const tokenId = req.params.tokenId
 
-    const cacheResult = cache.GetKey(`getNft-${contractAddress}-${tokenId}`)
+    const cacheResult = await cache.GetKey(`getNft-${contractAddress}-${tokenId}`)
     if (cacheResult === false) {
       let nftData = await token.getToken(tokenId, contractAddress)
       let listingData = await listing.GetNftListing(contractAddress, tokenId)
       nftData = { ...nftData, ...listingData }
-      cache.SetKey(`getNft-${contractAddress}-${tokenId}`, nftData)
+      await cache.SetKey(`getNft-${contractAddress}-${tokenId}`, nftData, cacheTime)
       res.send(nftData)
     } else {
       res.send(cacheResult)
@@ -26,11 +28,11 @@ module.exports = {
     const order = req.query.order ?? 'ASC'
     const orderBy = req.query.order ?? ''
 
-    const cacheResult = cache.GetKey(`getNfts-${page}-${filter}-${limit}-${order}-${orderBy}`)
+    const cacheResult = await cache.GetKey(`getNfts-${page}-${filter}-${limit}-${order}-${orderBy}`)
     if (cacheResult === false) 
     {
       const fetchData = await token.getTokens(filter, limit, page, order, orderBy)
-      cache.SetKey(`getNfts-${page}-${filter}-${limit}-${order}-${orderBy}`, fetchData)
+      await cache.SetKey(`getNfts-${page}-${filter}-${limit}-${order}-${orderBy}`, fetchData, cacheTime)
       res.send(fetchData)
     }
     else
@@ -43,10 +45,10 @@ module.exports = {
     const contractAddress = req.params.contractAddress
     const tokenId = req.params.tokenId
 
-    const cacheResult = cache.GetKey(`getNftSpender-${contractAddress}-${tokenId}`)
+    const cacheResult = await cache.GetKey(`getNftSpender-${contractAddress}-${tokenId}`)
     if (cacheResult === false) {
       let nftSpender = await token.GetTokenSpender(tokenId, contractAddress)
-      cache.SetKey(`getNftSpender-${contractAddress}-${tokenId}`, nftSpender)
+      await cache.SetKey(`getNftSpender-${contractAddress}-${tokenId}`, nftSpender, cacheTime)
       res.send(nftSpender)
     } else {
       res.send(cacheResult)
@@ -57,10 +59,10 @@ module.exports = {
     const contractAddress = req.params.contractAddress
     const userAddress = req.params.userAddress
 
-    const cacheResult = cache.GetKey(`getFungibleAllowance-${contractAddress}-${userAddress}`)
+    const cacheResult = await cache.GetKey(`getFungibleAllowance-${contractAddress}-${userAddress}`)
     if (cacheResult === false) {
       let ftAllowance = await token.GetTokenAllowance(contractAddress, userAddress)
-      cache.SetKey(`getFungibleAllowance-${contractAddress}-${userAddress}`, ftAllowance)
+      await cache.SetKey(`getFungibleAllowance-${contractAddress}-${userAddress}`, ftAllowance, cacheTime)
       res.send(ftAllowance)
     } else {
       res.send(cacheResult)
