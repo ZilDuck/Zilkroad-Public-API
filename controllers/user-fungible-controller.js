@@ -1,6 +1,9 @@
 const fungibleToken = require('../models/fungible-tokens')
 const cache = require('../cache/cache.js')
-const { toBech32Address, fromBech32Address, validation } = require('@zilliqa-js/zilliqa')
+const { fromBech32Address, validation } = require('@zilliqa-js/zilliqa')
+
+const cacheTime = 30
+
 module.exports = {
     GetFungibleForAddress: async function(req, res) {
         var walletAddress = req.params.walletAddress.toLowerCase()
@@ -9,11 +12,11 @@ module.exports = {
           walletAddress = fromBech32Address(walletAddress)
         }
 
-        const cacheResult = cache.GetKey(`getFungibleAmounts-${walletAddress}`)
+        const cacheResult = await cache.GetKey(`getFungibleAmounts-${walletAddress}`)
         if (cacheResult === false) 
         {
           const fetchData = await fungibleToken.GetFungibleDataForAddress(walletAddress)
-          cache.SetKey(`getFungibleAmounts-${walletAddress}`, fetchData)
+          await cache.SetKey(`getFungibleAmounts-${walletAddress}`, fetchData, cacheTime)
           res.send(fetchData)
         }
         else
