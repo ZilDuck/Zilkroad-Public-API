@@ -1,15 +1,17 @@
 const advert = require('../models/advert')
 const cache = require('../cache/cache.js')
 
+const cacheTime = 900
+
 module.exports = {
   getAdvert: async function(req, res) {
     const advertId = req.params.advertId
 
-    const cacheResult = cache.GetKey(`getAdvert-${advertId}`)
+    const cacheResult = await cache.GetKey(`getAdvert-${advertId}`)
     if (cacheResult === false) 
     {
       const fetchData = await advert.getAdvert(advertId)
-      cache.SetKey(`getAdvert-${advertId}`, fetchData)
+      await cache.SetKey(`getAdvert-${advertId}`, fetchData, cacheTime)
       res.send(fetchData)
     }
     else
@@ -25,11 +27,11 @@ module.exports = {
     const order = req.query.order ?? 'ASC'
     const orderBy = req.query.order ?? ''
 
-    const cacheResult = cache.GetKey(`getAdverts-${page}-${limit}-${filter}-${order}-${orderBy}`)
+    const cacheResult = await cache.GetKey(`getAdverts-${page}-${limit}-${filter}-${order}-${orderBy}`)
     if (cacheResult === false) 
     {
       const fetchData = advert.getAdverts(filter, limit, page, order, orderBy)
-      cache.SetKey(`getAdverts-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData)
+      await cache.SetKey(`getAdverts-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData, cacheTime)
       res.send(fetchData)
     }
     else
