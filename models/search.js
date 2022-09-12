@@ -5,6 +5,8 @@ const { toBech32Address, fromBech32Address } = require('@zilliqa-js/crypto')
 const { DBGetVerifiedStatusForNonFungible } = require('./common.js')
 const { ResolveZilDomain } = require("../DomainResolver.js");
 const nftUtils = require('../utils/nftUtils.js')
+
+const bunnyCDNImagePrefix = `https://zildexr-testnet.b-cdn.net/`
 // GIVEN WE HAVE A SEARCH QUERY, RETURN A SEARCH PARAM.
 
 // NFT CONTRACT
@@ -87,6 +89,7 @@ async function isUser(address)
 async function getSearchForUser(address)
 {
     const user_b32 = toBech32Address(address)
+    //generate user favicon as image - Base64encode transmit?
     return ReturnSearch(user_b32, user_b32, `/wallet/${user_b32}`, false)
 }
 
@@ -95,7 +98,7 @@ async function getSearchForContract(address)
     const contract_b32 = toBech32Address(address)
     const db_verified = await DBGetVerifiedStatusForNonFungible(address)
 
-    return ReturnSearch(await nftUtils.GetTokenName(contract_b32), contract_b32, `/collections/${contract_b32}`, !!db_verified)
+    return ReturnSearch(await nftUtils.GetTokenName(contract_b32), await getBunnyImageForContract(contract_b32), `/collections/${contract_b32}`, !!db_verified)
 }
 
 async function getSearchForZNS(zns)
@@ -168,6 +171,11 @@ function getSearchFallback( query ) {
     const result = ReturnSearch(`No results for ${query.toString()}`, '', '', false)
     console.table(result)
     return result
+}
+
+async function getBunnyImageForContract(b16_contract)
+{
+    return bunnyCDNImagePrefix.concat(b16_contract)
 }
 
 module.exports = {

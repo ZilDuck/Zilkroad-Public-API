@@ -124,8 +124,8 @@ module.exports =
             'token_name',
         );
         
-        logger.debugLog(stateResult.result?.token_name);
-        return stateResult.result?.token_name 
+        logger.debugLog(stateResult.result?.token_name );
+        return stateResult.result?.token_name ?? ""
     },
     GetTokenSymbol: async function (nft_contract) {
         logger.infoLog(`MODEL- UTILS - GetTokenSymbol - HIT - ${nft_contract}`);
@@ -135,6 +135,7 @@ module.exports =
         );
         
         logger.debugLog(stateResult.result?.token_symbol);
-        return stateResult.result?.token_symbol 
+        return stateResult.result?.token_symbol ?? ""
+
     },
 }
