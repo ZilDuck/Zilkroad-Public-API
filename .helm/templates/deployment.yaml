@@ -48,9 +48,7 @@ spec:
             - name: CACHE_AGE
               value: {{ .Values.env.cacheAge | quote }} 
             - name: REDIS_URL
-              value: {{ .Values.env.redisUrl | quote }} 
-            - name: REDIS_PORT
-              value: {{ .Values.env.redisPort | quote }} 
+              value: {{ .Values.env.redisUrl | quote }}
             - name: WZIL_CONTRACT
               value: {{ .Values.env.tokens.wzil | quote }}
             - name: GZIL_CONTRACT
