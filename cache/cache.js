@@ -15,6 +15,7 @@ try
         socket: {
           host: "redis-headless.redis.svc.cluster.local",
           port: 6379,
+          username: "default",
           password: "Jd8De29Z1o",
         },
     }
@@ -29,6 +30,8 @@ module.exports =
   {
     SetKey: async function(key, value, expiry = cache_default_age)
     {
+      try
+      {
         if(cache_enabled)
         {
           value = JSON.stringify(value)
@@ -46,32 +49,44 @@ module.exports =
         {
           logger.debugLog(`cache disabled`)
         }
+      }
+      catch(e)
+      {
+        logger.errorLog(e)
+      }
     },
     // A boolean false response indicates no value is in the cache
     GetKey: async function(key)
     {
-      if(cache_enabled)
+      try
       {
-          const value = await client.get(key)
-          if(value !== null)
-          {
-            logger.debugLog(`returning cache value`)
-            logger.debugLog(value)
-            return JSON.parse(value)
-          }
-          else 
-          {
-            logger.debugLog(`no cache value found`)
-            return false
-          }
+        if(cache_enabled)
+        {
+            const value = await client.get(key)
+            if(value !== null)
+            {
+              logger.debugLog(`returning cache value`)
+              logger.debugLog(value)
+              return JSON.parse(value)
+            }
+            else 
+            {
+              logger.debugLog(`no cache value found`)
+              return false
+            }
+        }
+        else
+        {
+          logger.debugLog(`cache disabled`)
+          return false
+        }
       }
-      else
-      {
-        logger.debugLog(`cache disabled`)
-        return false
-      }
+    catch(e)
+    {
+      logger.errorLog(e)
     }
   }
+}
 
 // A bit verbose, but readable
 function validateCacheInputs(key, value, expiry)
