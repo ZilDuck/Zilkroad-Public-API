@@ -10,16 +10,13 @@ logger.infoLog(`cache url : ${process.env.REDIS_URL}`)
 let client 
 try
 {
-  client = redis.createClient(
-    {
+    client = redis.createClient({
         socket: {
-          host: "redis-headless.redis.svc.cluster.local",
-          port: 6379,
-          password: "Jd8De29Z1o"
-        },
-    }
-  )
-  client.auth("Jd8De29Z1o")
+            host: "redis-headless.redis.svc.cluster.local",
+            port: 6379
+            },
+            password: 'Jd8De29Z1o'
+        });
 }
 catch(e)
 {
