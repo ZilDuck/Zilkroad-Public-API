@@ -215,7 +215,7 @@ async function GetTokenSpender(tokenId, contractAddress)
     [tokenId],
   );
   if (spenders.result) {
-    return spenders.result.spenders[tokenId]
+    return spenders.result?.spenders[tokenId]
   } else return false
 }
 
@@ -229,7 +229,7 @@ async function GetTokenAllowance(contractAddress, userAddress)
   console.log(allowances)
 
   if (allowances.result) {
-    return allowances.result.allowances[userAddress]
+    return allowances.result?.allowances[userAddress]
   } else return {}
 }
 

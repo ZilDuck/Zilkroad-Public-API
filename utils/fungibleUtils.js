@@ -11,8 +11,8 @@ module.exports =
     GetNativeZilBalanceForAddress : async function(address)
     {
       const zil_amount = await zilliqa.blockchain.getBalance(address)
-      console.log(zil_amount.result.balance)
-      return zil_amount.result.balance
+      console.log(zil_amount.result?.balance)
+      return zil_amount.result?.balance
     },
     GetFungibleAmountForAddress: async function(address)
     {

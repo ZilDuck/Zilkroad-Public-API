@@ -16,8 +16,8 @@ module.exports =
             'token_id_count',
         );
 
-        logger.debugLog(stateResult.result.token_id_count);
-        return stateResult.result.token_id_count
+        logger.debugLog(stateResult.result?.token_id_count);
+        return stateResult.result?.token_id_count
     },
     GetTotalSupplyCount: async function (nft_contract) {
         logger.infoLog(`MODEL- NFTModel - GetTotalSupplyCount - HIT - ${nft_contract}`);
@@ -25,8 +25,8 @@ module.exports =
             nft_contract,
             'total_supply',
         );
-        logger.debugLog(stateResult.result.total_supply);
-        return stateResult.result.total_supply
+        logger.debugLog(stateResult.result?.total_supply);
+        return stateResult.result?.total_supply
     },
     GetRoyaltyBPSForToken: async function (nft_contract) {
         logger.infoLog(`MODEL- NFTModel - GetRoyaltyBPSForToken - HIT - ${nft_contract}`);
@@ -34,8 +34,8 @@ module.exports =
             nft_contract,
             'royalty_fee_bps',
         );
-        logger.debugLog(stateResult.result.royalty_fee_bps);
-        return stateResult.result.royalty_fee_bps
+        logger.debugLog(stateResult.result?.royalty_fee_bps);
+        return stateResult.result?.royalty_fee_bps
     },
     GetRoyaltyRecipientForToken: async function (nft_contract) {
         logger.infoLog(`MODEL- NFTModel - GetRoyaltyBPSForToken - HIT - ${nft_contract}`);
@@ -44,8 +44,8 @@ module.exports =
             'royalty_recipient',
         );
 
-        logger.debugLog(stateResult.result.royalty_recipient);
-        return stateResult.result.royalty_recipient
+        logger.debugLog(stateResult.result?.royalty_recipient);
+        return stateResult.result?.royalty_recipient
     },
     GetTokenBalances: async function (nft_contract) {
         logger.infoLog(`MODEL- NFTModel - GetTokenBalances - HIT - ${nft_contract}`);
@@ -54,8 +54,8 @@ module.exports =
             'balances',
         );
 
-        logger.debugLog(stateResult.result.balances);
-        return stateResult.result.balances
+        logger.debugLog(stateResult.result?.balances);
+        return stateResult.result?.balances
     },
     GetTokenOperators: async function (nft_contract) {
         logger.infoLog(`MODEL- UTILS - GetTokenOperators - HIT - ${nft_contract}`);
@@ -64,8 +64,8 @@ module.exports =
             'operators',
         );
 
-        logger.debugLog(stateResult.result.operators);
-        return stateResult.result.operators
+        logger.debugLog(stateResult.result?.operators);
+        return stateResult.result?.operators
     },
     GetTokenMinters: async function (nft_contract) {
         logger.infoLog(`MODEL- UTILS - GetTokenMinters - HIT - ${nft_contract}`);
@@ -74,8 +74,8 @@ module.exports =
             'minters',
         );
         
-        logger.debugLog(stateResult.result.minters);
-        return stateResult.result.minters 
+        logger.debugLog(stateResult.result?.minters);
+        return stateResult.result?.minters 
     },
     GetTokenBaseURI: async function (nft_contract) {
         logger.infoLog(`MODEL- UTILS - GetTokenBaseURI - HIT - ${nft_contract}`);
@@ -84,8 +84,8 @@ module.exports =
             'base_uri',
         );
        
-        logger.debugLog(stateResult.result.base_uri);
-        return stateResult.result.base_uri
+        logger.debugLog(stateResult.result?.base_uri);
+        return stateResult.result?.base_uri
     },
     GetTokenPauseStatus: async function(nft_contract) {
         logger.infoLog(`MODEL- UTILS - GetTokenPauseStatus - HIT - ${nft_contract}`);
@@ -94,8 +94,8 @@ module.exports =
             'is_paused',
         );
        
-        logger.debugLog(stateResult.result.constructor);
-        return stateResult.result.constructor 
+        logger.debugLog(stateResult.result?.constructor);
+        return stateResult.result?.constructor 
     },
     GetTokenContractOwner: async function (nft_contract) {
         logger.infoLog(`MODEL- UTILS - GetTokenContractOwner - HIT - ${nft_contract}`);
@@ -104,8 +104,8 @@ module.exports =
             'contract_owner',
         );
         
-        logger.debugLog(stateResult.result.contract_owner);
-        return stateResult.result.contract_owner 
+        logger.debugLog(stateResult.result?.contract_owner);
+        return stateResult.result?.contract_owner 
     },
     GetTokenContractOwnerRecipientHandover: async function (nft_contract) {
         logger.infoLog(`MODEL- UTILS - GetTokenContractOwnerRecipientHandover - HIT - ${nft_contract}`);
@@ -114,8 +114,8 @@ module.exports =
             'contract_ownership_recipient',
         );
         
-        logger.debugLog(stateResult.result.contract_ownership_recipient);
-        return stateResult.result.contract_ownership_recipient 
+        logger.debugLog(stateResult.result?.contract_ownership_recipient);
+        return stateResult.result?.contract_ownership_recipient 
     },
     GetTokenName: async function (nft_contract) {
         logger.infoLog(`MODEL- UTILS - GetTokenName - HIT - ${nft_contract}`);
@@ -136,5 +136,6 @@ module.exports =
         
         logger.debugLog(stateResult.result?.token_symbol);
         return stateResult.result?.token_symbol ?? ""
+
     },
 }
