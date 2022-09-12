@@ -14,9 +14,7 @@ try
     {
         socket: {
           host: "redis-headless.redis.svc.cluster.local",
-          port: 6379,
-          username: "default",
-          password: "Jd8De29Z1o",
+          port: 6379
         },
     }
   )
