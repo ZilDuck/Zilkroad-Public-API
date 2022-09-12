@@ -14,7 +14,7 @@ try
     {
         socket: {
           host: "redis-headless.redis.svc.cluster.local",
-          port: 6379,
+          port: 6379
         },
     }
   )
