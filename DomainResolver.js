@@ -76,7 +76,7 @@ async function ResolveZilDomain(userInput) {
   }
 
   const [ownerAddress, resolverAddress] = 
-    registryState.result.records[token].arguments;
+    registryState.result?.records[token].arguments;
   
   if (resolverAddress === "0x0000000000000000000000000000000000000000") {
     return {'error' : 'resolver not configured'};
@@ -91,7 +91,7 @@ async function ResolveZilDomain(userInput) {
   data = {
     ownerAddress,
     resolverAddress,
-    records: recordResponse.result.records
+    records: recordResponse.result?.records
   };
   logger.debugLog(data)
   return data;
