@@ -9,7 +9,9 @@ env:
     user: user_function_readonly
     password: a}TKXA>M45dD#Ws#TAs+4a=MM8S
   currentNetwork: https://dev-api.zilliqa.com
-  disableCache: false
+  enableCache: true
+  cacheAge: 300
+  redisUrl: redis://default:Jd8De29Z1o@redis-headless.svc.cluster.local:6379
   tokens:
     wzil: 864895d52504c388a345ef6cd9c800dbbd0ef92a
     gzil: 607d0ba69c3680ed07262e5d80be98c401fd612c
