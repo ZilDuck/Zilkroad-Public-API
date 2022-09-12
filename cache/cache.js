@@ -5,7 +5,7 @@ const logger = require('../logger.js')
 const cache_enabled = process.env.ENABLE_CACHE === 'true' ? true : false
 const cache_default_age = process.env.CACHE_AGE ?? 300
 logger.infoLog(`cache active : ${cache_enabled} // cache age : ${cache_default_age}`)
-logger.infoLog(`cache url : ${process.env.REDIS_URL} // cache port : ${process.env.REDIS_PORT}`)
+logger.infoLog(`cache url : ${process.env.REDIS_URL}`)
 
 let client 
 try
@@ -13,8 +13,7 @@ try
   client = redis.createClient(
     {
         socket: {
-            host: process.env.REDIS_URL,
-            port: process.env.REDIS_PORT
+          url: process.env.REDIS_URL
         },
     }
   )
