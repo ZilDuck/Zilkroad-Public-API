@@ -43,8 +43,12 @@ spec:
               value: {{ .Values.env.pg.password | quote }}
             - name: current_network
               value: {{ .Values.env.currentNetwork | quote }}
-            - name: DISABLE_CACHE
-              value: {{ .Values.env.disableCache | quote }}
+            - name: ENABLE_CACHE
+              value: {{ .Values.env.enableCache | quote }} 
+            - name: CACHE_AGE
+              value: {{ .Values.env.cacheAge | quote }} 
+            - name: REDIS_URL
+              value: {{ .Values.env.redisUrl | quote }}
             - name: WZIL_CONTRACT
               value: {{ .Values.env.tokens.wzil | quote }}
             - name: GZIL_CONTRACT
