@@ -29,4 +29,4 @@ resources:
     memory: 128M 
   requests:
     cpu: 0.2
-    memory: 128M 
+    memory: 256M 
