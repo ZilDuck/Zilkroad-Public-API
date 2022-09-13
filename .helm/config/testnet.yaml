@@ -9,7 +9,7 @@ env:
     user: user_function_readonly
     password: a}TKXA>M45dD#Ws#TAs+4a=MM8S
   currentNetwork: https://dev-api.zilliqa.com
-  enableCache: true
+  enableCache: false
   cacheAge: 300
   redisUrl: redis-headless.redis.svc.cluster.local
   redisPort: 6379
@@ -32,4 +32,4 @@ image:
   app:
     pullSecret: aws-registry
 
-replicas: 3
+replicas: 2

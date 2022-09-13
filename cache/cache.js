@@ -49,7 +49,8 @@ module.exports =
       }
       catch(e)
       {
-        logger.errorLog(e)
+        logger.errorLog(`Cache-Set ${e}`)
+        return false
       }
     },
     // A boolean false response indicates no value is in the cache
@@ -80,7 +81,8 @@ module.exports =
       }
     catch(e)
     {
-      logger.errorLog(e)
+      logger.errorLog(`Cache-Get ${e}`)
+      return false
     }
   }
 }
