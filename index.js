@@ -55,6 +55,9 @@ app.use('/user-stats', userStatsRouter)
 const skinnyUserStatsRouter = require('./routes/skinny-user-stats-route')
 app.use('/skinny-user-stats', skinnyUserStatsRouter)
 
+const fungibleRouter = require('./routes/fungible-route')
+app.use('/fungible', fungibleRouter)
+
 const userFungibleRouter = require('./routes/user-fungible-route')
 app.use('/user-fungible', userFungibleRouter)
 
