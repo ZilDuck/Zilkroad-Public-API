@@ -182,6 +182,7 @@ async function getTokens(filter, limit, page, order, orderBy, query = {}) {
     return {
       order_id: static_order_id,
       collection_name: indexer_token.name,
+      current_owner: indexer_token.owner,
       symbol: indexer_token.symbol,
       contract_address_b16,
       contract_address_b32,
