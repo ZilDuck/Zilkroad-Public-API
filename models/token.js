@@ -334,6 +334,10 @@ async function getUserListedNfts(listings, walletAddress, limit = 16, page = 1) 
             owner_address_b16: validation.isBech32(walletAddress) ? fromBech32Address(walletAddress) : walletAddress,
             owner_address_b32: validation.isBech32(walletAddress) ? walletAddress : toBech32Address(walletAddress),
             token_id: nft.tokenId,
+            token_price: listing.listing_fungible_token_price,
+            token_symbol: listing.fungible_symbol,
+            decimals: listing.decimals,
+            verified: listing.verified,
             listing
           })
         }
