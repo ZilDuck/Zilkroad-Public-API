@@ -49,9 +49,9 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getWalletListedNfts-${walletAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`)
     if (cacheResult === false) {
       const listings = await wallet.GetPageUserListing(walletAddress, limit, (page - 1))
-      // const nfts = await token.getUserListedNfts(listings, walletAddress, limit, page)
-      await cache.SetKey(`getWalletListedNfts-${walletAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`, listings, cacheTime)
-      res.send(listings)
+      const nfts = await token.getUserListedNfts(listings, walletAddress, limit, page)
+      await cache.SetKey(`getWalletListedNfts-${walletAddress}-${page}-${limit}-${filter}-${order}-${orderBy}`, nfts, cacheTime)
+      res.send(nfts)
     } else {
       res.send(cacheResult)
     }

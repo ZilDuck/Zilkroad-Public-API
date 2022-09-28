@@ -56,18 +56,9 @@ async function GetPageUserListing(user_address, limit_rows, offset_rows) {
         user_address_b16 = user_address
         user_address_b32 = toBech32Address(user_address)
     }
-    let nfts = []
-    nfts = await DBGetPaginatedUserListings(user_address_b16, limit_rows, offset_rows)
+    const response = await DBGetPaginatedUserListings(user_address_b16, limit_rows, offset_rows)
 
-    const appData = {
-        nfts,
-        pagination: {
-            'size': limit_rows,
-            'page': offset_rows,
-        }
-    }
-    return appData
-
+    return response
 }
 
 /*
