@@ -47,7 +47,7 @@ async function getToken(
   // const db_sales_history_graph = await DBGetPeriodGraphForNonFungibleToken(contract_address_b16, token_id).catch((error) => console.log(error))
   // const db_volume = await DBGetNonFungibleTokenSalesData(contract_address_b16, token_id).catch((error) => console.log(error))
   // const bps = await utils.GetRoyaltyBPSForToken(contract_address_b16).catch((error) => console.log(error))
-  // const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => console.log(error))
+  const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => console.log(error))
   const sales_data = await DBGetNonFungibleTokenSalesData(contract_address_b16, token_id).catch((error) => console.log(error))
   const sales_count = sales_data[0]?.lifetime_quantity_sold ?? 0
   const sales_volume = sales_data[0]?.lifetime_sales_usd ?? 0
@@ -62,6 +62,7 @@ async function getToken(
   // is_verified = db_verified ?? false
   token_resource_uri = indexer_token.resources ?? false
   token_metadata = indexer_token.metadata ?? false
+  const verified = db_verified.length > 0
   // token_actions = indexer_actions ?? false
   // volume_over_time_graph = db_volume ?? false
   // token_sales_history = db_sales_history_graph ?? false
@@ -82,7 +83,8 @@ async function getToken(
     sales_count,
     sales_volume,
     sales_history,
-    graph_data
+    graph_data,
+    verified
     // token_actions,
     // volume_over_time_graph,
     // token_sales_history,
@@ -111,6 +113,7 @@ async function getTokenCard(
 
   const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).catch((error) => console.log(error))
   const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => console.log(error))
+  const verified = db_verified.length > 0
   const listing_data = await GetListing(order_id)
 
   let indexer_token_data
@@ -132,7 +135,8 @@ async function getTokenCard(
     owner_address,
     is_verified,
     token_resource_uri,
-    listing
+    listing,
+    verified
   }
 }
 
@@ -170,21 +174,23 @@ async function getTokens(filter, limit, page, order, orderBy, query = {}) {
       db_result = await DBGetPaginatedListedTokensForContract(queried_contract, limit, page)
   }
 
-  const nfts = await Promise.all(db_result.map(async ({nonfungible_address, token_id, listing_fungible_token_price, fungible_symbol, decimals}) => {
-
+    const nfts = await Promise.all(db_result.map(async ({static_order_id, nonfungible_address, token_id, listing_fungible_token_price, fungible_symbol, decimals, verified}) => {
     const contract_address_b16 = validation.isBech32(nonfungible_address) ? fromBech32Address(nonfungible_address) : nonfungible_address
     const contract_address_b32 = validation.isBech32(nonfungible_address) ? nonfungible_address : toBech32Address(nonfungible_address)
     const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(res => (res.data)).catch((error) => console.log(error)) // TODO Shouldn't have an api call in a loop like this. Need a batch method or listing data from indexer?
 
     return {
+      order_id: static_order_id,
       collection_name: indexer_token.name,
+      current_owner: indexer_token.owner,
       symbol: indexer_token.symbol,
       contract_address_b16,
       contract_address_b32,
       token_id: token_id,
       token_price: listing_fungible_token_price,
       token_symbol: fungible_symbol,
-      decimals: decimals
+      decimals: decimals,
+      verified: verified
     }
   }))
 
@@ -210,7 +216,7 @@ async function GetTokenSpender(tokenId, contractAddress)
     [tokenId],
   );
   if (spenders.result) {
-    return spenders.result.spenders[tokenId]
+    return spenders.result?.spenders[tokenId]
   } else return false
 }
 
@@ -224,22 +230,30 @@ async function GetTokenAllowance(contractAddress, userAddress)
   console.log(allowances)
 
   if (allowances.result) {
-    return allowances.result.allowances[userAddress]
+    return allowances.result?.allowances[userAddress]
   } else return {}
 }
 
 async function getContractNfts(contractAddress, filter, limit, page, order, orderBy) {
   const indexerData = await GetPaginatedTokenIDs(contractAddress, limit, page).then(response => response).catch((error) => logger.errorLog(error))
+
+  // this is butters but im so brain dead atm
+  const _contract_address = validation.isBech32(contractAddress) ? fromBech32Address(contractAddress) : contractAddress
+  const db_verified = await DBGetVerifiedStatusForNonFungible(_contract_address).catch((error) => console.log(error))
+  const verified = db_verified.length > 0
+
   const appData = {
     nfts: indexerData.data.map(({ name, symbol, contract, tokenId }) => ({
       collection_name: name,
       symbol,
       contract_address_b16: validation.isBech32(contract) ? fromBech32Address(contract) : contract,
       contract_address_b32: validation.isBech32(contract) ? contract : toBech32Address(contract),
-      token_id: tokenId
+      token_id: tokenId,
+      verified: verified
     })),
     pagination: indexerData.headers['x-pagination']
   }
+
   let token_ids = indexerData.data.map(({tokenId}) => {return tokenId});
   let min_token_id = Math.min.apply( null, token_ids );
   let max_token_id = Math.max.apply( null, token_ids );
@@ -311,7 +325,7 @@ async function getUserListedNfts(listings, walletAddress, limit = 16, page = 1) 
   for (const contract of indexerData.data) {
     for (const listing of listings) {
       for (const nft of contract.nfts) {
-        if (listing.nonfungible_address == nft.contract && listing.token_id == nft.tokenId) {
+        if (listing.nonfungible_address.toLowerCase() == nft.contract.toLowerCase() && listing.token_id == nft.tokenId) {
           nfts.push({
             collection_name: nft.name,
             symbol: nft.symbol,
@@ -320,6 +334,10 @@ async function getUserListedNfts(listings, walletAddress, limit = 16, page = 1) 
             owner_address_b16: validation.isBech32(walletAddress) ? fromBech32Address(walletAddress) : walletAddress,
             owner_address_b32: validation.isBech32(walletAddress) ? walletAddress : toBech32Address(walletAddress),
             token_id: nft.tokenId,
+            token_price: listing.listing_fungible_token_price,
+            token_symbol: listing.fungible_symbol,
+            decimals: listing.decimals,
+            verified: listing.verified,
             listing
           })
         }

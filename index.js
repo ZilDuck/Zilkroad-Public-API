@@ -55,6 +55,9 @@ app.use('/user-stats', userStatsRouter)
 const skinnyUserStatsRouter = require('./routes/skinny-user-stats-route')
 app.use('/skinny-user-stats', skinnyUserStatsRouter)
 
+const fungibleRouter = require('./routes/fungible-route')
+app.use('/fungible', fungibleRouter)
+
 const userFungibleRouter = require('./routes/user-fungible-route')
 app.use('/user-fungible', userFungibleRouter)
 
@@ -67,9 +70,6 @@ app.use('/calendar', calendarRouter)
 const sitewideStatsRouter = require('./routes/sitewide-stats-route')
 app.use('/site-stats', sitewideStatsRouter)
 
-const cacheRoute = require('./routes/cache-route')
-app.use('/cache', cacheRoute)
-
 const healthRouter = require('./routes/health-route')
 app.use('/health', healthRouter)
 
@@ -78,6 +78,9 @@ app.use('/marketplace', marketplaceRoute)
 
 const walletActivitiesRoute = require('./routes/wallet-activities-route')
 app.use('/wallet-activities', walletActivitiesRoute)
+
+const reportRoute = require('./routes/report-route')
+app.use('/report', reportRoute)
 
 const orderTransactionRoute = require('./routes/order-transaction-route')
 app.use('/order', orderTransactionRoute)

@@ -29,6 +29,8 @@ spec:
               value: {{ .Values.port | quote }}
             - name: is_testnet
               value: {{ .Values.env.isTestnet | quote }}
+            - name: discord_token
+              value: {{ .Values.env.discord.discordToken | quote }}
             - name: PGHOST
               value: {{ .Values.env.pg.host | quote }}
             - name: PGDATABASE
@@ -41,8 +43,12 @@ spec:
               value: {{ .Values.env.pg.password | quote }}
             - name: current_network
               value: {{ .Values.env.currentNetwork | quote }}
-            - name: DISABLE_CACHE
-              value: {{ .Values.env.disableCache | quote }}
+            - name: ENABLE_CACHE
+              value: {{ .Values.env.enableCache | quote }} 
+            - name: CACHE_AGE
+              value: {{ .Values.env.cacheAge | quote }} 
+            - name: REDIS_URL
+              value: {{ .Values.env.redisUrl | quote }}
             - name: WZIL_CONTRACT
               value: {{ .Values.env.tokens.wzil | quote }}
             - name: GZIL_CONTRACT
@@ -64,3 +70,10 @@ spec:
             requests:
               cpu: {{ .Values.resources.requests.cpu | quote }}
               memory: {{ .Values.resources.requests.memory | quote }}
+          livenessProbe:
+            failureThreshold: 3
+            periodSeconds: 30
+            httpGet:
+              path: /health
+              port: {{ .Values.port }}
+              scheme: HTTP

@@ -6,6 +6,7 @@ const axios = require("axios");
 const cache = require('../cache/cache.js')
 
 const metadataFileExtenstion = `metadata.json`
+const cacheTime = 900
 
 module.exports = {
 
@@ -44,19 +45,19 @@ module.exports = {
 
                 logger.infoLog(`Attempting to find metadata at ${baseURI + metadataFileExtenstion}`)
 
-                const cacheResult = cache.GetKey(`Metadata-${contractAddress}`, contractAddress)
-                var metadataResponse = undefined
+                const cacheResult = await cache.GetKey(`Metadata-${contractAddress}`)
+     
+                var metadataResponse;
                 if (cacheResult === false) {
                     logger.infoLog(`fetching...`)
                     const baseURIMetadata = String(baseURI + metadataFileExtenstion)
-                    logger.infoLog(baseURIMetadata)
+                    logger.infoLog(`req : ${baseURIMetadata}`)
                     metadataResponse = await axios.get(baseURIMetadata, {timeout: 3000})
-
-                    logger.infoLog(`setting key ${metadataResponse.result}`)
-                    cache.SetKey(`Metadata-${contractAddress}`, metadataResponse)
+                    console.log('JSON: %j', metadataResponse.data)
+                    await cache.SetKey(`Metadata-${contractAddress}`, metadataResponse.data, cacheTime)
                 }
 
-                if(metadataResponse === undefined)
+                if(metadataResponse.data === undefined)
                 {
                     res.status(404).send(`No metadata found at base_uri`)
                 }
@@ -78,7 +79,8 @@ module.exports = {
             }
         }
         catch(e){
-            res.status(404).send(`Error: No metadata found at base_uri`)
+            logger.errorLog(`Error: No metadata found at base_uri - ${e}`)
+            res.status(404).send(`Not Found`)
         }
     }
 }

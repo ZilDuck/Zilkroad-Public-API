@@ -16,7 +16,7 @@ module.exports =
             proxy_contract,
             'current_mint_count',
         );
-        return stateResult.result.current_mint_count
+        return stateResult.result?.current_mint_count
     },
     GetTotalPrimaryProxyProfit: async function (proxy_contract) {
         logger.infoLog(`ProxyUtils - GetRoyaltyBPSForToken - HIT - proxy:${proxy_contract}`);
@@ -24,6 +24,6 @@ module.exports =
             proxy_contract,
             'lifetime_earnings',
         );
-        return stateResult.result.lifetime_earnings
+        return stateResult.result?.lifetime_earnings
     },
 }

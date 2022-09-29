@@ -1,5 +1,7 @@
 const orderTransaction = require('../models/order-transaction')
 
+// No cache - Discord bot use once
+
 module.exports = {
     getListedTransactionHashForOrderID: async function(req, res) {
     const orderID = req.params.orderID
