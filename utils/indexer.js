@@ -36,9 +36,9 @@ module.exports =
     },
 
     // Address - GetNFTsForAddress
-    GetNFTsForAddress: async function(nft_contract) {
+    GetNFTsForAddress: async function(nft_contract, delegated = true) {
         logger.infoLog(`FUNC - INDEXER - GetNFTsForAddress - HIT`)
-        const response = await axios.get(`https://api.zildexr.com/address/${nft_contract}/nft${testnetString}&details=true&delegated=false`,
+        const response = await axios.get(`https://api.zildexr.com/address/${nft_contract}/nft${testnetString}&details=true&delegated=${delegated}`,
           { headers: { 'X-API-KEY': client.indexApiKey } })
         return response
     },
