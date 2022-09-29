@@ -2,7 +2,7 @@ const client = require('../utils/expressUtils.js');
 const axios = require('axios');
 const logger = require('../logger.js')
 
-const testnetString = process.env.is_testnet ? "?network=testnet" : ""
+const testnetString = process.env.is_testnet ? "?network=testnet" : "?"
 process.env.is_testnet ? console.log("INDEXER TESTNET") : console.log("INDEXER MAINNET") 
 /*
  * HELPER EXPORTED CLASS 
@@ -38,7 +38,7 @@ module.exports =
     // Address - GetNFTsForAddress
     GetNFTsForAddress: async function(nft_contract) {
         logger.infoLog(`FUNC - INDEXER - GetNFTsForAddress - HIT`)
-        const response = await axios.get(`https://api.zildexr.com/address/${nft_contract}/nft${testnetString}&details=true`,
+        const response = await axios.get(`https://api.zildexr.com/address/${nft_contract}/nft${testnetString}&details=true&delegated=false`,
           { headers: { 'X-API-KEY': client.indexApiKey } })
         return response
     },
