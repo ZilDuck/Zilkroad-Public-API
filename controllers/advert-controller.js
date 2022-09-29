@@ -9,7 +9,7 @@ module.exports = {
     if (cacheResult === false) 
     {
       const fetchData = await advert.GetAValidCardAdvertisements()
-      await cache.SetKey(`getAdvert`, fetchData)
+      await cache.SetKey(`getAdvert`, fetchData, cacheTime)
       res.send(fetchData)
     }
     else
