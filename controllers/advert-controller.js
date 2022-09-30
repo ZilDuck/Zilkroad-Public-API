@@ -5,11 +5,13 @@ const cacheTime = 900
 
 module.exports = {
   getAdvert: async function(req, res) {
-    const cacheResult = cache.GetKey(`getAdvert`)
+    const cacheResult = await cache.GetKey(`getAdvert`)
+    console.log(cacheResult)
     if (cacheResult === false) 
     {
+      console.log(`fetching data`)
       const fetchData = await advert.GetAValidCardAdvertisements()
-      await cache.SetKey(`getAdvert`, fetchData)
+      await cache.SetKey(`getAdvert`, fetchData, cacheTime)
       res.send(fetchData)
     }
     else
