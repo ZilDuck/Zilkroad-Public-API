@@ -289,7 +289,7 @@ async function getContractListedNfts(contractAddress, limit, page) {
 }
 
 async function getUserNfts(walletAddress, limit = 16, page = 1) {
-  const indexerData = await indexer.GetNFTsForAddress(walletAddress).then(response => response).catch((error) => logger.errorLog(error))
+  const indexerData = await indexer.GetNFTsForAddress(walletAddress, false).then(response => response).catch((error) => logger.errorLog(error))
   let nfts = []
   for (const contract of indexerData.data) {
     for (const nft of contract.nfts) {
@@ -321,7 +321,7 @@ async function getUserNfts(walletAddress, limit = 16, page = 1) {
 }
 
 async function getUserListedNfts(listings, walletAddress, limit = 16, page = 1) {
-  const indexerData = await indexer.GetNFTsForAddress(walletAddress).then(response => response).catch((error) => logger.errorLog(error))
+  const indexerData = await indexer.GetNFTsForAddress(walletAddress, true).then(response => response).catch((error) => logger.errorLog(error))
   let nfts = []
   for (const contract of indexerData.data) {
     for (const listing of listings) {
