@@ -32,8 +32,6 @@ module.exports = {
     if (cacheResult === false) 
     {
       const nftData = await token.getTokens(filter, limit, page, order, orderBy)
-      let listingData = await listing.GetNftListing(contractAddress, tokenId)
-      nftData = { ...nftData, ...listingData }
       await cache.SetKey(`getNfts-${page}-${filter}-${limit}-${order}-${orderBy}`, nftData, cacheTime)
       res.send(nftData)
     }
