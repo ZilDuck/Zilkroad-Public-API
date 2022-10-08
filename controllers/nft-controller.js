@@ -31,9 +31,11 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getNfts-${page}-${filter}-${limit}-${order}-${orderBy}`)
     if (cacheResult === false) 
     {
-      const fetchData = await token.getTokens(filter, limit, page, order, orderBy)
-      await cache.SetKey(`getNfts-${page}-${filter}-${limit}-${order}-${orderBy}`, fetchData, cacheTime)
-      res.send(fetchData)
+      const nftData = await token.getTokens(filter, limit, page, order, orderBy)
+      let listingData = await listing.GetNftListing(contractAddress, tokenId)
+      nftData = { ...nftData, ...listingData }
+      await cache.SetKey(`getNfts-${page}-${filter}-${limit}-${order}-${orderBy}`, nftData, cacheTime)
+      res.send(nftData)
     }
     else
     {
