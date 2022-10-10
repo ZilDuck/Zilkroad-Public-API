@@ -13,6 +13,7 @@ env:
   cacheAge: 300
   redisUrl: redis-headless.redis.svc.cluster.local
   redisPort: 6379
+  marketplaceContract: 0x7ff10124194f23e7478614026c125b8a9fd74bcf
   tokens:
     wzil: 864895d52504c388a345ef6cd9c800dbbd0ef92a
     gzil: 607d0ba69c3680ed07262e5d80be98c401fd612c
