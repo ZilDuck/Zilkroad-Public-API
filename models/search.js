@@ -118,9 +118,11 @@ async function getSearchForFreetext(freetext)
 
         logger.debugLog(`got search query ${freetext}`)
 
-        const sql = 'SELECT * FROM fn_getPaginatedSearchForString($1, $2, $3)'
+        let search_term = freetext + ":*"
+        const sql = 'SELECT * FROM fn_getPaginatedSearchForString($1, $2, $3, $4)'
         const values = [
             freetext,
+            search_term,
             limit_rows,
             offset_rows
         ]
