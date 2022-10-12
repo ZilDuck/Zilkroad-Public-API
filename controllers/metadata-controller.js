@@ -5,6 +5,7 @@ const { GetTokenBaseURI } = require("../utils/nftUtils");
 const axios = require("axios");
 const cache = require('../cache/cache.js')
 
+const ipfs_prefix = 'https://ipfs.io/ipfs/'
 const metadataFileExtenstion = `metadata.json`
 const cacheTime = 900
 
@@ -12,75 +13,77 @@ module.exports = {
 
     getMetadataForCollection: async function(req, res) 
     {
-        try
-        {
-            let contractAddress = String(req.params.contractAddress).toLowerCase()
+        let error_message = {
+            msg: 'There was an error trying to get the metadata'
+        }
+        let contractAddress = String(req.params.contractAddress).toLowerCase()
+        let base_uri = ''
+        let response = {}
 
-            if(contractAddress.startsWith(`zil`))
-            {
+        try {
+            if ( contractAddress === '' || contractAddress === undefined ) {
+                throw 'No contract address found'
+            }
+
+            if ( contractAddress.startsWith('zil') ) {
                 contractAddress = fromBech32Address(contractAddress)
             }
 
-            logger.infoLog(`got contractAddress ${contractAddress}`)
-
-            let baseURI = await GetTokenBaseURI(contractAddress)
-
-            logger.infoLog(`got baseURI ${baseURI}`)
-            
-            if(baseURI === undefined || baseURI == "")
-            {
-                logger.errorLog(`fucked it ${baseURI}`)
-                res.status(404).send(`No base_uri set`)
+            base_uri = await GetTokenBaseURI(contractAddress)
+            if ( base_uri === '' || base_uri === undefined ) {
+                throw `Base uri for ${contractAddress} was empty`
             }
-            else
-            {
-                if(baseURI.startsWith(`ipfs://`))
-                {
-                    baseURI = baseURI.replace('ipfs://', 'https://ipfs.io/ipfs/')
+
+            const cache_result = await cache.GetKey(`Metadata-${contractAddress}`)
+
+            if ( cache_result === false ) {
+                if ( base_uri.startsWith('ipfs://') ) {
+                    if ( base_uri.includes('/ipfs/') ) {
+                        base_uri = base_uri.split('/ipfs/').pop()
+                        base_uri = ipfs_prefix + base_uri
+                    } else {
+                        base_uri = base_uri.replace('ipfs://', ipfs_prefix)
+                    }
+                } else if ( base_uri.startsWith('ar://') ) {
+                    base_uri = base_uri.replace('ar://', 'https://xqozxxt2juqo5ubrsd3gzsrznsj7ev5qhghtctqfkg2thfay.arweave.net/')
                 }
-                if(baseURI.startsWith(`ar://`))
-                {
-                    baseURI = baseURI.replace('ar://', 'https://xqozxxt2juqo5ubrsd3gzsrznsj7ev5qhghtctqfkg2thfay.arweave.net/')
+                // Ensure the base_uri ends with a '/'
+                base_uri = base_uri.endsWith('/') ? base_uri : base_uri + '/'
+                base_uri = base_uri + metadataFileExtenstion
+
+                meta_data_response = await axios.get(base_uri)
+                meta_data_response = meta_data_response.data ?? {}
+
+                if ( meta_data_response === undefined ) {
+                    throw `No metadata could be found for contract ${contractAddress}`
+                    error_message.extra_information = `No metadata could be found for contract ${contractAddress}`
+                    error_message.contract_address = contractAddress
+                    error_message.base_uri = base_uri
+                    res.status(404).send(res)
                 }
 
-                logger.infoLog(`Attempting to find metadata at ${baseURI + metadataFileExtenstion}`)
-
-                const cacheResult = await cache.GetKey(`Metadata-${contractAddress}`)
-     
-                var metadataResponse;
-                if (cacheResult === false) {
-                    logger.infoLog(`fetching...`)
-                    const baseURIMetadata = String(baseURI + metadataFileExtenstion)
-                    logger.infoLog(`req : ${baseURIMetadata}`)
-                    metadataResponse = await axios.get(baseURIMetadata, {timeout: 3000})
-                    console.log('JSON: %j', metadataResponse.data)
-                    await cache.SetKey(`Metadata-${contractAddress}`, metadataResponse.data, cacheTime)
+                response = {
+                    name: meta_data_response.name ?? 'No Name',
+                    description: meta_data_response.description ?? '',
+                    external_url: meta_data_response.external_url ?? '',
+                    animation_url: meta_data_response.animation_url ?? '',
+                    collection_image_url: meta_data_response.collection_image_url ?? '',
+                    discord: meta_data_response.discord ?? '',
+                    twitter: meta_data_response.twitter ?? '',
+                    telegram: meta_data_response.telegram ?? ''
                 }
 
-                if(metadataResponse.data === undefined)
-                {
-                    res.status(404).send(`No metadata found at base_uri`)
-                }
-                else
-                {
-                    const response = Metadata
-                    (
-                        metadataResponse.data.name, 
-                        metadataResponse.data.description, 
-                        metadataResponse.data.external_url, 
-                        metadataResponse.data.animation_url,
-                        metadataResponse.data.collection_image_url,
-                        metadataResponse.data.discord,
-                        metadataResponse.data.twitter,
-                        metadataResponse.data.telegram
-                    )
-                    res.send(response)
-                }
+                await cache.SetKey(`Metadata-${contractAddress}`, response, cacheTime)
+                res.send(response)
+            } else {
+                res.send(cache_result)
             }
-        }
-        catch(e){
-            logger.errorLog(`Error: No metadata found at base_uri - ${e}`)
-            res.status(404).send(`Not Found`)
+
+        } catch (e) {
+            error_message.extra_information = e
+            error_message.contract_address = contractAddress
+            error_message.base_uri = base_uri
+            res.status(404).send(error_message)
         }
     }
 }
