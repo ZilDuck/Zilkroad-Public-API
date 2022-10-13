@@ -1,10 +1,16 @@
-FROM node:14.14.0-alpine
-RUN apk add --update python make g++\
+FROM node:16.17.0-alpine
+
+RUN apk --no-cache add --update python3 make g++\
    && rm -rf /var/cache/apk/*
+
 WORKDIR /app
+
 COPY ./package.json ./
 RUN npm i
+
 COPY . .
+
 EXPOSE 5000
 EXPOSE 9229
+
 CMD ["npm", "run", "dev"]
