@@ -4,6 +4,8 @@ const pgClient = client.ReturnPool()
 const { toBech32Address } = require('@zilliqa-js/crypto')
 const indexer = require('../utils/indexer')
 
+const marketplaceContract = process.env.marketplace_contract
+
 // GIVEN WE HAVE A OID - RETURN ME THE SHAPE
 
 /*
@@ -90,7 +92,7 @@ async function GetNftListing(contract_address, token_id) {
 }
 
 async function GetIndexerNftListing(contract_address, token_id) {
-    const contractState = await indexer.GetContractState('0xa4463b8d05eecd52249521e3d33447b0dceb17fb').then(r => r.data).catch((error) => console.log(error))
+    const contractState = await indexer.GetContractState(marketplaceContract).then(r => r.data).catch((error) => console.log(error))
 
     if (contractState.listing_map) {
         for (const [orderId, listingData] of Object.entries(contractState.listing_map)) {
