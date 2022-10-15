@@ -11,12 +11,12 @@ module.exports = {
         const limit = req.query.limit ?? 28
         const order = req.query.order ?? 'ASC'
         const orderBy = req.query.orderBy ?? ''
-        const query = {contract:req.query.contract}
+        const contract_address = req.query.contract
 
-        const cacheResult = await cache.GetKey(`Marketplace-${page}/${filter}/${limit}/${order}/${orderBy}/${query}`)
+        const cacheResult = await cache.GetKey(`Marketplace-${page}/${filter}/${limit}/${order}/${orderBy}/${contract_address}`)
         if (cacheResult === false) 
         {
-            const { nfts, pagination } = await getTokens(filter, limit, page, order, orderBy, query)
+            const { nfts, pagination } = await getTokens(filter, limit, page, order, orderBy, contract_address)
             const collections = nfts.map(({ collection_name, contract_address_b16 }) => ({
                 label: collection_name,
                 value: contract_address_b16,
@@ -29,7 +29,7 @@ module.exports = {
                 collections: uniqueCollections
             }
 
-            await cache.SetKey(`Marketplace-${page}/${filter}/${limit}/${order}/${orderBy}/${query}`, response, cacheTime)
+            await cache.SetKey(`Marketplace-${page}/${filter}/${limit}/${order}/${orderBy}/${contract_address}`, response, cacheTime)
 
             res.send(response)
         }
