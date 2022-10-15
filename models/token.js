@@ -152,7 +152,7 @@ async function getTokenCard(
  * @param query
  * @return {Promise<*[]>}
  */
-async function getTokens(filter, limit, page, order, orderBy, query = {}) {
+async function getTokens(filter, limit, page, order, orderBy, contract_address) {
   let db_result = []
   let tokenList = []
 
@@ -170,8 +170,7 @@ async function getTokens(filter, limit, page, order, orderBy, query = {}) {
       db_result = await DBGetPaginatedMostRecentlySold() // TODO DB query for recently listed nfts
       break
     case 'contract-listed':
-      const queried_contract = query?.contract
-      db_result = await DBGetPaginatedListedTokensForContract(queried_contract, limit, page)
+      db_result = await DBGetPaginatedListedTokensForContract(contract_address, limit, page)
   }
 
     const nfts = await Promise.all(db_result.map(async ({static_order_id, nonfungible_address, token_id, listing_fungible_token_price, fungible_symbol, decimals, verified, fungible_address}) => {
