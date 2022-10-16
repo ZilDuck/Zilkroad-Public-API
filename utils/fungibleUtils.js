@@ -5,6 +5,7 @@ const { Zilliqa } = require('@zilliqa-js/zilliqa');
 
 const zilliqa = new Zilliqa(process.env.current_network) // Same here 
 process.env.is_testnet ? console.log("UTILS TESTNET") : console.log("UTILS MAINNET") 
+const marketplace_contract = process.env.marketplace_contract;
 
 module.exports =
 { 
@@ -68,5 +69,65 @@ module.exports =
         (item) => ({[item.id]: item.result.balances[address]})
         ))
       return data
+    },
+    GetFungibleAllowancesForAddress: async function(address) {
+      const fungible_allowance_state = await zilliqa.blockchain.getSmartContractSubStateBatch([
+        [
+          process.env.WZIL_CONTRACT,
+          'allowances',
+          [address],
+        ],
+        [
+          process.env.GZIL_CONTRACT,
+          'allowances',
+          [address],
+        ],
+        [
+          process.env.XSGD_CONTRACT,
+          'allowances',
+          [address],
+        ],
+        [
+          process.env.ZWBTC_CONTRACT,
+          'allowances',
+          [address],
+        ],
+        [
+          process.env.ZETH_CONTRACT,
+          'allowances',
+          [address],
+        ],
+        [
+          process.env.ZUSDT_CONTRACT,
+          'allowances',
+          [address],
+        ],
+        [
+          process.env.DUCK_CONTRACT,
+          'allowances',
+          [address],
+        ]
+      ]);
+
+      let batch_result = fungible_allowance_state.batch_result
+      batch_result.forEach(function(item) {
+        if ( item.result === null ) {
+          let allowances = {}
+          allowances[marketplace_contract] = "0"
+          item.result = { "allowances": allowances }
+        } else {
+          let allowances = {}
+          allowances[marketplace_contract] = item.result.allowances[address][marketplace_contract]
+          item.result = { "allowances": allowances }
+        }
+      }, address, marketplace_contract)
+
+      // This flattens it from [{"id": 1, "result": {"allowances": {"wallet-address": value}}}, {"id": "2"...}]
+      // To {"1": value, "2": value, ...}
+      let data = Object.assign({}, ...batch_result.map(
+        (item) => ({[item.id]: item.result.allowances[marketplace_contract]})
+        ))
+      return data
+
     }
 }

@@ -227,7 +227,6 @@ async function GetTokenAllowance(contractAddress, userAddress)
     'allowances',
     [userAddress]
   );
-  console.log(allowances)
 
   if (allowances.result) {
     return allowances.result?.allowances[userAddress]
@@ -439,7 +438,7 @@ async function DBGetRandomVerifiedListedNonFungible() {
 }
 
 async function DBGetPaginatedMostRecentListings(limitRows, offsetRows) {
-  const sql = 'SELECT * FROM fn_getpaginatedmostrecentlistings($1, $2)'
+  const sql = 'SELECT * FROM fn_getPaginatedListingForRecent($1, $2)'
   const values = [
     limitRows,
     offsetRows

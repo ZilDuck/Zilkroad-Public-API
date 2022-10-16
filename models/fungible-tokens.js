@@ -32,21 +32,26 @@ async function GetFungibleDataForAddress(address)
 {
   let data = {}
   let fungibleResponse = await fungibleUtil.GetFungibleAmountForAddress(address)
+  let fungibleAllowance = await fungibleUtil.GetFungibleAllowancesForAddress(address)
   // Force zil to be 0'th index
   fungibleResponse["0"] = await fungibleUtil.GetNativeZilBalanceForAddress(address)
+  fungibleAllowance["0"] = "0"
 
 
   let total_usd_value = 0
   for ( const [fungible, id] of Object.entries(fungibles) ) {
     let amount_key = fungible + "_amount"
     let usd_key = fungible + "_usd_amount"
+    let allowance_key = fungible + "_allowance"
 
-    let balance = new Big(fungibleResponse[id]).div(new Big(10).pow(decimals[fungible]))
+    let balance = new Big(fungibleResponse[id] ?? 0 ).div(new Big(10).pow(decimals[fungible]))
+    let allowance = new Big(fungibleAllowance[id] ?? 0 ).div(new Big(10).pow(decimals[fungible]))
     let usd_value = await getUSDValuefromTokens(fungible, balance)
     total_usd_value += usd_value
 
     data[amount_key] = balance
     data[usd_key] = usd_value
+    data[allowance_key] = allowance
   }
   data["total_usd_value"] = total_usd_value
   
