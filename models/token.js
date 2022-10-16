@@ -227,7 +227,6 @@ async function GetTokenAllowance(contractAddress, userAddress)
     'allowances',
     [userAddress]
   );
-  console.log(allowances)
 
   if (allowances.result) {
     return allowances.result?.allowances[userAddress]
