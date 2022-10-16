@@ -3,7 +3,7 @@ require('dotenv').config()
 const logger = require('../logger.js')
 
 const cache_enabled = process.env.ENABLE_CACHE === 'true' ? true : false
-const cache_default_age = process.env.CACHE_AGE ?? 300
+const cache_default_age = parseInt(process.env.CACHE_AGE) ?? 300
 logger.infoLog(`cache active : ${cache_enabled} // cache age : ${cache_default_age}`)
 logger.infoLog(`cache url : ${process.env.REDIS_URL}`)
 
