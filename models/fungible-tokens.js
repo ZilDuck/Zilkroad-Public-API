@@ -44,8 +44,8 @@ async function GetFungibleDataForAddress(address)
     let usd_key = fungible + "_usd_amount"
     let allowance_key = fungible + "_allowance"
 
-    let balance = new Big(fungibleResponse[id]).div(new Big(10).pow(decimals[fungible]))
-    let allowance = new Big(fungibleAllowance[id]).div(new Big(10).pow(decimals[fungible]))
+    let balance = new Big(fungibleResponse[id] ?? 0 ).div(new Big(10).pow(decimals[fungible]))
+    let allowance = new Big(fungibleAllowance[id] ?? 0 ).div(new Big(10).pow(decimals[fungible]))
     let usd_value = await getUSDValuefromTokens(fungible, balance)
     total_usd_value += usd_value
 
