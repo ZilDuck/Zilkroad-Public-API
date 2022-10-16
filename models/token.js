@@ -438,7 +438,7 @@ async function DBGetRandomVerifiedListedNonFungible() {
 }
 
 async function DBGetPaginatedMostRecentListings(limitRows, offsetRows) {
-  const sql = 'SELECT * FROM fn_getpaginatedmostrecentlistings($1, $2)'
+  const sql = 'SELECT * FROM fn_getPaginatedListingForRecent($1, $2)'
   const values = [
     limitRows,
     offsetRows
