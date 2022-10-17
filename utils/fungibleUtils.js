@@ -5,7 +5,7 @@ const { Zilliqa } = require('@zilliqa-js/zilliqa');
 
 const zilliqa = new Zilliqa(process.env.current_network) // Same here 
 process.env.is_testnet ? console.log("UTILS TESTNET") : console.log("UTILS MAINNET") 
-const marketplace_contract = process.env.marketplace_contract;
+const marketplace_contract = process.env.MARKETPLACE_CONTRACT;
 
 module.exports =
 { 

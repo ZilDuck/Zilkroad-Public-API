@@ -11,6 +11,7 @@ module.exports = {
         if (validation.isBech32(walletAddress)) {
           walletAddress = fromBech32Address(walletAddress)
         }
+        console.log("Getting fungible balance data for address: ", walletAddress)
 
         const cacheResult = await cache.GetKey(`getFungibleAmounts-${walletAddress}`)
         if (cacheResult === false) 
