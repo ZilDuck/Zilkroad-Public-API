@@ -11,16 +11,19 @@ module.exports = {
         if (validation.isBech32(walletAddress)) {
           walletAddress = fromBech32Address(walletAddress)
         }
+        console.log("Getting fungible data for address: ", walletAddress)
 
         const cacheResult = await cache.GetKey(`getFungibleAmounts-${walletAddress}`)
         if (cacheResult === false) 
         {
+          console.log("No cache result for this address")
           const fetchData = await fungibleToken.GetFungibleDataForAddress(walletAddress)
           await cache.SetKey(`getFungibleAmounts-${walletAddress}`, fetchData, cacheTime)
           res.send(fetchData)
         }
         else
         {
+          console.log("Using cache result of: %j", cacheResult)
           res.send(cacheResult)
         }
     }
