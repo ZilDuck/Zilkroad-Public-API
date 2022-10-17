@@ -5,7 +5,7 @@ const { Zilliqa } = require('@zilliqa-js/zilliqa');
 
 const zilliqa = new Zilliqa(process.env.current_network) // Same here 
 process.env.is_testnet ? console.log("UTILS TESTNET") : console.log("UTILS MAINNET") 
-const marketplace_contract = process.env.marketplace_contract;
+const marketplace_contract = process.env.MARKETPLACE_CONTRACT;
 
 module.exports =
 { 
@@ -71,6 +71,14 @@ module.exports =
       return data
     },
     GetFungibleAllowancesForAddress: async function(address) {
+      const poo = await zilliqa.blockchain.getSmartContractState(process.env.WZIL_CONTRACT)
+      console.log("Raw contract data for WZIL: %j", poo)
+
+      const wee = await zilliqa.blockchain.getSmartContractSubState(process.env.WZIL_CONTRACT, 'allowances', [address])
+      console.log("Raw Substate for WZIL: %j", wee)
+
+      console.log("Marketplace contract: ", marketplace_contract)
+
       const fungible_allowance_state = await zilliqa.blockchain.getSmartContractSubStateBatch([
         [
           process.env.WZIL_CONTRACT,
