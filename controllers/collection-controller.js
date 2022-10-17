@@ -44,7 +44,7 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getCollectionListedNfts-${contractAddress}-${page}-${limit}`)
     if ( cacheResult === false ) {
       const fetchData = await nft.getContractListedNfts(contractAddress, limit, (page - 1))
-      await cache.SetKey(`getCollectionListedNfts-${contractAddress}-${page}-${limit}`, cacheTime)
+      await cache.SetKey(`getCollectionListedNfts-${contractAddress}-${page}-${limit}`, fetchData, cacheTime)
       res.send(fetchData)
     } else {
       res.send(cacheResult)
