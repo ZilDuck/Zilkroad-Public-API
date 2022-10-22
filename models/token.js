@@ -293,7 +293,7 @@ async function getUserNfts(walletAddress, limit = 16, page = 1) {
   let nfts = []
   for (const contract of indexerData.data) {
     let contract_address_b16 = validation.isBech32(nft.contract) ? fromBech32Address(nft.contract) : nft.contract
-    let indexer_contract_data await indexer.GetContractState(contract_address_b16).catch((error) => console.log(error))
+    let indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => console.log(error))
     for (const nft of contract.nfts) {
       nfts.push({
         collection_name: nft.name,
