@@ -187,7 +187,7 @@ async function getTokens(filter, limit, page, order, orderBy, contract_address) 
         contract_address_b16,
         contract_address_b32,
         token_id: token_id,
-        royalty_bps: indexer_state.data.royalty_fee_bps ?? 0,
+        royalty_bps: indexer_contract_data.data.royalty_fee_bps ?? 0,
         token_price: listing_fungible_token_price,
         fungible_address: fungible_address,
         token_symbol: fungible_symbol,
