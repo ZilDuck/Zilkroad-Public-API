@@ -292,6 +292,8 @@ async function getUserNfts(walletAddress, limit = 16, page = 1) {
   const indexerData = await indexer.GetNFTsForAddress(walletAddress, false).then(response => response).catch((error) => logger.errorLog(error))
   let nfts = []
   for (const contract of indexerData.data) {
+    let contract_address_b16 = validation.isBech32(nft.contract) ? fromBech32Address(nft.contract) : nft.contract
+    let indexer_contract_data await indexer.GetContractState(contract_address_b16).catch((error) => console.log(error))
     for (const nft of contract.nfts) {
       nfts.push({
         collection_name: nft.name,
@@ -300,6 +302,7 @@ async function getUserNfts(walletAddress, limit = 16, page = 1) {
         contract_address_b32: validation.isBech32(nft.contract) ? nft.contract : toBech32Address(nft.contract),
         owner_address_b16: validation.isBech32(walletAddress) ? fromBech32Address(walletAddress) : walletAddress,
         owner_address_b32: validation.isBech32(walletAddress) ? walletAddress : toBech32Address(walletAddress),
+        royalty_bps: indexer_contract_data.data.royalty_fee_bps ?? 0,
         token_id: nft.tokenId
       })
     }
