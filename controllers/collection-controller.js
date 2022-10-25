@@ -67,5 +67,21 @@ module.exports = {
     } else {
       res.send(cacheResult)
     }
+  },
+  getCollectionActivity: async function(req, res)
+  {
+    const contractAddress = req.params.contractAddress
+    const page = req.query.page ?? 1
+    const limit = req.query.limit ?? 10
+    console.log(`getCollectionActivity-${contractAddress}-${page}-${limit}`)
+
+    const cacheResult = await cache.GetKey(`getCollectionActivity-${contractAddress}-${page}-${limit}`)
+    if (cacheResult === false) {
+      const fetchData = await contract.DBGetPaginatedContractActivity(contractAddress, page, limit)
+      await cache.SetKey(`getCollectionActivity-${contractAddress}-${page}-${limit}`, fetchData, cacheTime)
+      res.send(fetchData)
+    } else {
+      res.send(cacheResult)
+    }
   }
 }
