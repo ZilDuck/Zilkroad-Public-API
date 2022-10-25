@@ -314,7 +314,7 @@ async function DBGetAllCollectionRanks(page, limit, timeFrom, timeTo)
   return result.rows
 }
 
-async function DBGetPaginatedContractActivity(contract_address, limit_rows, offset_rows)
+async function DBGetPaginatedContractActivity(contract_address, offset_rows, limit_rows)
 {
     logger.infoLog(`API - PUBLIC - DBGetPaginatedContractActivity - HIT`)
     
