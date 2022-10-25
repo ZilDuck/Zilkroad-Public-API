@@ -73,6 +73,7 @@ module.exports = {
     const contractAddress = req.params.contractAddress
     const page = req.query.page ?? 1
     const limit = req.query.limit ?? 10
+    console.log(`getCollectionActivity-${contractAddress}-${page}-${limit}`)
 
     const cacheResult = await cache.GetKey(`getCollectionActivity-${contractAddress}-${page}-${limit}`)
     if (cacheResult === false) {
