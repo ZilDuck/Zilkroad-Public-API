@@ -1,6 +1,7 @@
 const contract = require('../models/contract')
 const nft = require('../models/token')
 const cache = require('../cache/cache.js')
+const { toBech32Address, fromBech32Address, validation } = require('@zilliqa-js/zilliqa')
 
 const cacheTime = 30
 
@@ -63,6 +64,25 @@ module.exports = {
     if (cacheResult === false) {
       const fetchData = await contract.GetContractNfts(contractAddress, filter, limit, page, order, orderBy)
       await cache.SetKey(`getCollections-${page}-${limit}-${filter}-${order}-${orderBy}`, fetchData, cacheTime)
+      res.send(fetchData)
+    } else {
+      res.send(cacheResult)
+    }
+  },
+  getCollectionActivity: async function(req, res)
+  {
+    let contractAddress = req.params.contractAddress
+    const page = req.query.page ?? 1
+    const limit = req.query.limit ?? 10
+
+    if (validation.isBech32(contractAddress)) {
+      contractAddress = fromBech32Address(contractAddress)
+    }
+
+    const cacheResult = await cache.GetKey(`getCollectionActivity-${contractAddress}-${page}-${limit}`)
+    if (cacheResult === false) {
+      const fetchData = await contract.DBGetPaginatedContractActivity(contractAddress, (page - 1), limit)
+      await cache.SetKey(`getCollectionActivity-${contractAddress}-${page}-${limit}`, fetchData, cacheTime)
       res.send(fetchData)
     } else {
       res.send(cacheResult)
