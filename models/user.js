@@ -161,6 +161,11 @@ async function DBGetRankedWalletActivity(filter)
     }
     const values = [limit, offset, startTime, endTime]
     var result = await pgClient.query(sql, values)
+    for ( var res in result.rows ) {
+        let wallet_address = result.rows[res].address
+        wallet_address = validation.isBech32(wallet_address) ? wallet_address : toBech32Address(wallet_address)
+        result.rows[res].address = wallet_address
+    }
     logger.debugLog(result.rows)
     return result.rows
 }
