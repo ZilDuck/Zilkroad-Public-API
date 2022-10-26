@@ -71,7 +71,7 @@ module.exports = {
   },
   getCollectionActivity: async function(req, res)
   {
-    const contractAddress = req.params.contractAddress
+    let contractAddress = req.params.contractAddress
     const page = req.query.page ?? 1
     const limit = req.query.limit ?? 10
 
