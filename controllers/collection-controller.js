@@ -1,6 +1,7 @@
 const contract = require('../models/contract')
 const nft = require('../models/token')
 const cache = require('../cache/cache.js')
+const { toBech32Address, fromBech32Address, validation } = require('@zilliqa-js/zilliqa')
 
 const cacheTime = 30
 
@@ -73,6 +74,10 @@ module.exports = {
     const contractAddress = req.params.contractAddress
     const page = req.query.page ?? 1
     const limit = req.query.limit ?? 10
+
+    if (validation.isBech32(contract_address)) {
+      contract_address = fromBech32Address(contract_address)
+    }
 
     const cacheResult = await cache.GetKey(`getCollectionActivity-${contractAddress}-${page}-${limit}`)
     if (cacheResult === false) {
