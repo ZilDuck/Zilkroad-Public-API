@@ -1,6 +1,7 @@
 const cache = require('../cache/cache.js')
 const contractRanks = require('../models/contract-ranks')
 const contract = require('../models/contract')
+const { toBech32Address, fromBech32Address, validation } = require('@zilliqa-js/zilliqa')
 
 const cacheTime = 30
 
@@ -26,6 +27,7 @@ module.exports = {
                 data.sales_history = contractData.sales_history
                 data.primary_sales = contractData.primary_sales
                 data.stats = contractData.stats
+                data.contract_address_b32 = validation.isBech32(data.nonfungible_address) ? data.nonfungible_address : toBech32Address(data.nonfungible_address)
             }
             await cache.SetKey(`getAllCollectionRanks-${page}-${limit}-${timeFrom}-${timeTo}`, fetchData, cacheTime)
             res.send(fetchData)

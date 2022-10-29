@@ -140,6 +140,9 @@ async function DBGetPaginatedUserWalletActivity(user_address, limit_rows, offset
     ]
 
     var result = await pgClient.query(sql, values)
+    result.rows.forEach(function(object) {
+        object.zil_address = validation.isBech32(object.contract) ? object.contract : toBech32Address(object.contract)
+    })
     logger.debugLog(result.rows)
     return result.rows
 }
@@ -161,6 +164,9 @@ async function DBGetRankedWalletActivity(filter)
     }
     const values = [limit, offset, startTime, endTime]
     var result = await pgClient.query(sql, values)
+    result.rows.forEach(function(object) {
+        object.wallet_address_b32 = validation.isBech32(object.address) ? object.address : toBech32Address(object.address)
+    })
     logger.debugLog(result.rows)
     return result.rows
 }
