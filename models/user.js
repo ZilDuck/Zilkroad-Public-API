@@ -164,6 +164,9 @@ async function DBGetRankedWalletActivity(filter)
     }
     const values = [limit, offset, startTime, endTime]
     var result = await pgClient.query(sql, values)
+    result.rows.forEach(function(object) {
+        object.zil_address = validation.isBech32(object.address) ? object.address : toBech32Address(object.address)
+    })
     logger.debugLog(result.rows)
     return result.rows
 }
