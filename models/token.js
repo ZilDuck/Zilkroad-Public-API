@@ -299,7 +299,7 @@ async function getUserNfts(walletAddress, limit = 16, page = 1) {
         collection_name: nft.name,
         symbol: nft.symbol,
         contract_address_b16: contract_address_b16,
-        contract_address_b32: validation.isBech32(walletAddress) ? walletAddress : toBech32Address(walletAddress),
+        contract_address_b32: validation.isBech32(contract_address_b16) ? contract_address_b16 : toBech32Address(contract_address_b16),
         owner_address_b16: validation.isBech32(walletAddress) ? fromBech32Address(walletAddress) : walletAddress,
         royalty_bps: indexer_contract_data.data.royalty_fee_bps ?? 0,
         token_id: nft.tokenId
