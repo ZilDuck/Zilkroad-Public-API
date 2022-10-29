@@ -82,6 +82,9 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getCollectionActivity-${contractAddress}-${page}-${limit}`)
     if (cacheResult === false) {
       const fetchData = await contract.DBGetPaginatedContractActivity(contractAddress, (page - 1), limit)
+      fetchData.forEach(function(object) {
+        object.contract_address_b32 = validation.isBech32(object.contract) ? object.contract : toBech32Address(object.contract)
+      })
       await cache.SetKey(`getCollectionActivity-${contractAddress}-${page}-${limit}`, fetchData, cacheTime)
       res.send(fetchData)
     } else {
