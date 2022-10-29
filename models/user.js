@@ -141,7 +141,7 @@ async function DBGetPaginatedUserWalletActivity(user_address, limit_rows, offset
 
     var result = await pgClient.query(sql, values)
     result.rows.forEach(function(object) {
-        object.zil_address = validation.isBech32(object.contract) ? object.contract : toBech32Address(object.contract)
+        object.contract_address_b32 = validation.isBech32(object.contract) ? object.contract : toBech32Address(object.contract)
     })
     logger.debugLog(result.rows)
     return result.rows
