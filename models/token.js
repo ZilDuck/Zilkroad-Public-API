@@ -248,7 +248,7 @@ async function getContractNfts(contractAddress, filter, limit, page, order, orde
       collection_name: name,
       symbol,
       contract_address_b16: validation.isBech32(contract) ? fromBech32Address(contract) : contract,
-      contract_address_b32: validation.isBech32(contract) ? contract : toBech32Address(contract),
+      zil_address: validation.isBech32(contract) ? contract : toBech32Address(contract),
       token_id: tokenId,
       verified: verified
     })),
