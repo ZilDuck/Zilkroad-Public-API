@@ -175,7 +175,7 @@ async function getTokens(filter, limit, page, order, orderBy, contract_address) 
 
     const nfts = await Promise.all(db_result.map(async ({static_order_id, nonfungible_address, token_id, listing_fungible_token_price, fungible_symbol, decimals, verified, fungible_address}) => {
       const contract_address_b16 = validation.isBech32(nonfungible_address) ? fromBech32Address(nonfungible_address) : nonfungible_address
-      const contract_address_b32 = validation.isBech32(nonfungible_address) ? nonfungible_address : toBech32Address(nonfungible_address)
+      const zil_address = validation.isBech32(nonfungible_address) ? nonfungible_address : toBech32Address(nonfungible_address)
       const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(res => (res.data)).catch((error) => console.log(error)) // TODO Shouldn't have an api call in a loop like this. Need a batch method or listing data from indexer?
       const indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => console.log(error))
 
@@ -185,7 +185,7 @@ async function getTokens(filter, limit, page, order, orderBy, contract_address) 
         current_owner: indexer_token.owner,
         symbol: indexer_token.symbol,
         contract_address_b16,
-        contract_address_b32,
+        zil_address,
         token_id: token_id,
         royalty_bps: indexer_contract_data.data.royalty_fee_bps ?? 0,
         token_price: listing_fungible_token_price,
