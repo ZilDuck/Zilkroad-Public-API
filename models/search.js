@@ -1,7 +1,7 @@
 const logger = require('../logger.js');
 const client = require('../utils/expressUtils.js')
 const pgClient = client.ReturnPool()
-const { toBech32Address, fromBech32Address } = require('@zilliqa-js/crypto')
+const { toBech32Address, fromBech32Address, validation } = require('@zilliqa-js/zilliqa')
 const { DBGetVerifiedStatusForNonFungible } = require('./common.js')
 const { ResolveZilDomain } = require("../DomainResolver.js");
 const nftUtils = require('../utils/nftUtils.js')
@@ -130,6 +130,10 @@ async function getSearchForFreetext(freetext)
         logger.debugLog(`calling ${sql}, with ${values}`)
         var query = await pgClient.query(sql, values)
         logger.debugLog(query.rows)
+        query.rows.forEach(function(object) {
+            object.contract_address_b32 = validation.isBech32(object.nonfungible_address) ? object.nonfungible_address : toBech32Address(object.nonfungible_address)
+            object.result_action = '/collections/' + object.contract_address_b32
+        })
 
         return query.rows;
     }
