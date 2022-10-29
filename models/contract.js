@@ -314,7 +314,21 @@ async function DBGetAllCollectionRanks(page, limit, timeFrom, timeTo)
   return result.rows
 }
 
+async function DBGetPaginatedContractActivity(contract_address, offset_rows, limit_rows)
+{
+    logger.infoLog(`API - PUBLIC - DBGetPaginatedContractActivity - HIT`)
+    
+    const sql = 'SELECT * FROM fn_getpaginatedactivityforcontract($1, $2, $3)'
+    const values = [
+        contract_address,
+        limit_rows,
+        offset_rows
+    ]
 
+    var result = await pgClient.query(sql, values)
+    logger.debugLog(result.rows)
+    return result.rows
+}
 
 module.exports = {
   GetContract,
@@ -330,4 +344,5 @@ module.exports = {
   DBGetGraphForNonFungible,
   DBGetACollectionRank,
   DBGetAllCollectionRanks,
+  DBGetPaginatedContractActivity,
 }
