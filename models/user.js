@@ -24,7 +24,6 @@ async function GetUser(user_address_b16)
     {
         user_address_b16 = fromBech32Address(user_address_b16)
     }
-    console.log("User address: %s", user_address_b16);
     const fungible_token_balance = await APIGetHeldTokensForUser(user_address_b16).catch(error => console.log(error))
     const user_stats = await DBGetAccumulativeStatsForUser(user_address_b16).catch(error => console.log(error))
     const zil_balance = await APIGetZilBalanceForUser(user_address_b16).catch(error => console.log(error))
