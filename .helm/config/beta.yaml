@@ -33,4 +33,4 @@ image:
   app:
     pullSecret: aws-registry
 
-replicas: 1
+replicas: 2
