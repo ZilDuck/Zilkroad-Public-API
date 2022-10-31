@@ -23,14 +23,14 @@ env:
     zusdt: 9fce53c80e07fddb02450fc9b435b0a7781b68a8
     duck: e743ff40e780fe08dee4e2ad830983d1979ff2e6
 
-namespace: zilkroad-testnet
+namespace: zilkroad-beta
 
 ingress:
   enabled: True
-  host: staging-public-api.zilkroad.io
+  host: testnet-public-api.zilkroad.io
 
 image:
   app:
     pullSecret: aws-registry
 
-replicas: 1
+replicas: 2
