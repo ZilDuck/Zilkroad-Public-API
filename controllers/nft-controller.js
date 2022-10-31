@@ -1,12 +1,13 @@
 const token = require('../models/token')
 const listing = require('../models/listing')
 const cache = require('../cache/cache.js')
+const addressUtil = require('../utils/addressUtils.js')
 
 const cacheTime = 30
 
 module.exports = {
   getNft: async function(req, res) {
-    const contractAddress = req.params.contractAddress
+    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
     const tokenId = req.params.tokenId
 
     const cacheResult = await cache.GetKey(`getNft-${contractAddress}-${tokenId}`)
