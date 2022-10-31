@@ -3,6 +3,7 @@ const client = require('../utils/expressUtils.js')
 const pgClient = client.ReturnPool()
 const indexer = require('../utils/indexer.js')
 const logger = require('../logger')
+const addressUtil = require('../utils/addressUtils.js')
 const { Zilliqa, validation } = require('@zilliqa-js/zilliqa')
 const zilliqa = new Zilliqa(process.env.current_network) // Shouldn't we be exporting the one from expressUtils?
 
@@ -20,10 +21,7 @@ async function GetUserCollection(user_address_array) {
 async function GetUser(user_address_b16)
 {
     logger.infoLog(`MODEL - UserModel - GetUser - HIT`)
-    if(user_address_b16.startsWith('zil1'))
-    {
-        user_address_b16 = fromBech32Address(user_address_b16)
-    }
+    const user_address_b32 =  addressUtil.NormaliseAddressToBase16(user_address_b16)
     const fungible_token_balance = await APIGetHeldTokensForUser(user_address_b16).catch(error => console.log(error))
     const user_stats = await DBGetAccumulativeStatsForUser(user_address_b16).catch(error => console.log(error))
     const zil_balance = await APIGetZilBalanceForUser(user_address_b16).catch(error => console.log(error))
@@ -31,7 +29,7 @@ async function GetUser(user_address_b16)
 
     return {
         user_address_b16,
-        user_address_b32: toBech32Address(user_address_b16),
+        user_address_b32,
         zil_balance,
         fungible_token_balance,
         user_stats,
