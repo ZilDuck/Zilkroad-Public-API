@@ -3,7 +3,7 @@ const { fromBech32Address } = require('@zilliqa-js/crypto')
 module.exports = {
     NormaliseAddressToBase16: function(b32_address)
     {
-        if(b16_address.startsWith('zil1'))
+        if(b32_address.startsWith('zil1'))
         {
             return b16_address = fromBech32Address(b32_address)
         }
