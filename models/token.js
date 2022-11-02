@@ -289,7 +289,7 @@ async function getContractListedNfts(contractAddress, limit, page) {
 
 async function getUserNfts(walletAddress, limit = 16, page = 1) {
   let owner_address_b16 = addressUtil.NormaliseAddressToBase16(walletAddress)
-  let owner_address_b32 = toBech32Address(user_address_b16)
+  let owner_address_b32 = toBech32Address(owner_address_b16)
   const indexerData = await indexer.GetNFTsForAddress(walletAddress, false).then(response => response).catch((error) => logger.errorLog(error))
   let nfts = []
   for (const contract of indexerData.data) {
