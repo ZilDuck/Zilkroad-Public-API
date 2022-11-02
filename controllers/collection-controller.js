@@ -76,10 +76,6 @@ module.exports = {
     const page = req.query.page ?? 1
     const limit = req.query.limit ?? 10
 
-    if (validation.isBech32(contractAddress)) {
-      contractAddress = fromBech32Address(contractAddress)
-    }
-
     const cacheResult = await cache.GetKey(`getCollectionActivity-${contractAddress}-${page}-${limit}`)
     if (cacheResult === false) {
       const fetchData = await contract.DBGetPaginatedContractActivity(contractAddress, (page - 1), limit)
