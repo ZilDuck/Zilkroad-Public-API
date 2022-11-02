@@ -5,6 +5,7 @@ const indexer = require('../utils/indexer.js')
 const logger = require('../logger')
 const zilliqa = new Zilliqa(process.env.current_network)
 const addressUtil = require('../utils/addressUtils.js')
+const { toBech32Address } = require('@zilliqa-js/zilliqa')
 const { DBGetVerifiedStatusForNonFungible } = require('./common.js')
 const { GetPaginatedTokenIDs } = require('../utils/indexer')
 
@@ -42,7 +43,14 @@ async function getToken(
   const sales_count = sales_data[0]?.lifetime_quantity_sold ?? 0
   const sales_volume = sales_data[0]?.lifetime_sales_usd ?? 0
 
-  const sales_history = await DBGetNonFungibleTokenSaleHistory(contract_address_b16, token_id).catch((error) => console.log(error))
+  //this is also butters, but what are you gonna do about it
+  var sales_history = await DBGetNonFungibleTokenSaleHistory(contract_address_b16, token_id).catch((error) => console.log(error))
+  for (var sales in sales_history)
+  {
+    sales.seller = toBech32Address(sales.seller)
+    sales.buyer = toBech32Address(sales.buyer)
+  }
+
   const graph_data = await DBGetPeriodGraphForNonFungibleToken(contract_address_b16, token_id).catch((error) => console.log(error))
 
   contract_name = indexer_token.name ?? false
