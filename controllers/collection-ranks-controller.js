@@ -2,6 +2,7 @@ const cache = require('../cache/cache.js')
 const contractRanks = require('../models/contract-ranks')
 const contract = require('../models/contract')
 const { toBech32Address, fromBech32Address, validation } = require('@zilliqa-js/zilliqa')
+const addressUtil = require('../utils/addressUtils.js')
 
 const cacheTime = 30
 
@@ -39,7 +40,7 @@ module.exports = {
 
     getACollectionRank: async function(req, res)
     {
-        const contractAddress = req.params.contractAddress
+        const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
         const timeFrom = req.params.timeFrom ?? 0
         const timeTo = req.query.timeTo ?? 99999999999999
 
