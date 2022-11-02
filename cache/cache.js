@@ -8,19 +8,23 @@ logger.infoLog(`cache active : ${cache_enabled} // cache age : ${cache_default_a
 logger.infoLog(`cache url : ${process.env.REDIS_URL}`)
 
 let client 
-try
+if(cache_enabled)
 {
+  try
+  {
     client = redis.createClient({
-        socket: {
-            host: "redis-headless.redis.svc.cluster.local",
-            port: 6379
-            },
-            password: 'Jd8De29Z1o'
-        });
-}
-catch(e)
-{
-  logger.errorLog(e)
+      socket: {
+        host: "redis-headless.redis.svc.cluster.local",
+        port: 6379
+        },
+      password: 'Jd8De29Z1o'
+    });
+    client.connect().catch(console.error)
+  }
+  catch(e)
+  {
+    logger.errorLog(e)
+  }
 }
 
 module.exports =
@@ -117,4 +121,3 @@ function validateCacheInputs(key, value, expiry)
     }
 }
 
-client.connect().catch(console.error)
