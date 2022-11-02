@@ -4,8 +4,8 @@ const pgClient = client.ReturnPool()
 const indexer = require('../utils/indexer.js')
 const logger = require('../logger')
 const zilliqa = new Zilliqa(process.env.current_network)
-
-
+const addressUtil = require('../utils/addressUtils.js')
+const { toBech32Address } = require('@zilliqa-js/zilliqa')
 const { DBGetVerifiedStatusForNonFungible } = require('./common.js')
 const { GetPaginatedTokenIDs } = require('../utils/indexer')
 
@@ -29,16 +29,7 @@ async function getToken(
   contract_address
 ) {
 
-  let contract_address_b16
-  let contract_address_b32
-
-  if (validation.isBech32(contract_address)) {
-    contract_address_b16 = fromBech32Address(contract_address)
-    contract_address_b32 = contract_address
-  } else {
-    contract_address_b16 = contract_address
-    contract_address_b32 = toBech32Address(contract_address)
-  }
+  let contract_address_b16 = contract_address
 
   logger.infoLog(`MODEL - TokenModel - getToken - HIT - ${token_id + contract_address_b16}`)
   const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(r => r.data).catch((error) => console.log(error))
@@ -52,8 +43,15 @@ async function getToken(
   const sales_count = sales_data[0]?.lifetime_quantity_sold ?? 0
   const sales_volume = sales_data[0]?.lifetime_sales_usd ?? 0
 
-  const sales_history = await DBGetNonFungibleTokenSaleHistory(contract_address_b16, token_id).catch((error) => console.log(error))
-  const graph_data = await DBGetPeriodGraphForNonFungibleToken(contract_address, token_id).catch((error) => console.log(error))
+  //this is also butters, but what are you gonna do about it
+  var sales_history = await DBGetNonFungibleTokenSaleHistory(contract_address_b16, token_id).catch((error) => console.log(error))
+  for (var sales in sales_history)
+  {
+    sales.seller = toBech32Address(sales.seller)
+    sales.buyer = toBech32Address(sales.buyer)
+  }
+
+  const graph_data = await DBGetPeriodGraphForNonFungibleToken(contract_address_b16, token_id).catch((error) => console.log(error))
 
   contract_name = indexer_token.name ?? false
   contract_symbol = indexer_token.symbol ?? false
@@ -71,7 +69,7 @@ async function getToken(
     // order_id,
     token_id,
     contract_address_b16,
-    contract_address_b32,
+    contract_address_b32: toBech32Address(contract_address_b16),
     contract_name,
     contract_symbol,
     owner_address_b16: owner_address,
@@ -289,18 +287,22 @@ async function getContractListedNfts(contractAddress, limit, page) {
 }
 
 async function getUserNfts(walletAddress, limit = 16, page = 1) {
+  let owner_address_b16 = addressUtil.NormaliseAddressToBase16(walletAddress)
+  let owner_address_b32 = toBech32Address(owner_address_b16)
   const indexerData = await indexer.GetNFTsForAddress(walletAddress, false).then(response => response).catch((error) => logger.errorLog(error))
   let nfts = []
   for (const contract of indexerData.data) {
     for (const nft of contract.nfts) {
-      let contract_address_b16 = validation.isBech32(nft.contract) ? fromBech32Address(nft.contract) : nft.contract
-      let indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => console.log(error))
+      let contract_address_b16 = addressUtil.NormaliseAddressToBase16(nft.contract)
+      let contract_address_b32 = toBech32Address(contract_address_b16)
+      let indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => console.log(error))    
       nfts.push({
         collection_name: nft.name,
         symbol: nft.symbol,
         contract_address_b16: contract_address_b16,
-        contract_address_b32: validation.isBech32(contract_address_b16) ? contract_address_b16 : toBech32Address(contract_address_b16),
-        owner_address_b16: validation.isBech32(walletAddress) ? fromBech32Address(walletAddress) : walletAddress,
+        contract_address_b32: contract_address_b32,
+        owner_address_b16: owner_address_b16,
+        owner_address_b32: owner_address_b32,
         royalty_bps: indexer_contract_data.data.royalty_fee_bps ?? 0,
         token_id: nft.tokenId
       })
