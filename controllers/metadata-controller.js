@@ -17,17 +17,13 @@ module.exports = {
         let error_message = {
             msg: 'There was an error trying to get the metadata'
         }
-        let contractAddress = String(req.params.contractAddress).toLowerCase()
+        let contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
         let base_uri = ''
         let response = {}
 
         try {
             if ( contractAddress === '' || contractAddress === undefined ) {
                 throw 'No contract address found'
-            }
-
-            if ( contractAddress.startsWith('zil') ) {
-                contractAddress = fromBech32Address(contractAddress)
             }
 
             base_uri = await GetTokenBaseURI(contractAddress)
