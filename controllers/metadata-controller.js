@@ -4,9 +4,10 @@ const { Metadata } = require("../models/metadata");
 const { GetTokenBaseURI } = require("../utils/nftUtils");
 const axios = require("axios");
 const cache = require('../cache/cache.js')
-
 const ipfs_prefix = 'https://ipfs.io/ipfs/'
 const metadataFileExtenstion = `metadata.json`
+const addressUtil = require('../utils/addressUtils.js')
+
 const cacheTime = 900
 
 module.exports = {
