@@ -2,12 +2,13 @@ const contract = require('../models/contract')
 const nft = require('../models/token')
 const cache = require('../cache/cache.js')
 const { toBech32Address, fromBech32Address, validation } = require('@zilliqa-js/zilliqa')
+const addressUtil = require('../utils/addressUtils.js')
 
 const cacheTime = 30
 
 module.exports = {
   getCollection: async function(req, res) {
-    const contractAddress = req.params.contractAddress
+    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
 
     const cacheResult = await cache.GetKey(`getCollection-${contractAddress}`)
     if (cacheResult === false) {
@@ -20,7 +21,7 @@ module.exports = {
   },
 
   getCollectionNfts: async function(req, res) {
-    const contractAddress = req.params.contractAddress
+    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
     const page = req.query.page ?? 1
     const limit = req.query.limit ?? 10
     const filter = req.query.filter ?? ''
@@ -38,7 +39,7 @@ module.exports = {
   },
 
   getCollectionListedNfts: async function(req, res) {
-    const contractAddress = req.params.contractAddress
+    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
     const limit = req.query.limit ?? 10
     const page = req.query.page ?? 1
     
@@ -71,13 +72,9 @@ module.exports = {
   },
   getCollectionActivity: async function(req, res)
   {
-    let contractAddress = req.params.contractAddress
+    let contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
     const page = req.query.page ?? 1
     const limit = req.query.limit ?? 10
-
-    if (validation.isBech32(contractAddress)) {
-      contractAddress = fromBech32Address(contractAddress)
-    }
 
     const cacheResult = await cache.GetKey(`getCollectionActivity-${contractAddress}-${page}-${limit}`)
     if (cacheResult === false) {
