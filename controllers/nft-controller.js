@@ -43,7 +43,7 @@ module.exports = {
   },
   
   getNftSpender: async function(req, res) {
-    const contractAddress = req.params.contractAddress
+    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
     const tokenId = req.params.tokenId
 
     const cacheResult = await cache.GetKey(`getNftSpender-${contractAddress}-${tokenId}`)
@@ -57,7 +57,7 @@ module.exports = {
   },
 
   getFungibleAllowance: async function(req, res) {
-    const contractAddress = req.params.contractAddress
+    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
     const userAddress = req.params.userAddress
 
     const cacheResult = await cache.GetKey(`getFungibleAllowance-${contractAddress}-${userAddress}`)

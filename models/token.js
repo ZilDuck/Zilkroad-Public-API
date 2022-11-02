@@ -4,8 +4,7 @@ const pgClient = client.ReturnPool()
 const indexer = require('../utils/indexer.js')
 const logger = require('../logger')
 const zilliqa = new Zilliqa(process.env.current_network)
-
-
+const addressUtil = require('../utils/addressUtils.js')
 const { DBGetVerifiedStatusForNonFungible } = require('./common.js')
 const { GetPaginatedTokenIDs } = require('../utils/indexer')
 
@@ -289,18 +288,22 @@ async function getContractListedNfts(contractAddress, limit, page) {
 }
 
 async function getUserNfts(walletAddress, limit = 16, page = 1) {
+  let owner_address_b16 = addressUtil.NormaliseAddressToBase16(walletAddress)
+  let owner_address_b32 = toBech32Address(owner_address_b16)
   const indexerData = await indexer.GetNFTsForAddress(walletAddress, false).then(response => response).catch((error) => logger.errorLog(error))
   let nfts = []
   for (const contract of indexerData.data) {
     for (const nft of contract.nfts) {
-      let contract_address_b16 = validation.isBech32(nft.contract) ? fromBech32Address(nft.contract) : nft.contract
-      let indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => console.log(error))
+      let contract_address_b16 = addressUtil.NormaliseAddressToBase16(nft.contract)
+      let contract_address_b32 = toBech32Address(contract_address_b16)
+      let indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => console.log(error))    
       nfts.push({
         collection_name: nft.name,
         symbol: nft.symbol,
         contract_address_b16: contract_address_b16,
-        contract_address_b32: validation.isBech32(contract_address_b16) ? contract_address_b16 : toBech32Address(contract_address_b16),
-        owner_address_b16: validation.isBech32(walletAddress) ? fromBech32Address(walletAddress) : walletAddress,
+        contract_address_b32: contract_address_b32,
+        owner_address_b16: owner_address_b16,
+        owner_address_b32: owner_address_b32,
         royalty_bps: indexer_contract_data.data.royalty_fee_bps ?? 0,
         token_id: nft.tokenId
       })

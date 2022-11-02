@@ -1,12 +1,13 @@
 const contract = require('../models/contract')
 const nft = require('../models/token')
 const cache = require('../cache/cache.js')
+const addressUtil = require('../utils/addressUtils.js')
 
 const cacheTime = 30
 
 module.exports = {
   getCollectionStats: async function(req, res) {
-    const contractAddress = req.params.contractAddress
+    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
 
     const cacheResult = await cache.GetKey(`getCollection-${contractAddress}`)
     if (cacheResult === false) {
