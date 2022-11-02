@@ -5,7 +5,6 @@ const indexer = require('../utils/indexer.js')
 const logger = require('../logger')
 const zilliqa = new Zilliqa(process.env.current_network)
 const addressUtil = require('../utils/addressUtils.js')
-const { toBech32Address } = require('@zilliqa-js/zilliqa')
 const { DBGetVerifiedStatusForNonFungible } = require('./common.js')
 const { GetPaginatedTokenIDs } = require('../utils/indexer')
 
