@@ -1,12 +1,13 @@
 const wallet = require('../models/user')
 const token = require('../models/token')
 const cache = require('../cache/cache.js')
+const addressUtil = require('../utils/addressUtils.js')
 
 const cacheTime = 30
 
 module.exports = {
   getWallet: async function(req, res) {
-    const walletAddress = req.params.walletAddress
+    const walletAddress = addressUtil.NormaliseAddressToBase16(req.params.walletAddress)
 
     const cacheResult = await cache.GetKey(`getWallet-${walletAddress}`)
     if (cacheResult === false) {
@@ -21,7 +22,7 @@ module.exports = {
   },
 
   getWalletNfts: async function(req, res) {
-    const walletAddress = req.params.walletAddress
+    const walletAddress = addressUtil.NormaliseAddressToBase16(req.params.walletAddress)
     const page = req.query.page ?? 1
     const limit = req.query.limit ?? 10
     const filter = req.query.filter ?? ''
@@ -39,7 +40,7 @@ module.exports = {
   },
 
   getWalletListedNfts: async function(req, res) {
-    const walletAddress = req.params.walletAddress
+    const walletAddress = addressUtil.NormaliseAddressToBase16(req.params.walletAddress)
     const page = req.query.page ?? 1
     const limit = req.query.limit ?? 10
     const filter = req.query.filter ?? ''

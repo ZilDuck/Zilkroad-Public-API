@@ -21,7 +21,7 @@ async function GetUserCollection(user_address_array) {
 async function GetUser(user_address_b16)
 {
     logger.infoLog(`MODEL - UserModel - GetUser - HIT`)
-    const user_address_b32 =  addressUtil.NormaliseAddressToBase16(user_address_b16)
+    const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address_b16)
     const fungible_token_balance = await APIGetHeldTokensForUser(user_address_b16).catch(error => console.log(error))
     const user_stats = await DBGetAccumulativeStatsForUser(user_address_b16).catch(error => console.log(error))
     const zil_balance = await APIGetZilBalanceForUser(user_address_b16).catch(error => console.log(error))
@@ -29,7 +29,7 @@ async function GetUser(user_address_b16)
 
     return {
         user_address_b16,
-        user_address_b32,
+        user_address_b32 : toBech32Address(user_address_b16),
         zil_balance,
         fungible_token_balance,
         user_stats,
@@ -43,16 +43,7 @@ async function GetUser(user_address_b16)
 
 
 async function GetPageUserListing(user_address, limit_rows, offset_rows) {
-    let user_address_b16
-    let user_address_b32
-
-    if (validation.isBech32(user_address)) {
-        user_address_b16 = fromBech32Address(user_address)
-        user_address_b32 = user_address
-    } else {
-        user_address_b16 = user_address
-        user_address_b32 = toBech32Address(user_address)
-    }
+    const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
     const response = await DBGetPaginatedUserListings(user_address_b16, limit_rows, offset_rows)
 
     return response
@@ -62,14 +53,16 @@ async function GetPageUserListing(user_address, limit_rows, offset_rows) {
  * SHAPE DATA UTILS
  */ 
 
-async function APIGetZilBalanceForUser(user_address_b16) {
+async function APIGetZilBalanceForUser(user_address) {
+    const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
     const zil_balance = await zilliqa.blockchain.getBalance(user_address_b16).catch(error => console.log(error))
     return zil_balance.result
 }
 
-async function APIGetHeldTokensForUser(user_address_b16)
+async function APIGetHeldTokensForUser(user_address)
 {
     logger.infoLog(`API - PUBLIC - GetHeldTokensForUser - HIT`)
+    const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
 
     const token_db_result = await pgClient.query("SELECT * FROM fn_getAllSupportedFungibleAddresses()")
     
@@ -89,9 +82,10 @@ async function APIGetHeldTokensForUser(user_address_b16)
     return token_result
 }
 
-async function APIGetNFTHeldByWallet(user_address_b16)
+async function APIGetNFTHeldByWallet(user_address)
 {
     logger.infoLog(`API - PUBLIC - GetNFTHeldByWallet - HIT`)
+    const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
 
     var result = await indexer.GetNFTsForAddress(user_address_b16)
     logger.debugLog(result.data)
