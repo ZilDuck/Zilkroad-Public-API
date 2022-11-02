@@ -28,16 +28,7 @@ async function getToken(
   contract_address
 ) {
 
-  let contract_address_b16
-  let contract_address_b32
-
-  if (validation.isBech32(contract_address)) {
-    contract_address_b16 = fromBech32Address(contract_address)
-    contract_address_b32 = contract_address
-  } else {
-    contract_address_b16 = contract_address
-    contract_address_b32 = toBech32Address(contract_address)
-  }
+  let contract_address_b16 = contract_address
 
   logger.infoLog(`MODEL - TokenModel - getToken - HIT - ${token_id + contract_address_b16}`)
   const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(r => r.data).catch((error) => console.log(error))
@@ -52,7 +43,7 @@ async function getToken(
   const sales_volume = sales_data[0]?.lifetime_sales_usd ?? 0
 
   const sales_history = await DBGetNonFungibleTokenSaleHistory(contract_address_b16, token_id).catch((error) => console.log(error))
-  const graph_data = await DBGetPeriodGraphForNonFungibleToken(contract_address, token_id).catch((error) => console.log(error))
+  const graph_data = await DBGetPeriodGraphForNonFungibleToken(contract_address_b16, token_id).catch((error) => console.log(error))
 
   contract_name = indexer_token.name ?? false
   contract_symbol = indexer_token.symbol ?? false
@@ -70,7 +61,7 @@ async function getToken(
     // order_id,
     token_id,
     contract_address_b16,
-    contract_address_b32,
+    contract_address_b32: toBech32Address(contract_address_b16),
     contract_name,
     contract_symbol,
     owner_address_b16: owner_address,
