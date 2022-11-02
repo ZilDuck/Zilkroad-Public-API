@@ -2,7 +2,6 @@ const token = require('../models/token')
 const listing = require('../models/listing')
 const cache = require('../cache/cache.js')
 const addressUtil = require('../utils/addressUtils.js')
-const addressUtil = require('../utils/addressUtils.js')
 
 const cacheTime = 30
 
