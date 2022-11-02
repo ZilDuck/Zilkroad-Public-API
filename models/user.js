@@ -18,10 +18,10 @@ async function GetUserCollection(user_address_array) {
     return response
 }
 
-async function GetUser(user_address_b16)
+async function GetUser(user_address)
 {
     logger.infoLog(`MODEL - UserModel - GetUser - HIT`)
-    const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address_b16)
+    const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
     const fungible_token_balance = await APIGetHeldTokensForUser(user_address_b16).catch(error => console.log(error))
     const user_stats = await DBGetAccumulativeStatsForUser(user_address_b16).catch(error => console.log(error))
     const zil_balance = await APIGetZilBalanceForUser(user_address_b16).catch(error => console.log(error))
