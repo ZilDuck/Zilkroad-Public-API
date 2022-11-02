@@ -1,12 +1,13 @@
 const fungibleToken = require('../models/fungible-tokens')
 const cache = require('../cache/cache.js')
 const { fromBech32Address, validation } = require('@zilliqa-js/zilliqa')
+const addressUtil = require('../utils/addressUtils.js')
 
 const cacheTime = 30
 
 module.exports = {
     GetFungibleForAddress: async function(req, res) {
-        var walletAddress = req.params.walletAddress.toLowerCase()
+        var walletAddress = addressUtil.NormaliseAddressToBase16(req.params.walletAddress)
 
         if (validation.isBech32(walletAddress)) {
           walletAddress = fromBech32Address(walletAddress)
