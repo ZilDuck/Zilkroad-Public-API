@@ -9,8 +9,8 @@ module.exports = {
         }
         else
         {
-            console.log(`NormaliseAddressToBase16 - could not normalise ${b32_address} to b32`)
-            return b32_address
+            console.log(`NormaliseAddressToBase16 - could not normalise ${b32_address} to b16, returning b32`)
+            return b32_address.toLowerCase()
         } 
     }
 }
