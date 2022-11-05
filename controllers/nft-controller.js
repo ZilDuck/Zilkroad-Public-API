@@ -11,15 +11,20 @@ module.exports = {
     const tokenId = req.params.tokenId
 
     const cacheResult = await cache.GetKey(`getNft-${contractAddress}-${tokenId}`)
-    if (cacheResult === false) {
-      let nftData = await token.getToken(tokenId, contractAddress)
-      let listingData = await listing.GetNftListing(contractAddress, tokenId)
-      nftData = { ...nftData, ...listingData }
-      await cache.SetKey(`getNft-${contractAddress}-${tokenId}`, nftData, cacheTime)
-      res.send(nftData)
-    } else {
-      res.send(cacheResult)
+    try {
+      if (cacheResult === false) {
+        let nftData = await token.getToken(tokenId, contractAddress)
+        let listingData = await listing.GetNftListing(contractAddress, tokenId)
+        nftData = { ...nftData, ...listingData }
+        await cache.SetKey(`getNft-${contractAddress}-${tokenId}`, nftData, cacheTime)
+        res.send(nftData)
+      } else {
+        res.send(cacheResult)
+      }
+    } catch (error) {
+      res.status(404).send(error)
     }
+    
   },
 
   getNfts: async function(req, res) {
