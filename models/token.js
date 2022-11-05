@@ -31,7 +31,10 @@ async function getToken(
   let contract_address_b16 = addressUtil.NormaliseAddressToBase16(contract_address)
 
   logger.infoLog(`MODEL - TokenModel - getToken - HIT - ${token_id + contract_address_b16}`)
-  const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(r => r.data).catch((error) => console.log(error))
+  const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(r => r.data).catch((error) => {
+    console.log(error)
+    throw {"message": "Token: " + token_id + " for collection: " + contract_address + " does not exist"}
+  })
   // const indexer_actions = await indexer.GetActionsForTokenID(contract_address_b16, token_id).catch((error) => console.log(error))
   //
   // const db_sales_history_graph = await DBGetPeriodGraphForNonFungibleToken(contract_address_b16, token_id).catch((error) => console.log(error))
@@ -39,8 +42,8 @@ async function getToken(
   // const bps = await utils.GetRoyaltyBPSForToken(contract_address_b16).catch((error) => console.log(error))
   const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => console.log(error))
   const sales_data = await DBGetNonFungibleTokenSalesData(contract_address_b16, token_id).catch((error) => console.log(error))
-  const sales_count = sales_data[0]?.lifetime_quantity_sold ?? 0
-  const sales_volume = sales_data[0]?.lifetime_sales_usd ?? 0
+  const sales_count = sales_data?.[0].lifetime_quantity_sold ?? 0
+  const sales_volume = sales_data?.[0].lifetime_sales_usd ?? 0
 
   //this is also butters, but what are you gonna do about it
   var sales_history = await DBGetNonFungibleTokenSaleHistory(contract_address_b16, token_id).catch((error) => console.log(error))
