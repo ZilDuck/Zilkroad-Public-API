@@ -45,7 +45,7 @@ async function getToken(
     sales_history[sales].seller = toBech32Address(sales_history[sales].seller)
     sales_history[sales].buyer = toBech32Address(sales_history[sales].buyer)
   }
-  console.log(sales_history)
+  logger.debugLog(sales_history)
 
   const graph_data = await DBGetPeriodGraphForNonFungibleToken(contract_address_b16, token_id).catch((error) => {throw error})
 

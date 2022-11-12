@@ -27,7 +27,6 @@ module.exports = {
                     res.status(404).send({"message": error})
                     return
                 })
-                console.log(contractData)
                 data.royalty_bps = contractData.royalty_bps
                 data.is_verified = contractData.is_verified
                 data.nfts_minted = contractData.nfts_minted
@@ -61,7 +60,6 @@ module.exports = {
                 res.status(404).send({"message": "Unable to find data for collection"})
                 return
             }
-            console.log("Penis")
 
             const contractData = await contract.GetContract(fetchData[0].nonfungible_address).catch((error) => {
                 res.status(404).send({"message": error})

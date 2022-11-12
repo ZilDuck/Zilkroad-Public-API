@@ -7,26 +7,31 @@ const cacheTime = 30
 
 module.exports = {
     GetFungibleForAddress: async function(req, res) {
-        var walletAddress = addressUtil.NormaliseAddressToBase16(req.params.walletAddress)
+      var walletAddress
+      try {
+        walletAddress = addressUtil.NormaliseAddressToBase16(req.params.walletAddress)
+      } catch (error) {
+        res.status(404).send({"message": error})
+        return
+      }
 
-        if (validation.isBech32(walletAddress)) {
-          walletAddress = fromBech32Address(walletAddress)
-        }
-        console.log("Getting fungible balance data for address: ", walletAddress)
+      if (validation.isBech32(walletAddress)) {
+        walletAddress = fromBech32Address(walletAddress)
+      }
 
-        const cacheResult = await cache.GetKey(`getFungibleAmounts-${walletAddress}`)
-        if (cacheResult === false) 
-        {
-          const fetchData = await fungibleToken.GetFungibleDataForAddress(walletAddress).catch((error) => {
-            res.status(404).send({"message": error})
-            return
-          })
-          await cache.SetKey(`getFungibleAmounts-${walletAddress}`, fetchData, cacheTime)
-          res.send(fetchData)
-        }
-        else
-        {
-          res.send(cacheResult)
-        }
+      const cacheResult = await cache.GetKey(`getFungibleAmounts-${walletAddress}`)
+      if (cacheResult === false) 
+      {
+        const fetchData = await fungibleToken.GetFungibleDataForAddress(walletAddress).catch((error) => {
+          res.status(404).send({"message": error})
+          return
+        })
+        await cache.SetKey(`getFungibleAmounts-${walletAddress}`, fetchData, cacheTime)
+        res.send(fetchData)
+      }
+      else
+      {
+        res.send(cacheResult)
+      }
     }
 }

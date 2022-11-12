@@ -8,7 +8,7 @@ module.exports = {
     const fungible_symbol = req.params.fungible_symbol
     const fungible_amount = req.params.fungible_amount
 
-    const cacheResult = await cache.GetKey(`getCollection-${fungible_symbol}/${fungible_amount}`)
+    const cacheResult = await cache.GetKey(`lookupPrice-${fungible_symbol}/${fungible_amount}`)
     if (cacheResult === false) {
       const fetchData = await fungibleLookup.LookupFungiblePriceData(fungible_symbol, fungible_amount).catch((error) => {
         res.status(404).send({"message": error})

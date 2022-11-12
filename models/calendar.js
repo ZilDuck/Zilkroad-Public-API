@@ -21,7 +21,7 @@ function CreateCalendarFromResultSet(result, timezone)
     var resultArray = []
     for(res in result)
     {
-        console.log(result[res])
+        logger.debugLog(result[res])
         resultArray.push(Calender(result[res].calendar_unixtime, result[res].calendar_description, result[res].calendar_website, result[res].calendar_image, timezone))
     }
     return resultArray;

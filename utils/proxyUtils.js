@@ -2,7 +2,6 @@ const logger = require('../logger.js')
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
 
 const zilliqa = process.env.is_testnet ? new Zilliqa(process.env.testnet_zilliqa) : new Zilliqa(process.env.mainnet_zilliqa);
-process.env.is_testnet ? console.log("UTILS TESTNET") : console.log("UTILS MAINNET") 
 
 /*
  * HELPER EXPORTED CLASS 

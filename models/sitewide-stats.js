@@ -7,7 +7,7 @@ const pgClient = client.ReturnPool()
 
 function SitewideStats(result)
 {
-    console.log(result)
+    logger.debugLog(result)
     return {
         sitewide_listed : result.sitewide_listed,
         sitewide_sold : result.sitewide_sold,

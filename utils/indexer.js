@@ -3,7 +3,6 @@ const axios = require('axios');
 const logger = require('../logger.js')
 
 const testnetString = process.env.is_testnet ? "?network=testnet" : "?"
-process.env.is_testnet ? console.log("INDEXER TESTNET") : console.log("INDEXER MAINNET") 
 /*
  * HELPER EXPORTED CLASS 
  * ALL OF THE INDEXER CALLS 

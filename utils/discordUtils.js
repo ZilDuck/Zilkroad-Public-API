@@ -10,7 +10,7 @@ module.exports =
 {
     SendReportMessage: async function(contract, user)
     {
-        console.log(`REPORT - ${contract}/${user}`)
+        logger.infoLog(`REPORT - ${contract}/${user}`)
         const channel = await client.channels.fetch(siteReportsChannel).catch((error) => {
             logger.errorLog(`User: ${user} unable to report contract: ${contract}: ${error}`)
             throw 'Unable to report collection'

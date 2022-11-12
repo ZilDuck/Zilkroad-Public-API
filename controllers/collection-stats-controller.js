@@ -12,7 +12,7 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getCollection-${contractAddress}`)
     if (cacheResult === false) {
       const fetchData = await contract.GetContract(contractAddress).catch((error) => {
-        res.status(404).send({"message xox": error})
+        res.status(404).send({"message": error})
         return
       })
       await cache.SetKey(`getCollection-${contractAddress}`, fetchData, cacheTime)

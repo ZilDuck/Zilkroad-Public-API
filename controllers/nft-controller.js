@@ -9,17 +9,23 @@ module.exports = {
   getNft: async function(req, res) {
     const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
     const tokenId = req.params.tokenId
+    let failed = false
 
     const cacheResult = await cache.GetKey(`getNft-${contractAddress}-${tokenId}`)
     if (cacheResult === false) {
       let nftData = await token.getToken(tokenId, contractAddress).catch((error) => {
-        res.status(404).send({"message": error})
-        return
+        res.status(404).send({"message xox": error})
+        failed = true
       })
       let listingData = await listing.GetNftListing(contractAddress, tokenId).catch((error) => {
-        res.status(404).send({"message": error})
-        return
+        res.status(404).send({"message yo": error})
+        failed = true
       })
+
+      // Love asynchronous race conditions
+      if ( failed ) {
+        return
+      }
       nftData = { ...nftData, ...listingData }
       await cache.SetKey(`getNft-${contractAddress}-${tokenId}`, nftData, cacheTime)
       res.send(nftData)

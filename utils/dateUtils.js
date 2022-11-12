@@ -1,3 +1,4 @@
+const logger = require("../logger")
 
 
 
@@ -10,7 +11,6 @@ module.exports =
 
     unixToLocalDateTime: function (unix, timezone)
     {
-        console.log(unix,locale)
         locale = validateDateLocale(locale)
         const date = new Date(unix * 1000).setZone(timezone)
         const time = new Date(unix * 1000).setZone(timezone)
@@ -21,35 +21,35 @@ module.exports =
     {
         var now = new Date();
         var startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        console.log(`today is ${Math.round(startOfDay / 1000)}`)
+        logger.debugLog(`today is ${Math.round(startOfDay / 1000)}`)
         return Math.round(startOfDay / 1000);
     },
     getTomorrowAsUnix: function()
     {
         var today = new Date();
         var tomorrow = today.setUTCDate(today.getUTCDate() + 1);
-        console.log(`tomorrow is ${Math.round(tomorrow / 1000)}`)
+        logger.debugLog(`tomorrow is ${Math.round(tomorrow / 1000)}`)
         return Math.round(tomorrow / 1000)
     },
     GetAWeekAheadAsUnix: function()
     {
         var today = new Date();
         var week = today.setUTCDate(today.getUTCDate() + 7);
-        console.log(`week is ${Math.round(week / 1000)}`)
+        logger.debugLog(`week is ${Math.round(week / 1000)}`)
         return Math.round(week / 1000)
     },
     GetAMonthAheadAsUnix: function()
     {
         var today = new Date();
         var month = today.setUTCDate(today.getUTCDate() + 31);
-        console.log(`month is ${Math.round(month / 1000)}`)
+        logger.debugLog(`month is ${Math.round(month / 1000)}`)
         return Math.round(month / 1000)
     },
     GetAYearAheadAsUnix: function()
     {
         var today = new Date();
         var year = today.setUTCDate(today.getUTCDate() + 365);
-        console.log(`year is ${Math.round(year / 1000)}`)
+        logger.debugLog(`year is ${Math.round(year / 1000)}`)
         return Math.round(year / 1000)
     },
     //https://stackoverflow.com/questions/439630/create-a-date-with-a-set-timezone-without-using-a-string-representation

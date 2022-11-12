@@ -7,7 +7,13 @@ const cacheTime = 30
 
 module.exports = {
   getWallet: async function(req, res) {
-    const walletAddress = addressUtil.NormaliseAddressToBase16(req.params.walletAddress)
+    let walletAddress
+    try {
+      walletAddress = addressUtil.NormaliseAddressToBase16(req.params.walletAddress)
+    } catch (error) {
+      res.status(404).send({"message": error})
+      return
+    }
 
     const cacheResult = await cache.GetKey(`getWallet-${walletAddress}`)
     if (cacheResult === false) {
@@ -28,7 +34,13 @@ module.exports = {
   },
 
   getWalletNfts: async function(req, res) {
-    const walletAddress = addressUtil.NormaliseAddressToBase16(req.params.walletAddress)
+    let walletAddress
+    try {
+      walletAddress = addressUtil.NormaliseAddressToBase16(req.params.walletAddress)
+    } catch (error) {
+      res.status(404).send({"message": error})
+      return
+    }
     const page = req.query.page ?? 1
     const limit = req.query.limit ?? 10
     const filter = req.query.filter ?? ''
@@ -50,7 +62,13 @@ module.exports = {
   },
 
   getWalletListedNfts: async function(req, res) {
-    const walletAddress = addressUtil.NormaliseAddressToBase16(req.params.walletAddress)
+    let walletAddress
+    try {
+      walletAddress = addressUtil.NormaliseAddressToBase16(req.params.walletAddress)
+    } catch (error) {
+      res.status(404).send({"message": error})
+      return
+    }
     const page = req.query.page ?? 1
     const limit = req.query.limit ?? 10
     const filter = req.query.filter ?? ''

@@ -2,7 +2,6 @@ const logger = require('../logger.js')
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
 
 const zilliqa = new Zilliqa(process.env.current_network) // Same here 
-process.env.is_testnet ? console.log("UTILS TESTNET") : console.log("UTILS MAINNET") 
 /*
  * HELPER EXPORTED CLASS 
  * ALL OF THE ONE OFF RPC CALLS REQUIRED
