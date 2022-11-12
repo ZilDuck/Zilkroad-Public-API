@@ -14,11 +14,11 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getNft-${contractAddress}-${tokenId}`)
     if (cacheResult === false) {
       let nftData = await token.getToken(tokenId, contractAddress).catch((error) => {
-        res.status(404).send({"message xox": error})
+        res.status(404).send({"message": error})
         failed = true
       })
       let listingData = await listing.GetNftListing(contractAddress, tokenId).catch((error) => {
-        res.status(404).send({"message yo": error})
+        res.status(404).send({"message": error})
         failed = true
       })
 
@@ -32,6 +32,7 @@ module.exports = {
     } else {
       res.send(cacheResult)
     }
+    
   },
 
   getNfts: async function(req, res) {
