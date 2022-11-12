@@ -13,7 +13,10 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getSkinnyUserStats-${startTime}-${endTime}-${limit}-${offset}`)
     if (cacheResult === false) 
     {
-      const fetchData = await skinnyUserStats.getSkinnyUserStats(limit, offset, startTime, endTime)
+      const fetchData = await skinnyUserStats.getSkinnyUserStats(limit, offset, startTime, endTime).catch((error) => {
+        res.status(404).send({"message": error})
+        return
+      })
       await cache.SetKey(`getSkinnyUserStats-${startTime}-${endTime}-${limit}-${offset}`, fetchData, cacheTime)
       res.send(fetchData)
     }

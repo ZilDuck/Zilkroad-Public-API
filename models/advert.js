@@ -7,7 +7,10 @@ async function GetAValidCardAdvertisements() {
 
   const sql = 'SELECT * FROM fn_getCardAdvertisement()'
 
-  var result = await pgClient.query(sql)
+  var result = await pgClient.query(sql).catch((error) => {
+    logger.errorLog(`Unable to get advertisement data from database: ${error}`)
+    throw 'Unable to get advertisements'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }

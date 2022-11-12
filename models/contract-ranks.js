@@ -2,6 +2,7 @@ const logger = require('../logger')
 const client = require('../utils/expressUtils.js')
 const pgClient = client.ReturnPool()
 
+// TODO - Duplicate
 async function DBGetACollectionRank(contractAddress, timeFrom, timeTo)
 {
   logger.infoLog(`FUNC - PUBLIC - getACollectionRank - HIT`)
@@ -12,7 +13,10 @@ async function DBGetACollectionRank(contractAddress, timeFrom, timeTo)
     timeFrom,
     timeTo
   ]
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get rank for collection: ${contractAddress} (from: ${timeFrom} to ${timeTo}): ${error}`)
+    throw 'Unable to get rank for collection'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }
@@ -28,7 +32,10 @@ async function DBGetAllCollectionRanks(page, limit, timeFrom, timeTo)
     timeFrom,
     timeTo
   ]
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get activities for collections (from: ${timeFrom} to ${timeTo}): ${error}`)
+    throw 'Unable to get any collection ranks'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }

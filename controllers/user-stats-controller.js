@@ -14,7 +14,10 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getUserStats-${searchType}-${startTime}-${endTime}-${limit}-${offset}`)
     if (cacheResult === false) 
     {
-      const fetchData = await userStats.getUserStats(searchType, startTime, endTime, limit, offset)
+      const fetchData = await userStats.getUserStats(searchType, startTime, endTime, limit, offset).catch((error) => {
+        res.status(404).send({"message": error})
+        return
+      })
       await cache.SetKey(`getUserStats-${searchType}-${startTime}-${endTime}-${limit}-${offset}`, fetchData, cacheTime)
       res.send(fetchData)
     }

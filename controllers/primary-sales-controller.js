@@ -11,7 +11,10 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getPrimarySales-${limit}-${offset}`)
     if (cacheResult === false) 
     {
-      const fetchData = await primarySales.GetPrimarySales(limit, offset)
+      const fetchData = await primarySales.GetPrimarySales(limit, offset).catch((error) => {
+        res.status(404).send({"message": error})
+        return
+      })
       await cache.SetKey(`getPrimarySales-${limit}-${offset}`, fetchData, cacheTime)
       res.send(fetchData)
     }

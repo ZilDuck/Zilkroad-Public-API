@@ -11,7 +11,10 @@ async function DBGetVerifiedStatusForNonFungible(nonfungible_address)
   const values = [
     nonfungible_address
   ]
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get verification status for contract: ${nonfungible_address}: ${error}`)
+    throw 'Unable to get verification status for contract'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }

@@ -8,11 +8,15 @@
 const { Pool } = require("pg");
 const { off } = require('process');
 const keys = require("../keys");
+const { Zilliqa } = require('@zilliqa-js/zilliqa');
+const logger = require("../logger");
+
+const zilliqa = new Zilliqa(process.env.current_network);
 require("dotenv").config();
 
 const crypto = require('crypto')
-console.log("Host: %s\nUser: %s\nPassword: %s\nDatabase: %s\nPort: %s", keys.pgHost, keys.pgUser, keys.pgPassword, keys.pgDatabase, keys.pgPort)
 
+logger.infoLog(process.env.is_testnet ? "UTILS TESTNET" : "UTILS_MAINNET")
 
 const pgClient = new Pool
 ({
@@ -25,20 +29,18 @@ const pgClient = new Pool
 
 pgClient.connect((err, client, release) => {
   if (err) {
-    return console.error('Error acquiring client', err.stack)
+    logger.errorLog('Error acquiring client', err.stack)
+    throw 'Error acquiring client: ' + err.stack
   }
   client.query('SELECT NOW()', (err, result) => {
     release()
     if (err) {
-      return console.error('Error executing query', err.stack)
+      logger.errorLog('Error executing query', err.stack)
+      throw 'Error executing query: ' + err.stack
     }
-    console.log(result.rows)
+    logger.infoLog(result.rows)
   })
 })
-
-const { Zilliqa } = require('@zilliqa-js/zilliqa');
-
-const zilliqa = new Zilliqa(process.env.current_network);
 
 module.exports = 
 {

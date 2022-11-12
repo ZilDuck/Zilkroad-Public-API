@@ -16,12 +16,17 @@ module.exports = {
 
         const cacheResult = await cache.GetKey(`getAllCollectionRanks-${page}-${limit}-${timeFrom}-${timeTo}`)
         if (cacheResult === false) {
-            const fetchData = await contractRanks.DBGetAllCollectionRanks(page, limit, timeFrom, timeTo)
+            const fetchData = await contractRanks.DBGetAllCollectionRanks(page, limit, timeFrom, timeTo).catch((error) => {
+                res.status(404).send({"message": error})
+                return
+            })
             
             for(const data of fetchData)
             {
-                const contractData = await contract.GetContract(data.nonfungible_address)
-                console.log(contractData)
+                const contractData = await contract.GetContract(data.nonfungible_address).catch((error) => {
+                    res.status(404).send({"message": error})
+                    return
+                })
                 data.royalty_bps = contractData.royalty_bps
                 data.is_verified = contractData.is_verified
                 data.nfts_minted = contractData.nfts_minted
@@ -46,9 +51,20 @@ module.exports = {
 
         const cacheResult = await cache.GetKey(`getACollectionRank-${contractAddress}-${timeFrom}-${timeTo}`)
         if (cacheResult === false) {
-            const fetchData = await contractRanks.DBGetACollectionRank(contractAddress, timeFrom, timeTo)
+            const fetchData = await contractRanks.DBGetACollectionRank(contractAddress, timeFrom, timeTo).catch((error) => {
+                res.status(404).send({"message": error})
+                return
+            })
 
-            const contractData = await contract.GetContract(fetchData[0].nonfungible_address)
+            if (fetchData.length === 0) {
+                res.status(404).send({"message": "Unable to find data for collection"})
+                return
+            }
+
+            const contractData = await contract.GetContract(fetchData[0].nonfungible_address).catch((error) => {
+                res.status(404).send({"message": error})
+                return
+            })
             fetchData[0].royalty_bps = contractData.royalty_bps
             fetchData[0].is_verified = contractData.is_verified
             fetchData[0].nfts_minted = contractData.nfts_minted

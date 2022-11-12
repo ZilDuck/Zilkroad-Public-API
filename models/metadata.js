@@ -5,9 +5,16 @@ const axios = require("axios");
 
 
 
-function Metadata(metadata_name, metadata_description, metadata_url, metadata_animation_url, 
-                  collection_image_url, discord, twitter, telegram)
-{
+function Metadata(
+    metadata_name,
+    metadata_description,
+    metadata_url,
+    metadata_animation_url, 
+    collection_image_url,
+    discord,
+    twitter,
+    telegram
+) {
     return {
         name: metadata_name, 
         description: metadata_description, 

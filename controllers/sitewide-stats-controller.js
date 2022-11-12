@@ -9,7 +9,9 @@ module.exports = {
     const cacheResult = await cache.GetKey(`GetSitewideStats`)
     if (cacheResult === false) 
     {
-      const fetchData = await sitewideStats.GetSitewideStats()
+      const fetchData = await sitewideStats.GetSitewideStats().catch((error) => {
+        res.status(404).send({"message": error})
+      })
       await cache.SetKey(`GetSitewideStats`, fetchData, cacheTime)
       res.send(fetchData)
     }

@@ -12,7 +12,7 @@ const zilliqa = new Zilliqa(process.env.current_network) // Shouldn't we be expo
  */
 
 async function GetUserCollection(user_address_array) {
-    console.log(user_address_array)
+    logger.debugLog(user_address_array)
     logger.infoLog(`MODEL - UserModel - GetUserCollection - HIT`)
     const response = await Promise.all(user_address_array.map(x => GetContract(x.toString())))
     return response
@@ -22,10 +22,10 @@ async function GetUser(user_address)
 {
     logger.infoLog(`MODEL - UserModel - GetUser - HIT`)
     const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
-    const fungible_token_balance = await APIGetHeldTokensForUser(user_address_b16).catch(error => console.log(error))
-    const user_stats = await DBGetAccumulativeStatsForUser(user_address_b16).catch(error => console.log(error))
-    const zil_balance = await APIGetZilBalanceForUser(user_address_b16).catch(error => console.log(error))
-    const wallet_activity = await DBGetPaginatedUserWalletActivity(user_address_b16).catch(error => console.log(error))
+    const fungible_token_balance = await APIGetHeldTokensForUser(user_address_b16).catch(error => {throw error})
+    const user_stats = await DBGetAccumulativeStatsForUser(user_address_b16).catch(error => {throw error})
+    const zil_balance = await APIGetZilBalanceForUser(user_address_b16).catch(error => {throw error})
+    const wallet_activity = await DBGetPaginatedUserWalletActivity(user_address_b16).catch(error => {throw error})
 
     return {
         user_address_b16,
@@ -44,7 +44,7 @@ async function GetUser(user_address)
 
 async function GetPageUserListing(user_address, limit_rows, offset_rows) {
     const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
-    const response = await DBGetPaginatedUserListings(user_address_b16, limit_rows, offset_rows)
+    const response = await DBGetPaginatedUserListings(user_address_b16, limit_rows, offset_rows).catch((error) => {throw error})
 
     return response
 }
@@ -55,7 +55,10 @@ async function GetPageUserListing(user_address, limit_rows, offset_rows) {
 
 async function APIGetZilBalanceForUser(user_address) {
     const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
-    const zil_balance = await zilliqa.blockchain.getBalance(user_address_b16).catch(error => console.log(error))
+    const zil_balance = await zilliqa.blockchain.getBalance(user_address_b16).catch(error => {
+        logger.errorLog(`Unable to get balance for user: ${user_address}: ${error}`)
+        throw 'Unable to get balance for user'
+    })
     return zil_balance.result
 }
 
@@ -64,7 +67,10 @@ async function APIGetHeldTokensForUser(user_address)
     logger.infoLog(`API - PUBLIC - GetHeldTokensForUser - HIT`)
     const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
 
-    const token_db_result = await pgClient.query("SELECT * FROM fn_getAllSupportedFungibleAddresses()")
+    const token_db_result = await pgClient.query("SELECT * FROM fn_getAllSupportedFungibleAddresses()").catch((error) => {
+        logger.errorLog(`Unable to get confirmation of supported fungibles: ${error}`)
+        throw 'Unable to get confirmation of supported fungibles'
+    })
     
     var requestArray = [];
     token_db_result.rows.forEach(async result =>
@@ -76,7 +82,10 @@ async function APIGetHeldTokensForUser(user_address)
         ]);
     });
 
-    const allRequestState = await zilliqa.blockchain.getSmartContractSubStateBatch(requestArray);
+    const allRequestState = await zilliqa.blockchain.getSmartContractSubStateBatch(requestArray).catch((error) => {
+        logger.errorLog(`Unable to get Substate for contracts: ${requestArray}: ${error}`)
+        throw 'Unable to get Substates for contracts'
+    })
     var token_result = allRequestState.batch_result.find(x => x.result !== undefined).result
 
     return token_result
@@ -87,7 +96,7 @@ async function APIGetNFTHeldByWallet(user_address)
     logger.infoLog(`API - PUBLIC - GetNFTHeldByWallet - HIT`)
     const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
 
-    var result = await indexer.GetNFTsForAddress(user_address_b16)
+    var result = await indexer.GetNFTsForAddress(user_address_b16).catch((error) => {throw error})
     logger.debugLog(result.data)
     return result.data
 }
@@ -100,7 +109,10 @@ async function DBGetAccumulativeStatsForUser(user_address_b16)
         user_address_b16
     ]
 
-    var result = await pgClient.query(sql, values)
+    var result = await pgClient.query(sql, values).catch((error) => {
+        logger.errorLog(`Unable to get stats for user: ${user_address_b16}: ${error}`)
+        throw 'Unable to get stats for user'
+    })
     logger.debugLog(result.rows)
     return result.rows[0]
 }
@@ -114,7 +126,10 @@ async function DBGetPaginatedUserListings(user_address, limit_rows, offset_rows)
         offset_rows
     ]
 
-    var result = await pgClient.query(sql, values)
+    var result = await pgClient.query(sql, values).catch((error) => {
+        logger.errorLog(`Unable to get paginated listing data for user: ${user_address} (L: ${limit_rows}, O: ${offset_rows}): ${error}`)
+        throw 'Unable to get paginated listing data for user'
+    })
     logger.debugLog(result.rows)
     return result.rows
 }
@@ -130,7 +145,10 @@ async function DBGetPaginatedUserWalletActivity(user_address, limit_rows, offset
         offset_rows
     ]
 
-    var result = await pgClient.query(sql, values)
+    var result = await pgClient.query(sql, values).catch((error) => {
+        logger.errorLog(`Unable to get wallet activity for user: ${user_address} (L: ${limit_rows}, O: ${offset_rows}): ${error}`)
+        throw 'Unable to get wallet activity for user'
+    })
     result.rows.forEach(function(object) {
         object.contract_address_b32 = validation.isBech32(object.contract) ? object.contract : toBech32Address(object.contract)
     })
@@ -154,7 +172,10 @@ async function DBGetRankedWalletActivity(filter)
         sql = 'SELECT * FROM fn_getPaginatedTopBuyers($1, $2, $3, $4)'
     }
     const values = [limit, offset, startTime, endTime]
-    var result = await pgClient.query(sql, values)
+    var result = await pgClient.query(sql, values).catch((error) => {
+        logger.errorLog(`Unable to get ranked wallet activity for ${filter}: ${error}`)
+        throw 'Unable to get ranked wallet activity for a filter'
+    })
     result.rows.forEach(function(object) {
         object.wallet_address_b32 = validation.isBech32(object.address) ? object.address : toBech32Address(object.address)
     })
