@@ -8,7 +8,10 @@ async function GetAllFungibleTokens()
   
     const sql = "SELECT * FROM fn_getAllFungibleTokens()";
   
-    var result = await pgClient.query(sql)
+    var result = await pgClient.query(sql).catch((error) => {
+        logger.errorLog(`Unable to get fungible tokens from database: ${error}`)
+        throw 'Unable to get fungible tokens'
+    })
     logger.debugLog(result.rows)
     return result.rows
 }

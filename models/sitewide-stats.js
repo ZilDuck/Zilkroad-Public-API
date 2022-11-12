@@ -21,7 +21,7 @@ function SitewideStats(result)
 
 async function GetSitewideStats()
 {
-    const result = await DBGetSitewideStats()
+    const result = await DBGetSitewideStats().catch((error) => {throw error})
     return result
 }
 
@@ -29,7 +29,10 @@ async function GetSitewideStats()
 async function DBGetSitewideStats()
 {
     logger.infoLog(`MODEL - SitewideStats - DBGetSitewideStats - HIT`)
-    const dbResult = await pgClient.query("SELECT * FROM fn_getSiteStats()")
+    const dbResult = await pgClient.query("SELECT * FROM fn_getSiteStats()").catch((error) => {
+        logger.errorLog(`Unable to get site stats from DB: ${error}`)
+        throw 'Unable to get site stats'
+    })
 
     var result = SitewideStats(dbResult.rows[0])
 

@@ -1,6 +1,7 @@
 const axios = require("axios");
 const fungibleUtil = require('../utils/fungibleUtils')
 const Big = require('big.js');
+const logger = require("../logger");
 /*
  * SHAPE DEFINITION
  */
@@ -31,10 +32,10 @@ const decimals = {
 async function GetFungibleDataForAddress(address)
 {
   let data = {}
-  let fungibleResponse = await fungibleUtil.GetFungibleAmountForAddress(address)
-  let fungibleAllowance = await fungibleUtil.GetFungibleAllowancesForAddress(address)
+  let fungibleResponse = await fungibleUtil.GetFungibleAmountForAddress(address).catch((error) => {throw error})
+  let fungibleAllowance = await fungibleUtil.GetFungibleAllowancesForAddress(address).catch((error) => {throw error})
   // Force zil to be 0'th index
-  fungibleResponse["0"] = await fungibleUtil.GetNativeZilBalanceForAddress(address)
+  fungibleResponse["0"] = await fungibleUtil.GetNativeZilBalanceForAddress(address).catch((error) => {throw error})
   fungibleAllowance["0"] = "0"
 
 
@@ -65,7 +66,10 @@ async function getUSDValuefromTokens(fungible, numberOfTokens)
   const final_fungible = fungible.toLowerCase() == "wzil" ? "zil" : fungible;
   const token_info =
   (
-    await axios.get(`https://api.zilstream.com/tokens/${final_fungible}`)
+    await axios.get(`https://api.zilstream.com/tokens/${final_fungible}`).catch((error) => {
+      logger.errorLog(`Unable to get USD value for symbol: ${final_fungible}: ${error}`)
+      throw 'Unable to get USD value for symbol'
+    })
   )
   const usd_rate = token_info.data.rate_usd;
 

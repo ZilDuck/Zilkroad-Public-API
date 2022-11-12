@@ -9,7 +9,10 @@ async function getListedTransactionHashForOrderID(orderID)
     const sql = "SELECT * FROM fn_getListedTransactionHashForOrderID($1)";
     const values = [orderID];
 
-    var result = await pgClient.query(sql, values)
+    var result = await pgClient.query(sql, values).catch((error) => {
+        logger.errorLog(`Unable to get listed transaction hash for order ID: ${orderID}: ${error}`)
+        throw 'Unable to get listed transaction hash for order'
+    })
     logger.debugLog(result.rows)
     return result.rows
 }
@@ -21,7 +24,10 @@ async function getSoldTransactionHashForOrderID(orderID)
     const sql = "SELECT * FROM fn_getSoldTransactionHashForOrderID($1)";
     const values = [orderID];
 
-    var result = await pgClient.query(sql, values)
+    var result = await pgClient.query(sql, values).catch((error) => {
+        logger.errorLog(`Unable to get sold transaction hash for order ID: ${orderID}: ${error}`)
+        throw 'Unable to get sold transaction hash for order'
+    })
     logger.debugLog(result.rows)
     return result.rows
 }
