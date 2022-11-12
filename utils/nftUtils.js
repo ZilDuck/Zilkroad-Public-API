@@ -14,7 +14,10 @@ module.exports =
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'token_id_count',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get contract substate for contract: ${nft_contract}: ${error}`)
+            throw 'Unable to get collection substate'
+        })
 
         logger.debugLog(stateResult.result?.token_id_count);
         return stateResult.result?.token_id_count
@@ -24,7 +27,10 @@ module.exports =
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'total_supply',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get supply count for contract: ${nft_contract}: ${error}`)
+            throw 'Unable to get supply count for collection'
+        })
         logger.debugLog(stateResult.result?.total_supply);
         return stateResult.result?.total_supply
     },
@@ -33,7 +39,10 @@ module.exports =
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'royalty_fee_bps',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get Royalty BPS for contract: ${nft_contract}: ${error}`)
+            throw 'Unable to get Royalty BPS for collection'
+        })
         logger.debugLog(stateResult.result?.royalty_fee_bps);
         return stateResult.result?.royalty_fee_bps
     },
@@ -42,7 +51,10 @@ module.exports =
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'royalty_recipient',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get Royalty recipient for contract: ${nft_contract}: ${error}`)
+            throw 'Unable to get Royalty recipient for collection'
+        })
 
         logger.debugLog(stateResult.result?.royalty_recipient);
         return stateResult.result?.royalty_recipient
@@ -52,7 +64,10 @@ module.exports =
         const stateResult = await  zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'balances',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get token balances for contract: ${nft_contract}: ${error}`)
+            throw 'Unable to get token balances for collection'
+        })
 
         logger.debugLog(stateResult.result?.balances);
         return stateResult.result?.balances
@@ -62,7 +77,10 @@ module.exports =
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'operators',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get token operators for contract: ${contract}: ${error}`)
+            throw 'Unable to get token operators for collection'
+        })
 
         logger.debugLog(stateResult.result?.operators);
         return stateResult.result?.operators
@@ -72,7 +90,10 @@ module.exports =
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'minters',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get token minters for contract: ${nft_contract}: ${error}`)
+            throw 'Unable to get token minters for collection'
+        })
         
         logger.debugLog(stateResult.result?.minters);
         return stateResult.result?.minters 
@@ -82,7 +103,10 @@ module.exports =
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'base_uri',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get token base uri for contract: ${nft_contract}: ${error}`)
+            throw 'Unable to get base uri for collection'
+        })
        
         logger.debugLog(stateResult.result?.base_uri);
         return stateResult.result?.base_uri
@@ -92,7 +116,10 @@ module.exports =
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'is_paused',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get token pause status for contract: ${nft_contract}: ${error}`)
+            throw 'Unable to get token pause status for collection'
+        })
        
         logger.debugLog(stateResult.result?.constructor);
         return stateResult.result?.constructor 
@@ -102,7 +129,10 @@ module.exports =
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'contract_owner',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get contract owner for contract: ${nft_contract}: ${error}`)
+            throw 'Unable to get owner for collection'
+        })
         
         logger.debugLog(stateResult.result?.contract_owner);
         return stateResult.result?.contract_owner 
@@ -112,7 +142,10 @@ module.exports =
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'contract_ownership_recipient',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get handover recipient for contract: ${nft_contract}: ${error}`)
+            throw 'Unable to get handover recipient for collection'
+        })
         
         logger.debugLog(stateResult.result?.contract_ownership_recipient);
         return stateResult.result?.contract_ownership_recipient 
@@ -122,7 +155,10 @@ module.exports =
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'token_name',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get token name for contract: ${nft_contract}: ${error}`)
+            throw 'Unable to get token name for collection'
+        })
         
         logger.debugLog(stateResult.result?.token_name );
         return stateResult.result?.token_name ?? ""
@@ -132,7 +168,10 @@ module.exports =
         const stateResult = await zilliqa.blockchain.getSmartContractSubState(
             nft_contract,
             'token_symbol',
-        );
+        ).catch((error) => {
+            logger.errorLog(`Unable to get token symbole for contract: ${nft_contract}: ${error}`)
+            throw 'Unable to get token symbol for collection'
+        })
         
         logger.debugLog(stateResult.result?.token_symbol);
         return stateResult.result?.token_symbol ?? ""
