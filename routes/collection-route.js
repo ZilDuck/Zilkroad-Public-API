@@ -6,6 +6,7 @@ router.get('/:contractAddress', collectionController.getCollection)
 router.get('/:contractAddress/activity', collectionController.getCollectionActivity)
 router.get('/:contractAddress/nfts', collectionController.getCollectionNfts)
 router.get('/:contractAddress/listedNfts', collectionController.getCollectionListedNfts)
+// TODO - review usage
 router.get('/', collectionController.getCollections)
 
 module.exports = router
