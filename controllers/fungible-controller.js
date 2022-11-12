@@ -7,7 +7,10 @@ module.exports = {
   getAllTokens: async function(req, res) {
     const cacheResult = await cache.GetKey(`FungibleTokens`)
     if (cacheResult === false) {
-      const fetchData = await fungible.GetAllFungibleTokens().catch((error) => console.error(error))
+      const fetchData = await fungible.GetAllFungibleTokens().catch((error) => {
+        res.status(404).send({"message": error})
+        return
+      })
       await cache.SetKey(`FungibleTokens`, fetchData, cacheTime)
       res.send(fetchData)
     } else {

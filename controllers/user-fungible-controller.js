@@ -17,7 +17,10 @@ module.exports = {
         const cacheResult = await cache.GetKey(`getFungibleAmounts-${walletAddress}`)
         if (cacheResult === false) 
         {
-          const fetchData = await fungibleToken.GetFungibleDataForAddress(walletAddress)
+          const fetchData = await fungibleToken.GetFungibleDataForAddress(walletAddress).catch((error) => {
+            res.status(404).send({"message": error})
+            return
+          })
           await cache.SetKey(`getFungibleAmounts-${walletAddress}`, fetchData, cacheTime)
           res.send(fetchData)
         }
