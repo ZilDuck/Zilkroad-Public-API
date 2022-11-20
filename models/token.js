@@ -31,45 +31,33 @@ async function getToken(
   let contract_address_b16 = addressUtil.NormaliseAddressToBase16(contract_address)
 
   logger.infoLog(`MODEL - TokenModel - getToken - HIT - ${token_id + contract_address_b16}`)
-  const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(r => r.data).catch((error) => {
-    console.log(error)
-    throw {"message": "Token: " + token_id + " for collection: " + contract_address + " does not exist"}
-  })
-  // const indexer_actions = await indexer.GetActionsForTokenID(contract_address_b16, token_id).catch((error) => console.log(error))
-  //
-  // const db_sales_history_graph = await DBGetPeriodGraphForNonFungibleToken(contract_address_b16, token_id).catch((error) => console.log(error))
-  // const db_volume = await DBGetNonFungibleTokenSalesData(contract_address_b16, token_id).catch((error) => console.log(error))
-  // const bps = await utils.GetRoyaltyBPSForToken(contract_address_b16).catch((error) => console.log(error))
-  const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => console.log(error))
-  const sales_data = await DBGetNonFungibleTokenSalesData(contract_address_b16, token_id).catch((error) => console.log(error))
-  const sales_count = sales_data?.[0].lifetime_quantity_sold ?? 0
-  const sales_volume = sales_data?.[0].lifetime_sales_usd ?? 0
+  const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(r => r.data).catch((error) => {throw error})
+  const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => {throw error})
+  const sales_data = await DBGetNonFungibleTokenSalesData(contract_address_b16, token_id).catch((error) => {throw error})
+
+  const sales_count = sales_data[0]?.lifetime_quantity_sold ?? 0
+  const sales_volume = sales_data[0]?.lifetime_sales_usd ?? 0
 
   //this is also butters, but what are you gonna do about it
-  var sales_history = await DBGetNonFungibleTokenSaleHistory(contract_address_b16, token_id).catch((error) => console.log(error))
+  var sales_history = await DBGetNonFungibleTokenSaleHistory(contract_address_b16, token_id).catch((error) => {throw error})
   for (var sales in sales_history)
   {
     sales_history[sales].seller = toBech32Address(sales_history[sales].seller)
-    sales_history[sales].buyer =toBech32Address(sales_history[sales].buyer)
+    sales_history[sales].buyer = toBech32Address(sales_history[sales].buyer)
   }
-  console.log(sales_history)
+  logger.debugLog(sales_history)
 
-  const graph_data = await DBGetPeriodGraphForNonFungibleToken(contract_address_b16, token_id).catch((error) => console.log(error))
+  const graph_data = await DBGetPeriodGraphForNonFungibleToken(contract_address_b16, token_id).catch((error) => {throw error})
 
   contract_name = indexer_token.name ?? false
   contract_symbol = indexer_token.symbol ?? false
   owner_address = indexer_token.owner ?? false
-  // royalty_bps = bps ?? false
-  // is_verified = db_verified ?? false
+
   token_resource_uri = indexer_token.resources ?? false
   token_metadata = indexer_token.metadata ?? false
   const verified = db_verified.length > 0
-  // token_actions = indexer_actions ?? false
-  // volume_over_time_graph = db_volume ?? false
-  // token_sales_history = db_sales_history_graph ?? false
 
   return {
-    // order_id,
     token_id,
     contract_address_b16,
     contract_address_b32: toBech32Address(contract_address_b16),
@@ -77,8 +65,6 @@ async function getToken(
     contract_symbol,
     owner_address_b16: owner_address,
     owner_address_b32: toBech32Address(owner_address),
-    // royalty_bps,
-    // is_verified,
     token_resource_uri,
     token_metadata,
     sales_count,
@@ -86,10 +72,6 @@ async function getToken(
     sales_history,
     graph_data,
     verified
-    // token_actions,
-    // volume_over_time_graph,
-    // token_sales_history,
-    // listing
   }
 }
 
@@ -103,8 +85,8 @@ async function getTokenCard(
 
   logger.infoLog(`MODEL - TokenModel - getTokenCard - HIT - ${order_id + token_id + contract_address_b16}`)
 
-  const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).catch((error) => console.log(error))
-  const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => console.log(error))
+  const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).catch((error) => {throw error})
+  const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => {throw error})
   const verified = db_verified.length > 0
   const listing_data = await GetListing(order_id)
 
@@ -151,41 +133,53 @@ async function getTokens(filter, limit, page, order, orderBy, contract_address) 
   switch (filter) {
     case 'featured':
       // get the (collection address & token id & order id) for 4 nfts - top homepage section
-      db_result = await DBGetRandomVerifiedListedNonFungible() // TODO DB query for what we deem "featured". Could be random or some other metric.
+      db_result = await DBGetRandomVerifiedListedNonFungible().catch((error) => {throw error})
       break
     case 'recently-listed':
       // get the (collection address & token id  & order id) for 10 nfts - homepage recently listed section
-      db_result = await DBGetPaginatedMostRecentListings(limit, page)
+      db_result = await DBGetPaginatedMostRecentListings(limit, page).catch((error) => {throw error})
       break
     case 'recently-sold':
       // get the (collection address & token id  & order id) for 6 nfts - homepage recently sold section
-      db_result = await DBGetPaginatedMostRecentlySold() // TODO DB query for recently listed nfts
+      db_result = await DBGetPaginatedMostRecentlySold().catch((error) => {throw error})
       break
     case 'contract-listed':
-      db_result = await DBGetPaginatedListedTokensForContract(contract_address, limit, page)
+      db_result = await DBGetPaginatedListedTokensForContract(contract_address, limit, page).catch((error) => {throw error})
   }
 
-      const nfts = await Promise.all(db_result.map(async ({static_order_id, nonfungible_address, token_id, listing_fungible_token_price, fungible_symbol, decimals, verified, fungible_address}) => {
-      let contract_address_b16 = addressUtil.NormaliseAddressToBase16(nonfungible_address)
-      const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(res => (res.data)).catch((error) => console.log(error)) // TODO Shouldn't have an api call in a loop like this. Need a batch method or listing data from indexer?
-      const indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => console.log(error))
+  const nfts = await Promise.all(
+    db_result.map(async ({
+        static_order_id,
+        nonfungible_address,
+        token_id,
+        listing_fungible_token_price,
+        fungible_symbol,
+        decimals,
+        verified,
+        fungible_address
+      }) => {
+        let contract_address_b16 = addressUtil.NormaliseAddressToBase16(nonfungible_address)
+        const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(res => (res.data)).catch((error) => {throw error}) // TODO Shouldn't have an api call in a loop like this. Need a batch method or listing data from indexer?
+        const indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => {throw error})
 
-      return {
-        order_id: static_order_id,
-        collection_name: indexer_token.name,
-        current_owner: indexer_token.owner,
-        symbol: indexer_token.symbol,
-        contract_address_b16,
-        contract_address_b32: toBech32Address(contract_address_b16),
-        token_id: token_id,
-        royalty_bps: indexer_contract_data.data.royalty_fee_bps ?? 0,
-        token_price: listing_fungible_token_price,
-        fungible_address: fungible_address,
-        token_symbol: fungible_symbol,
-        decimals: decimals,
-        verified: verified
+        return {
+          order_id: static_order_id,
+          collection_name: indexer_token.name,
+          current_owner: indexer_token.owner,
+          symbol: indexer_token.symbol,
+          contract_address_b16,
+          contract_address_b32: toBech32Address(contract_address_b16),
+          token_id: token_id,
+          royalty_bps: indexer_contract_data.data.royalty_fee_bps ?? 0,
+          token_price: listing_fungible_token_price,
+          fungible_address: fungible_address,
+          token_symbol: fungible_symbol,
+          decimals: decimals,
+          verified: verified
+        }
       }
-  }))
+    )
+  )
 
   const totalPages = Math.ceil(nfts.length / limit)
   const appData = {
@@ -207,7 +201,10 @@ async function GetTokenSpender(tokenId, contractAddress)
     contractAddress,
     'spenders',
     [tokenId],
-  );
+  ).catch((error) => {
+    logger.errorLog(`Unable to get spenders for contract: ${contractAddress} with tokens: ${tokenId}: ${error}`)
+    throw 'Unable to get spenders for contract'
+  })
   if (spenders.result) {
     return spenders.result?.spenders[tokenId]
   } else return false
@@ -219,7 +216,10 @@ async function GetTokenAllowance(contractAddress, userAddress)
     contractAddress,
     'allowances',
     [userAddress]
-  );
+  ).catch((error) => {
+    logger.errorLog(`Unable to get allowances for contract: ${contractAddress} with users: ${userAddress}: ${error}`)
+    throw 'Unable to get allowances for contract'
+  })
 
   if (allowances.result) {
     return allowances.result?.allowances[userAddress]
@@ -227,11 +227,11 @@ async function GetTokenAllowance(contractAddress, userAddress)
 }
 
 async function getContractNfts(contractAddress, filter, limit, page, order, orderBy) {
-  const indexerData = await GetPaginatedTokenIDs(contractAddress, limit, page).then(response => response).catch((error) => logger.errorLog(error))
+  const indexerData = await GetPaginatedTokenIDs(contractAddress, limit, page).then(response => response).catch((error) => {throw error})
 
   // this is butters but im so brain dead atm
   const _contract_address = validation.isBech32(contractAddress) ? fromBech32Address(contractAddress) : contractAddress
-  const db_verified = await DBGetVerifiedStatusForNonFungible(_contract_address).catch((error) => console.log(error))
+  const db_verified = await DBGetVerifiedStatusForNonFungible(_contract_address).catch((error) => {throw error})
   const verified = db_verified.length > 0
 
   const appData = {
@@ -249,7 +249,7 @@ async function getContractNfts(contractAddress, filter, limit, page, order, orde
   let token_ids = indexerData.data.map(({tokenId}) => {return tokenId});
   let min_token_id = Math.min.apply( null, token_ids );
   let max_token_id = Math.max.apply( null, token_ids );
-  let token_prices = await DBGetListedTokenPricesForCollectionRange(contractAddress, min_token_id, max_token_id)
+  let token_prices = await DBGetListedTokenPricesForCollectionRange(contractAddress, min_token_id, max_token_id).catch((error) => {throw error})
   appData.nfts.map(function (nft) {
     for ( const result of token_prices ) {
       if ( result.token_id == nft.token_id ) {
@@ -263,7 +263,7 @@ async function getContractNfts(contractAddress, filter, limit, page, order, orde
 }
 
 async function getContractListedNfts(contractAddress, limit, page) {
-  const db_result = await DBGetPaginatedListedTokensForContract(contractAddress, limit, page)
+  const db_result = await DBGetPaginatedListedTokensForContract(contractAddress, limit, page).catch((error) => {throw error})
   let nfts = []
   for ( const result of db_result ) {
     nfts.push({
@@ -282,13 +282,14 @@ async function getContractListedNfts(contractAddress, limit, page) {
 async function getUserNfts(walletAddress, limit = 16, page = 1) {
   let owner_address_b16 = addressUtil.NormaliseAddressToBase16(walletAddress)
   let owner_address_b32 = toBech32Address(owner_address_b16)
-  const indexerData = await indexer.GetNFTsForAddress(walletAddress, false).then(response => response).catch((error) => logger.errorLog(error))
+
+  const indexerData = await indexer.GetNFTsForAddress(walletAddress, false).then(response => response).catch((error) => {throw error})
   let nfts = []
   for (const contract of indexerData.data) {
     for (const nft of contract.nfts) {
       let contract_address_b16 = addressUtil.NormaliseAddressToBase16(nft.contract)
       let contract_address_b32 = toBech32Address(contract_address_b16)
-      let indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => console.log(error))    
+      let indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => {throw error})    
       nfts.push({
         collection_name: nft.name,
         symbol: nft.symbol,
@@ -318,7 +319,7 @@ async function getUserNfts(walletAddress, limit = 16, page = 1) {
 }
 
 async function getUserListedNfts(listings, walletAddress, limit = 16, page = 1) {
-  const indexerData = await indexer.GetNFTsForAddress(walletAddress, true).then(response => response).catch((error) => logger.errorLog(error))
+  const indexerData = await indexer.GetNFTsForAddress(walletAddress, true).then(response => response).catch((error) => {throw error})
   let nfts = []
   for (const contract of indexerData.data) {
     for (const listing of listings) {
@@ -366,7 +367,11 @@ function paginate(array, page_size, page_number) {
  */
 async function GetRandomVerifiedListedNFT() {
   var return_result = []
-  const db_result = await DBGetRandomVerifiedListedNonFungible()
+  const db_result = await DBGetRandomVerifiedListedNonFungible().catch((error) => {
+    logger.errorLog(`Unable to get random verified listed NFTs: ${error}`)
+    throw 'Unable to get random verified listed NFTs'
+  })
+  
   for (var res in db_result) {
     logger.debugLog(res)
     let order_id = db_result[res].static_order_id
@@ -391,16 +396,20 @@ async function GetRandomVerifiedListedNFT() {
  */ 
 async function DBGetPeriodGraphForNonFungibleToken(nft_contract, token_id) {
   logger.infoLog(`MODEL- NFTModel - DBGetPeriodGraphForNonFungibleToken - HIT`)
+  const year_2069 = 3131648330534 // in epoch format
 
   const sql = 'SELECT * FROM fn_getPeriodGraphForNonFungibleToken($1, $2, $3, $4)'
   const values = [
     nft_contract,
     token_id,
     0,
-    3131648330534 // 2069
+    year_2069
   ]
 
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get graph data for token id: ${token_id} from contract: ${nft_contract}: ${error}`)
+    throw 'Unable to get graph data for token from contract'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }
@@ -413,7 +422,10 @@ async function DBGetNonFungibleTokenSalesData(nft_contract, token_id) {
     nft_contract,
     token_id
   ]
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get sales data for token id: ${token_id} from contract: ${nft_contract}: ${error}`)
+    throw 'Unable to get sales data for token from contract'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }
@@ -424,14 +436,20 @@ async function DBGetNonFungibleTokenSaleHistory(nft_contract, token_id) {
     nft_contract,
     token_id
   ]
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get sale history for token id: ${token_id} from contract: ${nft_contract}: ${error}`)
+    throw 'Unable to get sale history for token from contract'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }
 
 async function DBGetRandomVerifiedListedNonFungible() {
   logger.infoLog(`FUNC - PUBLIC - DBGetRandomVerifiedListedNonFungible - HIT`)
-  var result = await pgClient.query('SELECT * FROM fn_getRandomVerifiedListedNonFungible()')
+  var result = await pgClient.query('SELECT * FROM fn_getRandomVerifiedListedNonFungible()').catch((error) => {
+    logger.errorLog(`Unable to get random verified listings: ${error}`)
+    throw 'Unable to get random verified listings'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }
@@ -442,7 +460,10 @@ async function DBGetPaginatedMostRecentListings(limitRows, offsetRows) {
     limitRows,
     offsetRows
   ]
-  const result = await pgClient.query(sql, values)
+  const result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get most recent listings (L: ${limitRows}, O: ${offsetRows}): ${error}`)
+    throw 'Unable to get most recent listings'
+  })
   return result.rows
 }
 
@@ -452,7 +473,10 @@ async function DBGetPaginatedMostRecentlySold(limitRows, offsetRows) {
     limitRows,
     offsetRows
   ]
-  const result = await pgClient.query(sql, values)
+  const result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get most recent sold nfts (L: ${limitRows}, O: ${offsetRows}): ${error}`)
+    throw 'Unable to get most recent sold nfts'
+  })
   return result.rows
 }
 
@@ -463,7 +487,10 @@ async function DBGetPaginatedListedTokensForContract(contractAddress, limitRows,
     limitRows,
     offsetRows
   ]
-  const result = await pgClient.query(sql, values)
+  const result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get listed tokens for contract: ${contractAddress} (L: ${limitRows}, O: ${offsetRows}): ${error}`)
+    throw 'Unable to get listed tokens for contract'
+  })
   return result.rows
 }
 
@@ -474,7 +501,10 @@ async function DBGetListedTokenPricesForCollectionRange(contractAddress, min_tok
     min_token_id,
     max_token_id
   ]
-  const result = await pgClient.query(sql, values)
+  const result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get listed tokens for collection: ${contractAddress} in range: ${min_token_id}-${max_token_id}: ${error}`)
+    throw 'Unable to get listed tokens for collection with a given range'
+  })
   return result.rows
 }
 

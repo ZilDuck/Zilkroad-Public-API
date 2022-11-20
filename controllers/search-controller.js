@@ -10,7 +10,10 @@ module.exports = {
     const cacheResult = await cache.GetKey(`getSearchResults-${queryString}`)
     if (cacheResult == false) 
     {
-      let fetchData = await search.SearchString(queryString)
+      let fetchData = await search.SearchString(queryString).catch((_) => {
+        // Probably the ONLY place we don't care about an exception because we have a fall back
+        fetchData = search.getSearchFallback(queryString)
+      })
       if (fetchData.length < 1) {
         fetchData = search.getSearchFallback(queryString)
       }

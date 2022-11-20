@@ -14,18 +14,24 @@ const default_image_uri = '';
  */
 async function GetPrimarySales(limit, offset)
 {
-    const primary_sales_db = await DBGetPaginatedProxyContract(limit, offset)
+    const primary_sales_db = await DBGetPaginatedProxyContract(limit, offset).catch((error) => {throw error})
 
     var return_result = []
     for (var res in primary_sales_db) 
     {
         logger.debugLog(primary_sales_db[res])
-        const sold_chain = await proxyUtils.GetCurrentPrimaryProxyMintCount(primary_sales_db[res].proxy_address)
-        const lifetime_sales = await proxyUtils.GetTotalPrimaryProxyProfit(primary_sales_db[res].proxy_address)
+        const sold_chain = await proxyUtils.GetCurrentPrimaryProxyMintCount(
+            primary_sales_db[res].proxy_address
+        ).catch((error) => {throw error})
+        
+        const lifetime_sales = await proxyUtils.GetTotalPrimaryProxyProfit(
+            primary_sales_db[res].proxy_address
+        ).catch((error) => {throw error})
 
-        console.log(primary_sales_db[res].proxy_nonfungible_address)
-        const metadata = await indexer.GetMetadataForTokenID(primary_sales_db[res].proxy_nonfungible_address, 1).catch(e => e).then(x => console.log(x.response.data))
-        console.log(sold_chain + "/" + lifetime_sales)
+        const metadata = await indexer.GetMetadataForTokenID(
+            primary_sales_db[res].proxy_nonfungible_address,
+            1
+        ).catch((error) => {throw error})
 
 
         proxy_image = metadata ?? null // todo metadata call for nonfungibles
@@ -57,7 +63,6 @@ async function GetPrimarySales(limit, offset)
       
         return_result.push(primary_obj)
     }
-    console.log(return_result)
     return return_result
 }
 
@@ -68,7 +73,10 @@ async function DBGetPaginatedProxyContract(limit_rows, offset_rows) {
       offset_rows
     ]
   
-    var result = await pgClient.query(sql, values)
+    var result = await pgClient.query(sql, values).catch((error) => {
+        logger.errorLog(`Unable to get paginated data for proxy contract (L: ${limit_rows}, O: ${offset_rows}}): ${error}`)
+        throw 'Unable to get data for proxy contract'
+    })
     logger.debugLog(result.rows)
     return result.rows
   }

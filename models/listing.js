@@ -14,7 +14,7 @@ const marketplaceContract = process.env.marketplace_contract
 async function GetListing(static_order_id)
 {
     logger.infoLog(`MODEL - ListingModel - GetListing - HIT - Checking orderID ${static_order_id}`)
-    const listingData = await DBGetListing(static_order_id).catch((error) => console.log(error))
+    const listingData = await DBGetListing(static_order_id).catch((error) => {throw error})
 
     for (var res in listingData) {
         logger.debugLog(res)
@@ -53,7 +53,7 @@ async function GetListing(static_order_id)
 
 async function GetNftListing(contract_address, token_id) {
     logger.infoLog(`MODEL - ListingModel - GetListing - HIT - Checking token ${contract_address}/${token_id}`)
-    const listingData = await DBGetListing(token_id, contract_address).catch((error) => console.log(error))
+    const listingData = await DBGetListing(token_id, contract_address).catch((error) => {throw error})
 
     for (var res in listingData) {
         logger.debugLog(res)
@@ -92,7 +92,7 @@ async function GetNftListing(contract_address, token_id) {
 }
 
 async function GetIndexerNftListing(contract_address, token_id) {
-    const contractState = await indexer.GetContractState(marketplaceContract).then(r => r.data).catch((error) => console.log(error))
+    const contractState = await indexer.GetContractState(marketplaceContract).then(r => r.data).catch((error) => {throw error})
 
     if (contractState.listing_map) {
         for (const [orderId, listingData] of Object.entries(contractState.listing_map)) {
@@ -101,11 +101,7 @@ async function GetIndexerNftListing(contract_address, token_id) {
             let listing_fungible = listingData.arguments[1].arguments[1]
             let listing_amount = listingData.arguments[1].arguments[2]
 
-            console.log(listing_contract_address + ' ' + contract_address)
-            console.log(listing_token_id + ' ' + token_id)
-
             if (listing_contract_address.toLowerCase() === contract_address.toLowerCase() && listing_token_id === token_id) {
-                console.log('LISTING FOUND')
                 return {
                     listing: {
                         orderId: orderId,
@@ -118,14 +114,6 @@ async function GetIndexerNftListing(contract_address, token_id) {
     }
 }
 
-/*
- * SHAPE CREATORS
- */
-
-
-/*
- * SHAPE UTILS
- */
 async function DBGetListing(order_id) {
     logger.infoLog(`MODEL- NFTModel - DBGetNonFungibleTokenSalesData - HIT`)
 
@@ -133,7 +121,10 @@ async function DBGetListing(order_id) {
     const values = [
         order_id
     ]
-    var result = await pgClient.query(sql, values)
+    var result = await pgClient.query(sql, values).catch((error) => {
+        logger.errorLog(`Unable to get listing for order id: ${static_order_id}: ${error}`)
+        throw 'Unable to get listing'
+    })
     logger.debugLog(result.rows)
     return result.rows
 }
@@ -146,7 +137,10 @@ async function DBGetListing(token_id, contract_address) {
         token_id,
         contract_address
     ]
-    var result = await pgClient.query(sql, values)
+    var result = await pgClient.query(sql, values).catch((error) => {
+        logger.errorLog(`Unable to get listing for contract address: ${contract_address}, token id: ${token_id}: ${error}`)
+        throw 'Unable to get listing'
+    })
     logger.debugLog(result.rows)
     return result.rows
 }

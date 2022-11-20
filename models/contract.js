@@ -38,19 +38,18 @@ async function GetContract(contract_address) {
   }
 
   logger.infoLog(`MODEL - ContractModel - GetContract - HIT`)
-  const indexer_state = await indexer.GetContractState(contract_address_b16).catch((error) => console.log(error))
+  const indexer_state = await indexer.GetContractState(contract_address_b16).catch((error) => {throw error})
   logger.debugLog(indexer_state.data)
-  const indexer_metadata = await indexer.GetStatisticsForMetadata(contract_address_b16).catch((error) => console.log(error))
-  const db_primary_sales = await DBGetPrimarySalesIfPresent(contract_address_b16).catch((error) => console.log(error))
-  //const api_metadata = await APIGetNFTCollectionHeader(contract_address_b16).catch((error) => console.log(error))
-  const db_floors = await DBGetPaginatedCollectionFloors(0, 20).catch((error) => console.log(error))
-  const db_stats = await DBGetStatsForNonfungible(contract_address_b16).catch((error) => console.log(error))
-  const db_graph = await DBGetGraphForNonFungible(contract_address_b16).catch((error) => console.log(error))
-  const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => console.log(error))
+  const indexer_metadata = await indexer.GetStatisticsForMetadata(contract_address_b16).catch((error) => {throw error})
+  const db_primary_sales = await DBGetPrimarySalesIfPresent(contract_address_b16).catch((error) => {throw error})
+
+  const db_floors = await DBGetPaginatedCollectionFloors(0, 20).catch((error) => {throw error})
+  const db_stats = await DBGetStatsForNonfungible(contract_address_b16).catch((error) => {throw error})
+  const db_graph = await DBGetGraphForNonFungible(contract_address_b16).catch((error) => {throw error})
+  const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => {throw error})
 
   const contract_name = indexer_state.data.token_name
   const contract_symbol = indexer_state.data.token_symbol
- // const user_defined_metadata = api_metadata
   const aggregated_contract_metadata = indexer_metadata.data
   const contract_owner = indexer_state.data.contract_owner
   const royalty_recipient = indexer_state.data.royalty_recipient
@@ -69,7 +68,6 @@ async function GetContract(contract_address) {
     contract_address_b32,
     contract_name,
     contract_symbol,
-   // user_defined_metadata,
     aggregated_contract_metadata,
     contract_owner,
     royalty_recipient,
@@ -88,7 +86,6 @@ async function GetContract(contract_address) {
  * SHAPE CREATORS
  */
 
-//GIVEN a contact and page options, return listed TOKENS
 async function GetPageListingForNonFungible(nonfungible_address, limit_rows, offset_rows) {
   logger.infoLog(`API - PUBLIC - GetPageListingForNonFungible - HIT`)
 
@@ -99,7 +96,11 @@ async function GetPageListingForNonFungible(nonfungible_address, limit_rows, off
     offset_rows
   ]
 
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get listings for contract: ${nonfungible_address} (L: ${limit_rows}, O: ${offset_rows}): ${error}`)
+    throw 'Unable to get listings for contract'
+  })
+
   var return_result = []
   for (var res in result.rows) {
     logger.debugLog(result.rows[res])
@@ -111,7 +112,7 @@ async function GetPageListingForNonFungible(nonfungible_address, limit_rows, off
       order_id,
       token_id,
       contract_address_b16
-    )
+    ).catch((error) => {throw error})
 
     return_result.push(nft)
   }
@@ -130,7 +131,11 @@ async function GetPageSalesForNonFungible(limit_rows, offset_rows, nonfungible_a
     nonfungible_address
   ]
 
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get sold NFTs for contract: ${nonfungible_address} (L: ${limit_rows}, O: ${offset_rows}): ${error}`)
+    throw 'Unable to get sold NFTs for contract'
+  })
+
   var return_result = []
   for (var res in result.rows) {
     logger.debugLog(result.rows[res])
@@ -142,7 +147,7 @@ async function GetPageSalesForNonFungible(limit_rows, offset_rows, nonfungible_a
       order_id,
       token_id,
       contract_address_b16
-    )
+    ).catch((error) => {throw error})
 
     return_result.push(nft)
   }
@@ -159,7 +164,11 @@ async function GetPageMostRecentListings(limit_rows, offset_rows) {
     offset_rows
   ];
 
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get most recent listings (L: ${limit_rows}, O: ${offset_rows}): ${error}`)
+    throw 'Unable to get most recent listings'
+  })
+
   var return_result = []
   for (var res in result.rows) {
     logger.debugLog(result.rows[res])
@@ -171,7 +180,7 @@ async function GetPageMostRecentListings(limit_rows, offset_rows) {
       order_id,
       token_id,
       contract_address_b16
-    )
+    ).catch((error) => {throw error})
 
     return_result.push(nft)
   }
@@ -189,7 +198,11 @@ async function GetPageMostRecentSales(limit_rows, offset_rows) {
     offset_rows
   ];
 
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get most recently sold NFTs (L: ${limit_rows}, O: ${offset_rows}): ${error}`)
+    throw 'Unable to get most recently sold NFTs'
+  })
+
   var return_result = []
   for (var res in result.rows) {
     logger.debugLog(result.rows[res])
@@ -201,7 +214,7 @@ async function GetPageMostRecentSales(limit_rows, offset_rows) {
       order_id,
       token_id,
       contract_address_b16
-    )
+    ).catch((error) => {throw error})
 
     return_result.push(nft)
   }
@@ -222,7 +235,10 @@ async function DBGetPrimarySalesIfPresent(nonfungible_address) {
   const values = [
     nonfungible_address
   ]
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get sales data for contract: ${nonfungible_address}: ${error}`)
+    throw 'Unable to get sales data for contract'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }
@@ -233,7 +249,10 @@ async function DBGetPaginatedNonFungibleStats(limit_rows, offset_rows) {
     limit_rows,
     offset_rows
   ]
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get stats for non-fungibles (L: ${limit_rows}, O: ${offset_rows}): ${error}`)
+    throw 'Unable to get stats for non-fungibles'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }
@@ -246,7 +265,10 @@ async function DBGetPaginatedCollectionFloors(limit_rows, offset_rows) {
     limit_rows,
     offset_rows
   ]
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get collection floors (L: ${limit_rows}, O: ${offset_rows}): ${error}`)
+    throw 'Unable to get collection floors'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }
@@ -258,7 +280,10 @@ async function DBGetStatsForNonfungible(nonfungible_address) {
   const values = [
     nonfungible_address
   ]
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get stats for contract: ${nonfungible_address}: ${error}`)
+    throw 'Unable to get stats for contract'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }
@@ -276,7 +301,10 @@ async function DBGetGraphForNonFungible(nonfungible_address) {
     lastYear,
     now
   ]
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get graph data for contract: ${nonfungible_address}: ${error}`)
+    throw 'Unable to get graph data for contract'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }
@@ -292,7 +320,10 @@ async function DBGetACollectionRank(contractAddress, timeFrom, timeTo)
     timeFrom,
     timeTo
   ]
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get activity for collection: ${contractAddress} (from: ${timeFrom} to ${timeTo}): ${error}`)
+    throw 'Unable to get activity for collection'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }
@@ -309,7 +340,10 @@ async function DBGetAllCollectionRanks(page, limit, timeFrom, timeTo)
     timeFrom,
     timeTo
   ]
-  var result = await pgClient.query(sql, values)
+  var result = await pgClient.query(sql, values).catch((error) => {
+    logger.errorLog(`Unable to get collection activities: (L: ${limit}, O: ${page}) (from: ${timeFrom} to: ${timeTo}): ${error}`)
+    throw 'Unable to get collection activities'
+  })
   logger.debugLog(result.rows)
   return result.rows
 }
@@ -325,7 +359,10 @@ async function DBGetPaginatedContractActivity(contract_address, offset_rows, lim
         offset_rows
     ]
 
-    var result = await pgClient.query(sql, values)
+    var result = await pgClient.query(sql, values).catch((error) => {
+      logger.errorLog(`Unable to get activity for contract: ${contract_address} (L: ${limit_rows}, O: ${offset_rows}): ${error}`)
+      throw 'Unable to get activity for contract'
+    })
     logger.debugLog(result.rows)
     return result.rows
 }

@@ -4,14 +4,16 @@ const logger = require('../logger.js')
 const { Zilliqa } = require('@zilliqa-js/zilliqa');
 
 const zilliqa = new Zilliqa(process.env.current_network) // Same here 
-process.env.is_testnet ? console.log("UTILS TESTNET") : console.log("UTILS MAINNET") 
 const marketplace_contract = process.env.MARKETPLACE_CONTRACT;
 
 module.exports =
 { 
     GetNativeZilBalanceForAddress : async function(address)
     {
-      const zil_amount = await zilliqa.blockchain.getBalance(address)
+      const zil_amount = await zilliqa.blockchain.getBalance(address).catch((error) => {
+        logger.errorLog(`Unable to get balance for address: ${address}: ${error}`)
+        throw 'Unable to get balance for address'
+      })
       return zil_amount.result?.balance ?? 0
     },
     GetFungibleAmountForAddress: async function(address)
@@ -52,7 +54,10 @@ module.exports =
           'balances',
           [address],
         ]
-      ]);
+      ]).catch((error) => {
+        logger.errorLog(`Unable to get balances for supported tokens for contract: ${address}: ${error}`)
+        throw 'Unable to get balance for supported tokens for collection'
+      })
     
       let batch_result = fungible_amount_state.batch_result
       batch_result.forEach(function(item) {
@@ -107,7 +112,10 @@ module.exports =
           'allowances',
           [address],
         ]
-      ]);
+      ]).catch((error) => {
+        logger.errorLog(`Unable to get allowances for supported tokens for contract: ${address}: ${error}`)
+        throw 'Unable to get allowances for supported tokens for collection'
+      })
 
       let batch_result = fungible_allowance_state.batch_result
       batch_result.forEach(function(item) {

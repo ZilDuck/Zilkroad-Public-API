@@ -25,7 +25,10 @@ async function LookupFungiblePriceData(fungible_symbol, fungible_amount)
 
     const token_info =
     (
-      await axios.get(`https://api.zilstream.com/tokens/${final_symbol}`)
+      await axios.get(`https://api.zilstream.com/tokens/${final_symbol}`).catch((error) => {
+          logger.errorLog(`Unable to get price data for fungible: ${final_symbol}: ${error}`)
+          throw 'Unable to get price data for fungible'
+      })
     )
 
     const decimals = token_info.data.decimals; 

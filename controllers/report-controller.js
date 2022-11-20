@@ -12,7 +12,10 @@ module.exports = {
         const cacheResult = await cache.GetKey(`Report-${contract}-${user}`)
         if (cacheResult === false) 
         {
-            await discordUtils.SendReportMessage(contract, user, cacheTime)
+            await discordUtils.SendReportMessage(contract, user, cacheTime).catch((error) => {
+                res.status(404).send({"message": error})
+                return
+            })
             await cache.SetKey(`Report-${contract}-${user}`, `${contract}-${user}`, cacheTime)
             res.status(200).send()
         }

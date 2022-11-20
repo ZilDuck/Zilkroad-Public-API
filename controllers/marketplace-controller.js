@@ -16,7 +16,10 @@ module.exports = {
         const cacheResult = await cache.GetKey(`Marketplace-${page}/${filter}/${limit}/${order}/${orderBy}/${contract_address}`)
         if (cacheResult === false) 
         {
-            const { nfts, pagination } = await getTokens(filter, limit, page, order, orderBy, contract_address)
+            const { nfts, pagination } = await getTokens(filter, limit, page, order, orderBy, contract_address).catch((error) => {
+                res.status(404).send({"message": error})
+                return
+            })
             const collections = nfts.map(({ collection_name, contract_address_b16 }) => ({
                 label: collection_name,
                 value: contract_address_b16,
