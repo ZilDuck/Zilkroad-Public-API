@@ -14,7 +14,13 @@ module.exports = {
 
     getMetadataForCollection: async function(req, res) 
     {
-        let contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+        let contractAddress
+        try {
+            contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+        } catch(error) {
+            res.status(404).send({"message": error})
+            return
+        }
         let base_uri = ''
         let response = {}
 

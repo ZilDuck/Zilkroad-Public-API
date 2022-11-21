@@ -28,7 +28,12 @@ async function getToken(
   contract_address
 ) {
 
-  let contract_address_b16 = addressUtil.NormaliseAddressToBase16(contract_address)
+  let contract_address_b16
+  try {
+    contract_address_b16 = addressUtil.NormaliseAddressToBase16(contract_address)
+  } catch (error) {
+    throw error
+  }
 
   logger.infoLog(`MODEL - TokenModel - getToken - HIT - ${token_id + contract_address_b16}`)
   const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(r => r.data).catch((error) => {throw error})
@@ -81,7 +86,12 @@ async function getTokenCard(
   contract_address
 ) {
 
-  let contract_address_b16 = addressUtil.NormaliseAddressToBase16(contract_address)
+  let contract_address_b16
+  try {
+    contract_address_b16 = addressUtil.NormaliseAddressToBase16(contract_address)
+  } catch (error) {
+    throw error
+  }
 
   logger.infoLog(`MODEL - TokenModel - getTokenCard - HIT - ${order_id + token_id + contract_address_b16}`)
 
@@ -158,7 +168,12 @@ async function getTokens(filter, limit, page, order, orderBy, contract_address) 
         verified,
         fungible_address
       }) => {
-        let contract_address_b16 = addressUtil.NormaliseAddressToBase16(nonfungible_address)
+        let contract_address_b16
+        try {
+          contract_address_b16 = addressUtil.NormaliseAddressToBase16(nonfungible_address)
+        } catch (error) {
+          throw error
+        }
         const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(res => (res.data)).catch((error) => {throw error}) // TODO Shouldn't have an api call in a loop like this. Need a batch method or listing data from indexer?
         const indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => {throw error})
 
@@ -280,14 +295,25 @@ async function getContractListedNfts(contractAddress, limit, page) {
 }
 
 async function getUserNfts(walletAddress, limit = 16, page = 1) {
-  let owner_address_b16 = addressUtil.NormaliseAddressToBase16(walletAddress)
+  let owner_address_b16
+  try {
+    owner_address_b16 = addressUtil.NormaliseAddressToBase16(walletAddress)
+  } catch (error) {
+    throw error
+  }
+  
   let owner_address_b32 = toBech32Address(owner_address_b16)
 
   const indexerData = await indexer.GetNFTsForAddress(walletAddress, false).then(response => response).catch((error) => {throw error})
   let nfts = []
   for (const contract of indexerData.data) {
     for (const nft of contract.nfts) {
-      let contract_address_b16 = addressUtil.NormaliseAddressToBase16(nft.contract)
+      let contract_address_b16
+      try {
+        contract_address_b16 = addressUtil.NormaliseAddressToBase16(walletAddress)
+      } catch (error) {
+        throw error
+      }
       let contract_address_b32 = toBech32Address(contract_address_b16)
       let indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => {throw error})    
       nfts.push({
