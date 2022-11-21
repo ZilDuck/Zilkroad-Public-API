@@ -44,7 +44,7 @@ module.exports = {
   getNfts: async function(req, res) {
     const page = req.params.page ?? 0
     const filter = req.query.filter ?? ''
-    const limit = req.query.limit ?? 10
+    const limit = req.query.limit ?? 12
     const order = req.query.order ?? 'ASC'
     const orderBy = req.query.order ?? ''
 
