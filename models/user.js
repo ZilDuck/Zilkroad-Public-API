@@ -21,7 +21,12 @@ async function GetUserCollection(user_address_array) {
 async function GetUser(user_address)
 {
     logger.infoLog(`MODEL - UserModel - GetUser - HIT`)
-    const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
+    let user_address_b16
+    try {
+        user_address_b16 = addressUtil.NormaliseAddressToBase16(user_address)
+    } catch (error) {
+        throw error
+    }
     const fungible_token_balance = await APIGetHeldTokensForUser(user_address_b16).catch(error => {throw error})
     const user_stats = await DBGetAccumulativeStatsForUser(user_address_b16).catch(error => {throw error})
     const zil_balance = await APIGetZilBalanceForUser(user_address_b16).catch(error => {throw error})
@@ -43,7 +48,12 @@ async function GetUser(user_address)
 
 
 async function GetPageUserListing(user_address, limit_rows, offset_rows) {
-    const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
+    let user_address_b16
+    try {
+        user_address_b16 = addressUtil.NormaliseAddressToBase16(user_address)
+    } catch (error) {
+        throw error
+    }
     const response = await DBGetPaginatedUserListings(user_address_b16, limit_rows, offset_rows).catch((error) => {throw error})
 
     return response
@@ -54,7 +64,12 @@ async function GetPageUserListing(user_address, limit_rows, offset_rows) {
  */ 
 
 async function APIGetZilBalanceForUser(user_address) {
-    const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
+    let user_address_b16
+    try {
+        user_address_b16 = addressUtil.NormaliseAddressToBase16(user_address)
+    } catch (error) {
+        throw error
+    }
     const zil_balance = await zilliqa.blockchain.getBalance(user_address_b16).catch(error => {
         logger.errorLog(`Unable to get balance for user: ${user_address}: ${error}`)
         throw 'Unable to get balance for user'
@@ -65,7 +80,12 @@ async function APIGetZilBalanceForUser(user_address) {
 async function APIGetHeldTokensForUser(user_address)
 {
     logger.infoLog(`API - PUBLIC - GetHeldTokensForUser - HIT`)
-    const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
+    let user_address_b16
+    try {
+        user_address_b16 = addressUtil.NormaliseAddressToBase16(user_address)
+    } catch (error) {
+        throw error
+    }
 
     const token_db_result = await pgClient.query("SELECT * FROM fn_getAllSupportedFungibleAddresses()").catch((error) => {
         logger.errorLog(`Unable to get confirmation of supported fungibles: ${error}`)
@@ -94,7 +114,12 @@ async function APIGetHeldTokensForUser(user_address)
 async function APIGetNFTHeldByWallet(user_address)
 {
     logger.infoLog(`API - PUBLIC - GetNFTHeldByWallet - HIT`)
-    const user_address_b16 =  addressUtil.NormaliseAddressToBase16(user_address)
+    let user_address_b16
+    try {
+        user_address_b16 = addressUtil.NormaliseAddressToBase16(user_address)
+    } catch (error) {
+        throw error
+    }
 
     var result = await indexer.GetNFTsForAddress(user_address_b16).catch((error) => {throw error})
     logger.debugLog(result.data)

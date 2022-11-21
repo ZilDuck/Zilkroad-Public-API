@@ -7,7 +7,13 @@ const cacheTime = 30
 
 module.exports = {
   getNft: async function(req, res) {
-    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    let contractAddress
+    try {
+      contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    } catch (error) {
+      res.status(404).send({"message": error})
+      return
+    }
     const tokenId = req.params.tokenId
     let failed = false
 
@@ -59,7 +65,13 @@ module.exports = {
   },
   
   getNftSpender: async function(req, res) {
-    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    let contractAddress
+    try {
+      contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    } catch (error) {
+      res.status(404).send({"message": error})
+      return
+    }
     const tokenId = req.params.tokenId
 
     const cacheResult = await cache.GetKey(`getNftSpender-${contractAddress}-${tokenId}`)
@@ -75,7 +87,13 @@ module.exports = {
   },
 
   getFungibleAllowance: async function(req, res) {
-    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    let contractAddress
+    try {
+      contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    } catch (error) {
+      res.status(404).send({"message": error})
+      return
+    }
     const userAddress = req.params.userAddress
 
     const cacheResult = await cache.GetKey(`getFungibleAllowance-${contractAddress}-${userAddress}`)
