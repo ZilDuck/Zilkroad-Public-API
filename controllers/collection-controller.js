@@ -8,7 +8,13 @@ const cacheTime = 30
 
 module.exports = {
   getCollection: async function(req, res) {
-    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    let contractAddress
+    try {
+      contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    } catch (error) {
+      res.status(404).send({"message": error})
+      return
+    }
 
     const cacheResult = await cache.GetKey(`getCollection-${contractAddress}`)
     if (cacheResult === false) {
@@ -24,7 +30,13 @@ module.exports = {
   },
 
   getCollectionNfts: async function(req, res) {
-    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    let contractAddress
+    try {
+      contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    } catch (error) {
+      res.status(404).send({"message": error})
+      return
+    }
     const page = req.query.page ?? 1
     const limit = req.query.limit ?? 10
     const filter = req.query.filter ?? ''
@@ -45,7 +57,13 @@ module.exports = {
   },
 
   getCollectionListedNfts: async function(req, res) {
-    const contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    let contractAddress
+    try {
+      contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    } catch (error) {
+      res.status(404).send({"message": error})
+      return
+    }
     const limit = req.query.limit ?? 10
     const page = req.query.page ?? 1
     
@@ -86,7 +104,13 @@ module.exports = {
 
   getCollectionActivity: async function(req, res)
   {
-    let contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    let contractAddress
+    try {
+      contractAddress = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+    } catch (error) {
+      res.status(404).send({"message": error})
+      return
+    }
     const page = req.query.page ?? 1
     const limit = req.query.limit ?? 10
 

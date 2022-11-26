@@ -6,7 +6,13 @@ const cacheTime = 3600
 
 module.exports = {
     reportContract: async function(req, res) {
-        const contract = addressUtil.NormaliseAddressToBase16(req.params.contract)
+        let contract
+        try {
+          contract = addressUtil.NormaliseAddressToBase16(req.params.contractAddress)
+        } catch (error) {
+            res.status(404).send({"message": error})
+            return
+        }
         const user = req.params?.user ?? '<no user>'
 
         const cacheResult = await cache.GetKey(`Report-${contract}-${user}`)
