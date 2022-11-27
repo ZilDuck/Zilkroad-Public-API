@@ -53,11 +53,11 @@ module.exports = {
             base_uri = base_uri + metadataFileExtenstion
 
             meta_data_response = await axios.get(base_uri).catch((error) => {
-                logger.errorLog(`Unable to get data from base uri: ${base_uri} for collection: ${collection}: ${error}`)
+                logger.errorLog(`Unable to get data from base uri: ${base_uri} for collection: ${contractAddress}: ${error}`)
                 res.status(404).send({"message": "Unable to get data from base uri for collection"})
                 return
             })
-            meta_data_response = meta_data_response.data ?? {}
+            meta_data_response = meta_data_response?.data ?? {}
 
             if ( meta_data_response === undefined ) {
                 res.status(404).send({"message": "No metadata could be found for collection"})

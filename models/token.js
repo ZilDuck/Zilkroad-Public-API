@@ -5,7 +5,7 @@ const indexer = require('../utils/indexer.js')
 const logger = require('../logger')
 const zilliqa = new Zilliqa(process.env.current_network)
 const addressUtil = require('../utils/addressUtils.js')
-const { DBGetVerifiedStatusForNonFungible } = require('./common.js')
+const { DBGetVerifiedStatusForNonFungible, DBGetExcludedStatusForNonFungible } = require('./common.js')
 const { GetPaginatedTokenIDs } = require('../utils/indexer')
 
 /*
@@ -38,6 +38,7 @@ async function getToken(
   logger.infoLog(`MODEL - TokenModel - getToken - HIT - ${token_id + contract_address_b16}`)
   const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(r => r.data).catch((error) => {throw error})
   const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => {throw error})
+  const db_excluded = await DBGetExcludedStatusForNonFungible(contract_address_b16).catch((error) => {throw error})
   const sales_data = await DBGetNonFungibleTokenSalesData(contract_address_b16, token_id).catch((error) => {throw error})
 
   const sales_count = sales_data[0]?.lifetime_quantity_sold ?? 0
@@ -61,6 +62,7 @@ async function getToken(
   token_resource_uri = indexer_token.resources ?? false
   token_metadata = indexer_token.metadata ?? false
   const verified = db_verified.length > 0
+  const excluded = db_excluded.length > 0
 
   return {
     token_id,
@@ -76,7 +78,8 @@ async function getToken(
     sales_volume,
     sales_history,
     graph_data,
-    verified
+    verified,
+    excluded
   }
 }
 
@@ -175,7 +178,9 @@ async function getTokens(filter, limit, page, order, orderBy, contract_address) 
           throw error
         }
         const indexer_token = await indexer.GetTokenID(contract_address_b16, token_id).then(res => (res.data)).catch((error) => {throw error}) // TODO Shouldn't have an api call in a loop like this. Need a batch method or listing data from indexer?
-        const indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => {throw error})
+        const indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => {
+          throw error
+        })
 
         return {
           order_id: static_order_id,
@@ -304,13 +309,15 @@ async function getUserNfts(walletAddress, limit = 16, page = 1) {
   
   let owner_address_b32 = toBech32Address(owner_address_b16)
 
-  const indexerData = await indexer.GetNFTsForAddress(walletAddress, false).then(response => response).catch((error) => {throw error})
+  const indexerData = await indexer.GetNFTsForAddress(walletAddress, false).then(response => response).catch((error) => {
+    throw error
+  })
   let nfts = []
   for (const contract of indexerData.data) {
     for (const nft of contract.nfts) {
-      let contract_address_b16
+      let contract_address_b16 = nft.contract
       try {
-        contract_address_b16 = addressUtil.NormaliseAddressToBase16(walletAddress)
+        contract_address_b16 = addressUtil.NormaliseAddressToBase16(contract_address_b16)
       } catch (error) {
         throw error
       }
@@ -323,7 +330,7 @@ async function getUserNfts(walletAddress, limit = 16, page = 1) {
         contract_address_b32: contract_address_b32,
         owner_address_b16: owner_address_b16,
         owner_address_b32: owner_address_b32,
-        royalty_bps: indexer_contract_data.data.royalty_fee_bps ?? 0,
+        royalty_bps: indexer_contract_data?.data?.royalty_fee_bps ?? 0,
         token_id: nft.tokenId
       })
     }

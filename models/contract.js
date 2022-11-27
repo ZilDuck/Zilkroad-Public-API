@@ -8,7 +8,7 @@ const axios = require('axios')
 
 //other shapes
 const token = require('./token.js')
-const { DBGetVerifiedStatusForNonFungible } = require('./common.js')
+const { DBGetVerifiedStatusForNonFungible, DBGetExcludedStatusForNonFungible } = require('./common.js')
 /*
  * SHAPE DEFINITION
  */
@@ -47,6 +47,7 @@ async function GetContract(contract_address) {
   const db_stats = await DBGetStatsForNonfungible(contract_address_b16).catch((error) => {throw error})
   const db_graph = await DBGetGraphForNonFungible(contract_address_b16).catch((error) => {throw error})
   const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => {throw error})
+  const db_excluded = await DBGetExcludedStatusForNonFungible(contract_address_b16).catch((error) => {throw error})
 
   const contract_name = indexer_state.data.token_name
   const contract_symbol = indexer_state.data.token_symbol
@@ -62,6 +63,7 @@ async function GetContract(contract_address) {
   const stats = db_stats[0] ?? {"listed_tokens": 0, "volume": 0}
   const primary_sales = db_primary_sales
   const verified = db_verified.length > 0
+  const excluded = db_excluded.length > 0
 
   return {
     contract_address_b16,
@@ -73,6 +75,7 @@ async function GetContract(contract_address) {
     royalty_recipient,
     royalty_bps,
     verified,
+    excluded,
     nfts_minted,
     token_balances,
     floor_prices,
