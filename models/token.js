@@ -252,7 +252,9 @@ async function getContractNfts(contractAddress, filter, limit, page, order, orde
   // this is butters but im so brain dead atm
   const _contract_address = validation.isBech32(contractAddress) ? fromBech32Address(contractAddress) : contractAddress
   const db_verified = await DBGetVerifiedStatusForNonFungible(_contract_address).catch((error) => {throw error})
+  const db_excluded = await DBGetExcludedStatusForNonFungible(_contract_address).catch((error) => {throw error})
   const verified = db_verified.length > 0
+  const excluded = db_excluded.length > 0
 
   const appData = {
     nfts: indexerData.data.map(({ name, symbol, contract, tokenId }) => ({
@@ -261,7 +263,8 @@ async function getContractNfts(contractAddress, filter, limit, page, order, orde
       contract_address_b16: validation.isBech32(contract) ? fromBech32Address(contract) : contract,
       contract_address_b32: validation.isBech32(contract) ? contract : toBech32Address(contract),
       token_id: tokenId,
-      verified: verified
+      verified: verified,
+      excluded: excluded
     })),
     pagination: indexerData.headers['x-pagination']
   }
@@ -321,6 +324,12 @@ async function getUserNfts(walletAddress, limit = 16, page = 1) {
       } catch (error) {
         throw error
       }
+
+      const db_verified = await DBGetVerifiedStatusForNonFungible(contract_address_b16).catch((error) => {throw error})
+      const db_excluded = await DBGetExcludedStatusForNonFungible(contract_address_b16).catch((error) => {throw error})
+      const verified = db_verified.length > 0
+      const excluded = db_excluded.length > 0
+
       let contract_address_b32 = toBech32Address(contract_address_b16)
       let indexer_contract_data = await indexer.GetContractState(contract_address_b16).catch((error) => {throw error})    
       nfts.push({
@@ -331,7 +340,9 @@ async function getUserNfts(walletAddress, limit = 16, page = 1) {
         owner_address_b16: owner_address_b16,
         owner_address_b32: owner_address_b32,
         royalty_bps: indexer_contract_data?.data?.royalty_fee_bps ?? 0,
-        token_id: nft.tokenId
+        token_id: nft.tokenId,
+        verified: verified,
+        excluded: excluded
       })
     }
   }
