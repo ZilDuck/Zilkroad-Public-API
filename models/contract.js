@@ -294,15 +294,11 @@ async function DBGetStatsForNonfungible(nonfungible_address) {
 async function DBGetGraphForNonFungible(nonfungible_address) {
   logger.infoLog(`API - PUBLIC - DBGetGraphForNonFungible - HIT`)
 
-  const now = parseInt((new Date().getTime() / 1000).toFixed(0))
-  var date = new Date();
-  const lastYear = date.setFullYear(date.getFullYear() - 1);
-
-  const sql = 'SELECT * FROM fn_getPeriodGraphForNonFungible ($1, $2, $3)'
+  const sql = 'SELECT * FROM fn_getPeriodGraphForNonFungible($1, $2, $3)'
   const values = [
     nonfungible_address,
-    lastYear,
-    now
+    0,
+    3131648330534 // 2069
   ]
   var result = await pgClient.query(sql, values).catch((error) => {
     logger.errorLog(`Unable to get graph data for contract: ${nonfungible_address}: ${error}`)
