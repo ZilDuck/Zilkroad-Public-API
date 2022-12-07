@@ -21,6 +21,8 @@ async function GetUserCollection(user_address_array) {
 async function GetUser(user_address)
 {
     logger.infoLog(`MODEL - UserModel - GetUser - HIT`)
+    var limit = 15
+    var offset = 0
     let user_address_b16
     try {
         user_address_b16 = addressUtil.NormaliseAddressToBase16(user_address)
@@ -30,7 +32,7 @@ async function GetUser(user_address)
     const fungible_token_balance = await APIGetHeldTokensForUser(user_address_b16).catch(error => {throw error})
     const user_stats = await DBGetAccumulativeStatsForUser(user_address_b16).catch(error => {throw error})
     const zil_balance = await APIGetZilBalanceForUser(user_address_b16).catch(error => {throw error})
-    const wallet_activity = await DBGetPaginatedUserWalletActivity(user_address_b16).catch(error => {throw error})
+    const wallet_activity = await DBGetPaginatedUserWalletActivity(user_address_b16, limit, offset).catch(error => {throw error})
 
     return {
         user_address_b16,
