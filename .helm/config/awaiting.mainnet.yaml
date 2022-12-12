@@ -13,17 +13,15 @@ env:
   cacheAge: 300
   redisUrl: redis-headless.redis.svc.cluster.local
   redisPort: 6379
-  # REPLACE
-  marketplaceContract: 0xad43392d1750771e58931801ddc274e5984660b4
+  marketplaceContract: 0x70b1f9e6a4d00baaf6972957f3b6a9f6c9f631b6
   tokens:
-    # REPLACE ALL TOKENS
-    wzil: 864895d52504c388a345ef6cd9c800dbbd0ef92a
-    gzil: 607d0ba69c3680ed07262e5d80be98c401fd612c
-    xsgd: 56906c825a6df74032ea40b4ff882b5970f3d0a8
-    zwbtc: 9fe903bf7c48d6bf4bcc7c53e77d3d2a2ebbf5ae
-    zeth: 049346a00627b89441b2d5110b09c376913f19ff
-    zusdt: 9fce53c80e07fddb02450fc9b435b0a7781b68a8
-    duck: e743ff40e780fe08dee4e2ad830983d1979ff2e6
+    wzil: 4306f921c982766810cf342775fd79aa2d0d0e24
+    gzil: a845c1034cd077bd8d32be0447239c7e4be6cb21
+    xsgd: 3bd9ad6fee7bfdf5b5875828b555e4f702e427cd
+    zwbtc: 75fa7d8ba6bed4a68774c758a5e43cfb6633d9d6
+    zeth: 2ca315f4329654614d1e8321f9c252921192c5f2
+    zusdt: 818ca2e217e060ad17b7bd0124a483a1f66930a9
+    duck: c6bb661eda683bdc792b3e456a206a92cc3cb92e
 
 namespace: zilkroad-mainnet
 
