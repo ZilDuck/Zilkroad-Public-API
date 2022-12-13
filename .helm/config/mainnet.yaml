@@ -1,0 +1,42 @@
+env:
+  isTestnet: false
+  discord:
+    discordToken: OTA0NDcwNDUzMjc4NjE3NjAw.GAJrjt.puUo3ND91vnKdBIUFrNYdTUnpUjeD4hictHMnk
+  pg:
+    host: postgres-zilkroad-mainnet
+    database: postgres
+    port: 5432
+    user: user_function_readonly
+    password: NNq7!aXfZRig3U!
+  currentNetwork: https://api.zilliqa.com
+  enableCache: true
+  cacheAge: 300
+  redisUrl: redis-headless.redis.svc.cluster.local
+  redisPort: 6379
+  marketplaceContract: 0x70b1f9e6a4d00baaf6972957f3b6a9f6c9f631b6
+  tokens:
+    wzil: 4306f921c982766810cf342775fd79aa2d0d0e24
+    gzil: a845c1034cd077bd8d32be0447239c7e4be6cb21
+    xsgd: 3bd9ad6fee7bfdf5b5875828b555e4f702e427cd
+    zwbtc: 75fa7d8ba6bed4a68774c758a5e43cfb6633d9d6
+    zeth: 2ca315f4329654614d1e8321f9c252921192c5f2
+    zusdt: 818ca2e217e060ad17b7bd0124a483a1f66930a9
+    duck: c6bb661eda683bdc792b3e456a206a92cc3cb92e
+
+namespace: zilkroad-mainnet
+
+resources:
+  limits:
+    memory: 512M
+  requests:
+    memory: 512M
+
+ingress:
+  enabled: True
+  host: public-api.zilkroad.io
+
+image:
+  app:
+    pullSecret: aws-registry
+
+replicas: 2
