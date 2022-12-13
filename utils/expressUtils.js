@@ -16,7 +16,7 @@ require("dotenv").config();
 
 const crypto = require('crypto')
 
-logger.infoLog(`UTILS network: ${process.env.is_testnet}`)
+logger.infoLog(`network is_testnet: ${process.env.is_testnet}`)
 
 const pgClient = new Pool
 ({
