@@ -2,7 +2,9 @@ const client = require('../utils/expressUtils.js');
 const axios = require('axios');
 const logger = require('../logger.js')
 
-const testnetString = process.env.is_testnet ? "?network=testnet" : "?"
+var testnetString = ""
+process.env.is_testnet == 'true' ? testnetString = "?network=testnet" : testnetString = "?"
+console.log(`testnet indexer string ${testnetString}`)
 /*
  * HELPER EXPORTED CLASS 
  * ALL OF THE INDEXER CALLS 
