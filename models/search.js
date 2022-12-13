@@ -6,7 +6,7 @@ const { DBGetVerifiedStatusForNonFungible } = require('./common.js')
 const { ResolveZilDomain } = require("../DomainResolver.js");
 const nftUtils = require('../utils/nftUtils.js')
 
-const bunnyCDNImagePrefix = `https://zildexr-testnet.b-cdn.net/`
+const bunnyCDNImagePrefix = process.env.is_testnet ? `https://zildexr-testnet.b-cdn.net/` : `https://zildexr.b-cdn.net/`
 // GIVEN WE HAVE A SEARCH QUERY, RETURN A SEARCH PARAM.
 
 // NFT CONTRACT
